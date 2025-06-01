@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TravelBooking.Infrastructure;
 
@@ -11,9 +12,11 @@ using TravelBooking.Infrastructure;
 namespace TravelBooking.Infrastructure.Migrations
 {
     [DbContext(typeof(TravelBookingDbContext))]
-    partial class TravelBookingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250601215932_make-modifiedAt-nullable")]
+    partial class makemodifiedAtnullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
