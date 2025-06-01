@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TravelBooking.Domain", "TravelBooking.Domain\TravelBooking.Domain.csproj", "{A2FC422C-55A1-43D0-AFE0-FFEC82A443A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TravelBooking.Application", "TravelBooking.Application\TravelBooking.Application.csproj", "{962D037B-5301-4126-87B9-75D9E58EB66A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TravelBooking.Infrastructure", "TravelBooking.Infrastructure\TravelBooking.Infrastructure.csproj", "{140B7492-7AE5-4822-85A4-67998B7D3B82}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TravelBooking.Web", "TravelBooking.Web\TravelBooking.Web.csproj", "{EC2AEE36-E17A-4959-92BA-FAD5E69FC9E6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A2FC422C-55A1-43D0-AFE0-FFEC82A443A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2FC422C-55A1-43D0-AFE0-FFEC82A443A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2FC422C-55A1-43D0-AFE0-FFEC82A443A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2FC422C-55A1-43D0-AFE0-FFEC82A443A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{962D037B-5301-4126-87B9-75D9E58EB66A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{962D037B-5301-4126-87B9-75D9E58EB66A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{962D037B-5301-4126-87B9-75D9E58EB66A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{962D037B-5301-4126-87B9-75D9E58EB66A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{140B7492-7AE5-4822-85A4-67998B7D3B82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{140B7492-7AE5-4822-85A4-67998B7D3B82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{140B7492-7AE5-4822-85A4-67998B7D3B82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{140B7492-7AE5-4822-85A4-67998B7D3B82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC2AEE36-E17A-4959-92BA-FAD5E69FC9E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC2AEE36-E17A-4959-92BA-FAD5E69FC9E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC2AEE36-E17A-4959-92BA-FAD5E69FC9E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC2AEE36-E17A-4959-92BA-FAD5E69FC9E6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
