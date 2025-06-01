@@ -1,6 +1,14 @@
-@TravelBooking.Web_HostAddress = http://localhost:5144
+@TravelBooking-API = http://localhost:5144
 
-GET {{TravelBooking.Web_HostAddress}}/weatherforecast/
+POST {{TravelBooking-API}}/api/accounts/sign-up
+Content-Type: application/json
 Accept: application/json
 
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe@example.com",
+  "password": "Password123",
+  "confirmPassword": "Password123"
+}
 ###
