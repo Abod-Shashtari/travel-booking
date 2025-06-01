@@ -1,11 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TravelBooking.Domain;
+﻿using AttributeBasedRegistration;
+using AttributeBasedRegistration.Attributes;
+using Microsoft.EntityFrameworkCore;
 using TravelBooking.Domain.Entities;
 using TravelBooking.Domain.Interfaces;
 using TravelBooking.Domain.Shared;
 
 namespace TravelBooking.Infrastructure.Repositories;
 
+[ServiceImplementation]
+[RegisterAs<IUserRepository>]
+[Lifetime(ServiceLifetime.InstancePerLifetimeScope)]
 public class UserRepository:IUserRepository
 {
     private readonly TravelBookingDbContext _context;
