@@ -23,9 +23,16 @@ public class CreateUserCommandHandler:IRequestHandler<CreateUserCommand,Guid>
         if (userUseEmail != null) throw new EmailAlreadyUsed(request.Email);
         
         var hashedPassword= _passwordHasher.HashPassword(null, request.Password);
-        var user = new User() {Email = request.Email, HashedPassword = hashedPassword};
+        var user = new User()
+        {
+            FirstName = request.FirstName,
+            LastName = request.LastName,
+            Email = request.Email,
+            HashedPassword = hashedPassword
+        };
         
         await _userRepository.AddAsync(user);
+        await _userRepository.SaveChangesAsync();
         return user.Id;
     }
 }
