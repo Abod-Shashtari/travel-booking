@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System.Security.Authentication;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using TravelBooking.Application.Common.Interfaces;
 using TravelBooking.Domain.Authentication.Entities;
@@ -25,17 +26,20 @@ public class SignInCommandHandler:IRequestHandler<SignInCommand,string>
 
     public async Task<string> Handle(SignInCommand request, CancellationToken cancellationToken)
     {
+        const string invalidLoginMessage = "Invalid Email or Password";
+        
         var user = await _userRepository.GetByEmailAsync(request.Email);
-        if(user == null) throw new Exception();
-        var requestedHashedPassword = _passwordHasher.HashPassword(null, request.Password);
-        if(user.HashedPassword != requestedHashedPassword) throw new Exception();
+        if(user == null) throw new InvalidCredentialException(invalidLoginMessage);
+        
+        var verificationResult = _passwordHasher.VerifyHashedPassword(user, user.HashedPassword, request.Password);
+        if (verificationResult == PasswordVerificationResult.Failed) throw new Exception(invalidLoginMessage);
         
         var token = _jwtTokenGenerator.GenerateToken(user);
         await _tokenWhiteListRepository.AddAsync(new TokenWhiteList
         {
             UserId = user.Id,
-            Jti = "",
-            ExpiresAt = DateTime.Now.AddMinutes(5)
+            Jti = token.Jti,
+            ExpiresAt = token.ExpirationAt 
         });
         await _tokenWhiteListRepository.SaveChangesAsync();
         return token.Token;

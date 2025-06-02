@@ -1,4 +1,6 @@
 @TravelBooking-API = http://localhost:5144
+@token = ***REMOVED***
+
 
 POST {{TravelBooking-API}}/api/accounts/sign-up
 Content-Type: application/json
@@ -12,3 +14,11 @@ Accept: application/json
   "confirmPassword": "Password123"
 }
 ###
+
+POST {{TravelBooking-API}}/api/accounts/sign-in
+Content-Type: application/json
+
+{
+  "email": "Tom.doe@example.com",
+  "password": "Password123"
+}
