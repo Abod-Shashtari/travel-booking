@@ -1,4 +1,4 @@
-﻿namespace TravelBooking.Domain.Shared;
+﻿namespace TravelBooking.Domain.Common;
 
 public record PaginatedList<T>(
     List<T> Data,

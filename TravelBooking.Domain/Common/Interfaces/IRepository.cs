@@ -1,7 +1,6 @@
-﻿using TravelBooking.Domain.Entities;
-using TravelBooking.Domain.Shared;
+﻿using TravelBooking.Domain.Common.Entities;
 
-namespace TravelBooking.Domain.Interfaces;
+namespace TravelBooking.Domain.Common.Interfaces;
 
 public interface IRepository<T> where T : EntityBase
 {

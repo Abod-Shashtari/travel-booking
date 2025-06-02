@@ -1,9 +1,9 @@
 ﻿using AttributeBasedRegistration;
 using AttributeBasedRegistration.Attributes;
 using Microsoft.EntityFrameworkCore;
-using TravelBooking.Domain.Entities;
-using TravelBooking.Domain.Interfaces;
-using TravelBooking.Domain.Shared;
+using TravelBooking.Domain.Common;
+using TravelBooking.Domain.Users.Entities;
+using TravelBooking.Domain.Users.Interfaces;
 
 namespace TravelBooking.Infrastructure.Repositories;
 

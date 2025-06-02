@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using TravelBooking.Domain.Enums;
+using TravelBooking.Domain.Common.Entities;
 
-namespace TravelBooking.Domain.Entities;
+namespace TravelBooking.Domain.Users.Entities;
 
 public class User:AuditEntity
 {
@@ -13,5 +13,5 @@ public class User:AuditEntity
     public string Email { get; set; }=string.Empty;
     [MaxLength(128)]
     public string HashedPassword { get; set; } = string.Empty;
-    public Roles Role { get; set; } = Roles.User;
+    public UserRole UserRole { get; set; } = UserRole.User;
 }

@@ -1,4 +1,4 @@
-﻿namespace TravelBooking.Domain.Entities;
+﻿namespace TravelBooking.Domain.Common.Entities;
 
 public class AuditEntity:EntityBase
 {

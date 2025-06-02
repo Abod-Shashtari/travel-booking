@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
-using TravelBooking.Domain.Entities;
-using TravelBooking.Domain.Exceptions;
-using TravelBooking.Domain.Interfaces;
+using TravelBooking.Domain.Users.Entities;
+using TravelBooking.Domain.Users.Exceptions;
+using TravelBooking.Domain.Users.Interfaces;
 
 namespace TravelBooking.Application.Users.CreateUser;
 
@@ -20,7 +20,7 @@ public class CreateUserCommandHandler:IRequestHandler<CreateUserCommand,Guid>
     public async Task<Guid> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         var userUseEmail = await _userRepository.GetByEmailAsync(request.Email);
-        if (userUseEmail != null) throw new EmailAlreadyUsed(request.Email);
+        if (userUseEmail != null) throw new EmailAlreadyUsedException(request.Email);
         
         var hashedPassword= _passwordHasher.HashPassword(null, request.Password);
         var user = new User()

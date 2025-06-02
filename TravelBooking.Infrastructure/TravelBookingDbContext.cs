@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TravelBooking.Domain.Entities;
+using TravelBooking.Domain.Authentication.Entities;
+using TravelBooking.Domain.Common.Entities;
+using TravelBooking.Domain.Users.Entities;
 
 namespace TravelBooking.Infrastructure;
 
