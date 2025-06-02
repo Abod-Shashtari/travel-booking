@@ -1,4 +1,6 @@
 @TravelBooking-API = http://localhost:5144
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI3ZTNkOGQwNy1kN2E0LTQ3YTQtOTVhYi00ZmYyZjljZGM1ZGMiLCJzdWIiOiIyNmI0NmU1MC1kNjg5LTQ2MjgtZGE3Yy0wOGRkYTE1ODBhZDkiLCJlbWFpbCI6IlRvbS5kb2VAZXhhbXBsZS5jb20iLCJyb2xlIjoiVXNlciIsIm5iZiI6MTc0ODg5MzYxMSwiZXhwIjoxNzQ4ODkzOTExLCJpYXQiOjE3NDg4OTM2MTEsImlzcyI6ImxvY2FsSG9zdCJ9.34KY9yOg6qvNlVm5YhIoTxEyRxbqTexqX_eJsY8KiJE
+
 
 POST {{TravelBooking-API}}/api/accounts/sign-up
 Content-Type: application/json
@@ -12,3 +14,11 @@ Accept: application/json
   "confirmPassword": "Password123"
 }
 ###
+
+POST {{TravelBooking-API}}/api/accounts/sign-in
+Content-Type: application/json
+
+{
+  "email": "Tom.doe@example.com",
+  "password": "Password123"
+}

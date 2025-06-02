@@ -1,7 +1,10 @@
-﻿using MediatR;
+﻿using System.Security.Authentication;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TravelBooking.Application.Users.CreateUser;
-using TravelBooking.Domain.Exceptions;
+using TravelBooking.Application.Users.SignIn;
+using TravelBooking.Domain.Users.Exceptions;
 
 namespace TravelBooking.Web.Controllers;
 
@@ -23,9 +26,23 @@ public class AccountController:ControllerBase
             var userId=await _sender.Send(command);
             return Ok(userId);
         }
-        catch (EmailAlreadyUsed e)
+        catch (EmailAlreadyUsedException e)
         {
             return BadRequest(e.Message);
+        }
+    }
+
+    [HttpPost("sign-in")]
+    public async Task<IActionResult> SignIn(SignInCommand command)
+    {
+        try
+        {
+            var token= await _sender.Send(command);
+            return Ok(token);
+        }
+        catch (InvalidCredentialException e)
+        {
+            return Unauthorized(e.Message);
         }
     }
 }
