@@ -14,7 +14,7 @@ public class SignOutCommandHandler:IRequestHandler<SignOutCommand>
 
     public async Task Handle(SignOutCommand request, CancellationToken cancellationToken)
     {
-        await _tokenWhiteListRepository.DeactivateTokenAsync(request.TokenJti);
-        await _tokenWhiteListRepository.SaveChangesAsync();
+        await _tokenWhiteListRepository.DeactivateTokenAsync(request.TokenJti,cancellationToken);
+        await _tokenWhiteListRepository.SaveChangesAsync(cancellationToken);
     }
 }

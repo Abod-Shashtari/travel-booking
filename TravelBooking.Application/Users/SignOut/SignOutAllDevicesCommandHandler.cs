@@ -13,7 +13,7 @@ public class SignOutAllDevicesCommandHandler:IRequestHandler<SignOutAllDevicesCo
     }
     public async Task Handle(SignOutAllDevicesCommand request, CancellationToken cancellationToken)
     {
-        await _tokenWhiteListRepository.DeactivateTokensByUserIdAsync(request.UserId);
-        await _tokenWhiteListRepository.SaveChangesAsync();
+        await _tokenWhiteListRepository.DeactivateTokensByUserIdAsync(request.UserId,cancellationToken);
+        await _tokenWhiteListRepository.SaveChangesAsync(cancellationToken);
     }
 }

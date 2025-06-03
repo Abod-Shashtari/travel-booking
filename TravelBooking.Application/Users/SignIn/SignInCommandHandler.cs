@@ -28,7 +28,7 @@ public class SignInCommandHandler:IRequestHandler<SignInCommand,string>
     {
         const string invalidLoginMessage = "Invalid Email or Password";
         
-        var user = await _userRepository.GetByEmailAsync(request.Email);
+        var user = await _userRepository.GetByEmailAsync(request.Email,cancellationToken);
         if(user == null) throw new InvalidCredentialException(invalidLoginMessage);
         
         var verificationResult = _passwordHasher.VerifyHashedPassword(user, user.HashedPassword, request.Password);
@@ -40,8 +40,8 @@ public class SignInCommandHandler:IRequestHandler<SignInCommand,string>
             UserId = user.Id,
             Jti = token.Jti,
             ExpiresAt = token.ExpirationAt 
-        });
-        await _tokenWhiteListRepository.SaveChangesAsync();
+        },cancellationToken);
+        await _tokenWhiteListRepository.SaveChangesAsync(cancellationToken);
         return token.Token;
     }
 }
