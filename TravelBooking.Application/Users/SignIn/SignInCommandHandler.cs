@@ -4,12 +4,14 @@ using Microsoft.AspNetCore.Identity;
 using TravelBooking.Application.Common.Interfaces;
 using TravelBooking.Domain.Authentication.Entities;
 using TravelBooking.Domain.Authentication.Interfaces;
+using TravelBooking.Domain.Common;
 using TravelBooking.Domain.Users.Entities;
+using TravelBooking.Domain.Users.Errors;
 using TravelBooking.Domain.Users.Interfaces;
 
 namespace TravelBooking.Application.Users.SignIn;
 
-public class SignInCommandHandler:IRequestHandler<SignInCommand,string>
+public class SignInCommandHandler:IRequestHandler<SignInCommand,Result<string?>>
 {
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher<User> _passwordHasher;
@@ -24,12 +26,12 @@ public class SignInCommandHandler:IRequestHandler<SignInCommand,string>
         _tokenWhiteListRepository = tokenWhiteListRepository;
     }
 
-    public async Task<string> Handle(SignInCommand request, CancellationToken cancellationToken)
+    public async Task<Result<string?>> Handle(SignInCommand request, CancellationToken cancellationToken)
     {
         const string invalidLoginMessage = "Invalid Email or Password";
         
         var user = await _userRepository.GetByEmailAsync(request.Email,cancellationToken);
-        if(user == null) throw new InvalidCredentialException(invalidLoginMessage);
+        if (user == null) return Result<string>.Failure(UserErrors.InvalidCredentialException());
         
         var verificationResult = _passwordHasher.VerifyHashedPassword(user, user.HashedPassword, request.Password);
         if (verificationResult == PasswordVerificationResult.Failed) throw new InvalidCredentialException(invalidLoginMessage);
@@ -42,6 +44,6 @@ public class SignInCommandHandler:IRequestHandler<SignInCommand,string>
             ExpiresAt = token.ExpirationAt 
         },cancellationToken);
         await _tokenWhiteListRepository.SaveChangesAsync(cancellationToken);
-        return token.Token;
+        return Result<string>.Success(token.Token)!;
     }
 }

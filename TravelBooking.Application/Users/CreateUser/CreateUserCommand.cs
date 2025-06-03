@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MediatR;
+using TravelBooking.Domain.Common;
 
 namespace TravelBooking.Application.Users.CreateUser;
 
-public record CreateUserCommand : IRequest<Guid>
+public record CreateUserCommand : IRequest<Result<Guid>>
 {
     [Required]
     public string FirstName{get;init;}=string.Empty;

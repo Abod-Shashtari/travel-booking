@@ -1,9 +1,10 @@
 ﻿using MediatR;
 using TravelBooking.Domain.Authentication.Interfaces;
+using TravelBooking.Domain.Common;
 
 namespace TravelBooking.Application.Users.SignOut;
 
-public class SignOutCommandHandler:IRequestHandler<SignOutCommand>
+public class SignOutCommandHandler:IRequestHandler<SignOutCommand,Result>
 {
     private readonly ITokenWhiteListRepository _tokenWhiteListRepository;
     
@@ -12,9 +13,10 @@ public class SignOutCommandHandler:IRequestHandler<SignOutCommand>
         _tokenWhiteListRepository = tokenWhiteListRepository;
     }
 
-    public async Task Handle(SignOutCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(SignOutCommand request, CancellationToken cancellationToken)
     {
         await _tokenWhiteListRepository.DeactivateTokenAsync(request.TokenJti,cancellationToken);
         await _tokenWhiteListRepository.SaveChangesAsync(cancellationToken);
+        return Result.Success();
     }
 }
