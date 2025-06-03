@@ -4,10 +4,10 @@ namespace TravelBooking.Domain.Authentication.Interfaces;
 
 public interface ITokenWhiteListRepository
 {
-    Task<Guid> AddAsync(TokenWhiteList entity);
-    Task<bool> IsTokenActiveAsync(string token);
-    Task DeactivateTokenAsync(string token);
-    Task DeactivateTokensByUserIdAsync (Guid userId);
-    Task<int> CleanTokenWhiteList();
-    Task <int> SaveChangesAsync(); 
+    Task<Guid> AddAsync(TokenWhiteList entity,CancellationToken cancellationToken=default);
+    Task<bool> IsTokenActiveAsync(string token, CancellationToken cancellationToken=default);
+    Task DeactivateTokenAsync(string token, CancellationToken cancellationToken=default);
+    Task DeactivateTokensByUserIdAsync (Guid userId,CancellationToken cancellationToken=default);
+    Task<int> CleanTokenWhiteList(CancellationToken cancellationToken=default);
+    Task <int> SaveChangesAsync(CancellationToken cancellationToken=default); 
 }

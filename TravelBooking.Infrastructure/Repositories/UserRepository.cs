@@ -18,19 +18,19 @@ public class UserRepository:IUserRepository
         _context = context;
     }
 
-    public async Task<User?> GetByIdAsync(Guid id)
+    public async Task<User?> GetByIdAsync(Guid id,CancellationToken cancellationToken=default)
     {
-        return await _context.FindAsync<User>(id);
+        return await _context.Users.FindAsync(new object[] { id }, cancellationToken);
     }
 
-    public Task<PaginatedList<User>> GetAllAsync(int pageNumber, int pageSize)
+    public Task<PaginatedList<User>> GetAllAsync(int pageNumber, int pageSize,CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<Guid> AddAsync(User user)
+    public async Task<Guid> AddAsync(User user,CancellationToken cancellationToken=default)
     {
-        await _context.Users.AddAsync(user);
+        await _context.Users.AddAsync(user, cancellationToken);
         return user.Id;
     }
 
@@ -39,13 +39,13 @@ public class UserRepository:IUserRepository
         _context.Users.Remove(entity);
     }
 
-    public Task<int> SaveChangesAsync()
+    public Task<int> SaveChangesAsync(CancellationToken cancellationToken=default)
     {
-        return _context.SaveChangesAsync();
+        return _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<User?> GetByEmailAsync(string email)
+    public async Task<User?> GetByEmailAsync(string email,CancellationToken cancellationToken=default)
     {
-        return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        return await _context.Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
     }
 }

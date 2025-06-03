@@ -32,16 +32,16 @@ public class CreateUserCommandHandlerTests
         var expectedUserId = _fixture.Create<Guid>();
         var hashedPassword = _fixture.Create<string>();
 
-        _userRepositoryMock.Setup(x => x.GetByEmailAsync(command.Email))
+        _userRepositoryMock.Setup(x => x.GetByEmailAsync(command.Email,It.IsAny<CancellationToken>()))
             .ReturnsAsync((User)null);
 
         _passwordHasherMock.Setup(x => x.HashPassword(null, command.Password))
             .Returns(hashedPassword);
 
-        _userRepositoryMock.Setup(x => x.AddAsync(It.IsAny<User>()))
+        _userRepositoryMock.Setup(x => x.AddAsync(It.IsAny<User>(),It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedUserId);
 
-        _userRepositoryMock.Setup(x => x.SaveChangesAsync())
+        _userRepositoryMock.Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(1);
 
         // Act
@@ -49,7 +49,7 @@ public class CreateUserCommandHandlerTests
 
         // Assert
         result.Should().Be(expectedUserId);
-        _userRepositoryMock.Verify(x => x.SaveChangesAsync(), Times.Once);
+        _userRepositoryMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -58,7 +58,7 @@ public class CreateUserCommandHandlerTests
         // Arrange
         var command = _fixture.Create<CreateUserCommand>();
         var existingUser = new User { Email = command.Email };
-        _userRepositoryMock.Setup(x => x.GetByEmailAsync(command.Email))
+        _userRepositoryMock.Setup(x => x.GetByEmailAsync(command.Email,It.IsAny<CancellationToken>()))
             .ReturnsAsync(existingUser);
 
         // Act
@@ -66,7 +66,7 @@ public class CreateUserCommandHandlerTests
 
         // Assert
         await result.Should().ThrowAsync<EmailAlreadyUsedException>();
-        _userRepositoryMock.Verify(x => x.SaveChangesAsync(), Times.Never);
+        _userRepositoryMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]
