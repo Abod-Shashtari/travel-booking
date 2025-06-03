@@ -31,8 +31,8 @@ public class CreateUserCommandHandler:IRequestHandler<CreateUserCommand,Guid>
             HashedPassword = hashedPassword
         };
         
-        await _userRepository.AddAsync(user);
+        var newId=await _userRepository.AddAsync(user);
         await _userRepository.SaveChangesAsync();
-        return user.Id;
+        return newId;
     }
 }

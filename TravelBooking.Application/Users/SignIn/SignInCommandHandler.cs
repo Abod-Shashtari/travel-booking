@@ -32,7 +32,7 @@ public class SignInCommandHandler:IRequestHandler<SignInCommand,string>
         if(user == null) throw new InvalidCredentialException(invalidLoginMessage);
         
         var verificationResult = _passwordHasher.VerifyHashedPassword(user, user.HashedPassword, request.Password);
-        if (verificationResult == PasswordVerificationResult.Failed) throw new Exception(invalidLoginMessage);
+        if (verificationResult == PasswordVerificationResult.Failed) throw new InvalidCredentialException(invalidLoginMessage);
         
         var token = _jwtTokenGenerator.GenerateToken(user);
         await _tokenWhiteListRepository.AddAsync(new TokenWhiteList
