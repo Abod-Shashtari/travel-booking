@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using AutoFixture;
+using AutoMapper;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Moq;
@@ -16,13 +17,15 @@ public class CreateUserCommandHandlerTests
     private readonly Mock<IUserRepository> _userRepositoryMock;
     private readonly Mock<IPasswordHasher<User>> _passwordHasherMock;
     private readonly CreateUserCommandHandler _handler;
+    private readonly Mock<IMapper> _mapperMock;
 
     public CreateUserCommandHandlerTests()
     {
         _fixture = new Fixture();
         _userRepositoryMock = new Mock<IUserRepository>();
         _passwordHasherMock = new Mock<IPasswordHasher<User>>();
-        _handler = new CreateUserCommandHandler(_userRepositoryMock.Object, _passwordHasherMock.Object);
+        _mapperMock=new Mock<IMapper>();
+        _handler = new CreateUserCommandHandler(_userRepositoryMock.Object, _passwordHasherMock.Object, _mapperMock.Object);
     }
 
     [Fact]
@@ -31,12 +34,16 @@ public class CreateUserCommandHandlerTests
         var command = _fixture.Create<CreateUserCommand>();
         var expectedUserId = _fixture.Create<Guid>();
         var hashedPassword = _fixture.Create<string>();
+        var user = _fixture.Create<User>();
 
         _userRepositoryMock.Setup(x => x.GetByEmailAsync(command.Email,It.IsAny<CancellationToken>()))
             .ReturnsAsync((User)null);
 
         _passwordHasherMock.Setup(x => x.HashPassword(null, command.Password))
             .Returns(hashedPassword);
+        
+        _mapperMock.Setup(x => x.Map<User>(command)) // Set up the mapping
+            .Returns(user);
 
         _userRepositoryMock.Setup(x => x.AddAsync(It.IsAny<User>(),It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedUserId);

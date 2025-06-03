@@ -1,6 +1,7 @@
 using AttributeBasedRegistration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using TravelBooking.Application.Common.Profiles;
 using TravelBooking.Application.Users.CreateUser;
 using TravelBooking.Domain.Users.Entities;
 using TravelBooking.Infrastructure;
@@ -15,6 +16,8 @@ builder.Services.AddDbContext<TravelBookingDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+
+builder.Services.AddAutoMapper(typeof(UserProfile));
 
 builder.Services.AddAttributeDefinedServices(typeof(TravelBookingDbContext).Assembly);
 builder.Services.AddMediatR(configuration=>
