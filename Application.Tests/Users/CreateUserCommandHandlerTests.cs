@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Moq;
 using TravelBooking.Application.Users.CreateUser;
 using TravelBooking.Domain.Users.Entities;
-using TravelBooking.Domain.Users.Exceptions;
+using TravelBooking.Domain.Users.Errors;
 using TravelBooking.Domain.Users.Interfaces;
 
 namespace Application.Tests.Users;
@@ -55,7 +55,8 @@ public class CreateUserCommandHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        result.Should().Be(expectedUserId);
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().Be(expectedUserId);
         _userRepositoryMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -69,10 +70,11 @@ public class CreateUserCommandHandlerTests
             .ReturnsAsync(existingUser);
 
         // Act
-        var result = async () => await _handler.Handle(command, CancellationToken.None);
+        var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        await result.Should().ThrowAsync<EmailAlreadyUsedException>();
+        result.IsFailure.Should().BeTrue();
+        result.Error.Should().Be(UserErrors.EmailAlreadyUsed(command.Email));
         _userRepositoryMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
 

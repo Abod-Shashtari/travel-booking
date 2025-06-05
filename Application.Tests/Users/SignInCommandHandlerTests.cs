@@ -1,5 +1,4 @@
-﻿using System.Security.Authentication;
-using AutoFixture;
+﻿using AutoFixture;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Moq;
@@ -9,6 +8,7 @@ using TravelBooking.Application.Users.SignIn;
 using TravelBooking.Domain.Authentication.Entities;
 using TravelBooking.Domain.Authentication.Interfaces;
 using TravelBooking.Domain.Users.Entities;
+using TravelBooking.Domain.Users.Errors;
 using TravelBooking.Domain.Users.Interfaces;
 
 namespace Application.Tests.Users;
@@ -71,7 +71,8 @@ public class SignInCommandHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        result.Should().Be(jwtToken.Token);
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().Be(jwtToken.Token);
         _tokenWhiteListRepositoryMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -85,10 +86,11 @@ public class SignInCommandHandlerTests
             .ReturnsAsync((User)null);
 
         // Act
-        Func<Task> act = async () => await _handler.Handle(command, CancellationToken.None);
+        var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        await act.Should().ThrowAsync<InvalidCredentialException>();
+        result.IsFailure.Should().BeTrue();
+        result.Error.Should().Be(UserErrors.InvalidCredentialException());
         _tokenWhiteListRepositoryMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
 
@@ -110,10 +112,11 @@ public class SignInCommandHandlerTests
             .Returns(PasswordVerificationResult.Failed);
 
         // Act
-        Func<Task> act = async () => await _handler.Handle(command, CancellationToken.None);
+        var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        await act.Should().ThrowAsync<InvalidCredentialException>();
+        result.IsFailure.Should().BeTrue();
+        result.Error.Should().Be(UserErrors.InvalidCredentialException());
         _tokenWhiteListRepositoryMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
 }
