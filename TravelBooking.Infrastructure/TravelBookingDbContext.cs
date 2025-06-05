@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TravelBooking.Domain.Authentication.Entities;
+using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Domain.Common.Entities;
+using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Domain.Users.Entities;
 
 namespace TravelBooking.Infrastructure;
@@ -9,10 +11,16 @@ public class TravelBookingDbContext:DbContext
 {
     public DbSet<User> Users { get; set; }
     public DbSet<TokenWhiteList> TokenWhiteList { get; set; }
+    public DbSet<Hotel> Hotels { get; set; }
+    public DbSet<City> Cities { get; set; }
     public TravelBookingDbContext(DbContextOptions<TravelBookingDbContext> options):base(options)
     {
     }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Hotel>(h => h.OwnsOne(hotel => hotel.Location));
+    }
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken=default)
     {
         ApplyAudit();
