@@ -27,6 +27,7 @@ builder.Services.AddMediatR(configuration=>
 
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddControllers();
+builder.WebHost.UseSentry();
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
