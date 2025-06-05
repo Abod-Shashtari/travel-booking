@@ -28,13 +28,11 @@ public class SignInCommandHandler:IRequestHandler<SignInCommand,Result<string?>>
 
     public async Task<Result<string?>> Handle(SignInCommand request, CancellationToken cancellationToken)
     {
-        const string invalidLoginMessage = "Invalid Email or Password";
-        
         var user = await _userRepository.GetByEmailAsync(request.Email,cancellationToken);
         if (user == null) return Result<string>.Failure(UserErrors.InvalidCredentialException());
         
         var verificationResult = _passwordHasher.VerifyHashedPassword(user, user.HashedPassword, request.Password);
-        if (verificationResult == PasswordVerificationResult.Failed) throw new InvalidCredentialException(invalidLoginMessage);
+        if (verificationResult == PasswordVerificationResult.Failed) return Result<string>.Failure(UserErrors.InvalidCredentialException());
         
         var token = _jwtTokenGenerator.GenerateToken(user);
         await _tokenWhiteListRepository.AddAsync(new TokenWhiteList
