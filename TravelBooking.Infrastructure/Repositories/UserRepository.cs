@@ -34,6 +34,11 @@ public class UserRepository:IUserRepository
         return user.Id;
     }
 
+    public Task<bool> IsExistAsync(User entity, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
     public void Delete(User entity)
     {
         _context.Users.Remove(entity);

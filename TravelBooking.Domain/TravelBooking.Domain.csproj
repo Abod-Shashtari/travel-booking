@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Cities\Errors\" />
       <Folder Include="Hotels\Errors\" />
     </ItemGroup>
 

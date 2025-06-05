@@ -1,5 +1,5 @@
 @TravelBooking-API = http://localhost:5144
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJmODMwZjZhMS0yZjgwLTRhZWItYjEwNS00NDIyYmUyMTAzMTIiLCJzdWIiOiIyNmI0NmU1MC1kNjg5LTQ2MjgtZGE3Yy0wOGRkYTE1ODBhZDkiLCJlbWFpbCI6IlRvbS5kb2VAZXhhbXBsZS5jb20iLCJyb2xlIjoiVXNlciIsIm5iZiI6MTc0ODkwMDAxMywiZXhwIjoxNzQ4OTAwMzEzLCJpYXQiOjE3NDg5MDAwMTMsImlzcyI6ImxvY2FsSG9zdCJ9.S2k9beQpZJBo8XP343pSe1k6PiH_DGfhhnrujK8KMdQ
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwNzM3MzBkYS0zN2ViLTQyYTAtYmUyYS1lY2E3Y2Y3YjJmM2EiLCJzdWIiOiIxZDZjYjgxMy1lMjlkLTQ1MjgtY2QxZi0wOGRkYTE1NjZiODQiLCJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwicm9sZSI6IkFkbWluIiwibmJmIjoxNzQ5MTU3NDA3LCJleHAiOjE3NDkxNTc3MDcsImlhdCI6MTc0OTE1NzQwNywiaXNzIjoibG9jYWxIb3N0In0.p7Yv6wP2YLIwhHXMj1IF2pMp0kZPTAOluMTXv_MYw0I
 
 POST {{TravelBooking-API}}/api/accounts/sign-up
 Content-Type: application/json
@@ -18,7 +18,7 @@ POST {{TravelBooking-API}}/api/accounts/sign-in
 Content-Type: application/json
 
 {
-  "email": "Tom.doe@example.com",
+  "email": "John.doe@example.com",
   "password": "Password123"
 }
 ###
@@ -28,3 +28,14 @@ Authorization: Bearer {{token}}
 ###
 GET {{TravelBooking-API}}/api/accounts/sign-out/all-devices
 Authorization: Bearer {{token}}
+
+###
+POST {{TravelBooking-API}}/api/cities
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "New York",
+  "country": "USA",
+  "postOffice": "10001"
+}
