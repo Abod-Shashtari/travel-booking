@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using TravelBooking.Domain.Common;
 
 namespace TravelBooking.Web.Extensions;
