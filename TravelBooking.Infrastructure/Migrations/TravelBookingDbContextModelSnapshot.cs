@@ -43,7 +43,7 @@ namespace TravelBooking.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TokenWhiteList");
+                    b.ToTable("TokenWhiteList", (string)null);
                 });
 
             modelBuilder.Entity("TravelBooking.Domain.Cities.Entities.City", b =>
@@ -75,7 +75,7 @@ namespace TravelBooking.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cities");
+                    b.ToTable("Cities", (string)null);
                 });
 
             modelBuilder.Entity("TravelBooking.Domain.Hotels.Entities.Hotel", b =>
@@ -107,7 +107,7 @@ namespace TravelBooking.Infrastructure.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Hotels");
+                    b.ToTable("Hotels", (string)null);
                 });
 
             modelBuilder.Entity("TravelBooking.Domain.Users.Entities.User", b =>
@@ -147,7 +147,7 @@ namespace TravelBooking.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("TravelBooking.Domain.Hotels.Entities.Hotel", b =>
@@ -177,7 +177,7 @@ namespace TravelBooking.Infrastructure.Migrations
 
                             b1.HasKey("HotelId");
 
-                            b1.ToTable("Hotels");
+                            b1.ToTable("Hotels", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("HotelId");

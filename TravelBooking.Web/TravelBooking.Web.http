@@ -1,5 +1,5 @@
 @TravelBooking-API = http://localhost:5144
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwNzM3MzBkYS0zN2ViLTQyYTAtYmUyYS1lY2E3Y2Y3YjJmM2EiLCJzdWIiOiIxZDZjYjgxMy1lMjlkLTQ1MjgtY2QxZi0wOGRkYTE1NjZiODQiLCJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwicm9sZSI6IkFkbWluIiwibmJmIjoxNzQ5MTU3NDA3LCJleHAiOjE3NDkxNTc3MDcsImlhdCI6MTc0OTE1NzQwNywiaXNzIjoibG9jYWxIb3N0In0.p7Yv6wP2YLIwhHXMj1IF2pMp0kZPTAOluMTXv_MYw0I
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxOTE0MzkzZC1lYjgwLTQzZDctYjI3NC0zYjA3MTE4YTExMzQiLCJzdWIiOiIxZDZjYjgxMy1lMjlkLTQ1MjgtY2QxZi0wOGRkYTE1NjZiODQiLCJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwicm9sZSI6IkFkbWluIiwibmJmIjoxNzQ5MTg1OTY0LCJleHAiOjE3NDkxODYyNjQsImlhdCI6MTc0OTE4NTk2NCwiaXNzIjoibG9jYWxIb3N0In0.5VOTHnwl1GQ0re6HC7G9Iu6T1qSlYRfxMfgshG6mGuc
 
 POST {{TravelBooking-API}}/api/accounts/sign-up
 Content-Type: application/json
@@ -39,3 +39,18 @@ Content-Type: application/json
   "country": "USA",
   "postOffice": "10001"
 }
+###
+POST {{TravelBooking-API}}/api/hotels
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Grand Plaza Hotel",
+  "location": {
+    "latitude": 40.7128,
+    "longitude": -74.0060
+  },
+  "cityId": "55958153-6dc5-443f-2299-08dda474bd3d",
+  "ownerId": "26b46e50-d689-4628-da7c-08dda1580ad9"
+}
+

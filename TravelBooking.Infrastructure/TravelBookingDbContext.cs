@@ -19,7 +19,7 @@ public class TravelBookingDbContext:DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Hotel>(h => h.OwnsOne(hotel => hotel.Location));
+        modelBuilder.Entity<Hotel>().ComplexProperty(h=>h.Location);
     }
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken=default)
     {
