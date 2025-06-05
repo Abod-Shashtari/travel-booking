@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using TravelBooking.Domain.Common;
 
 namespace TravelBooking.Web.Extensions;
@@ -7,49 +8,43 @@ public static class ControllerExtensions
 {
     public static IActionResult HandleFailure(this ControllerBase controller ,Error error)
     {
-        var problemDetails = error.Type switch
-        {
-            ErrorType.NotFound => new ProblemDetails
+        
+        var (statusCode, title, problemType) = error.Type switch 
+        { 
+            ErrorType.NotFound => (
+                StatusCodes.Status404NotFound, 
+                "Resource Not Found", 
+                "https://tools.ietf.org/html/rfc9110#section-15.5.5"
+            ), 
+            ErrorType.Conflict => (
+                StatusCodes.Status409Conflict, 
+                "Conflict", 
+                "https://tools.ietf.org/html/rfc9110#section-15.5.10"
+            ), 
+            ErrorType.Unauthorized => (
+                StatusCodes.Status401Unauthorized, 
+                "Unauthorized", 
+                "https://tools.ietf.org/html/rfc9110#section-15.5.2"
+            ), 
+            _ => (
+                StatusCodes.Status400BadRequest, 
+                "Bad Request", 
+                "https://tools.ietf.org/html/rfc9110#section-15.5.1"
+            ) 
+        }; 
+        
+        var problemDetails = new ProblemDetails{
+            Type = problemType,
+            Title = title,
+            Status = statusCode,
+            Detail = error.Message,
+            Instance = controller.HttpContext.Request.Path,
+            Extensions =
             {
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
-                Title = "Resource Not Found",
-                Status = StatusCodes.Status404NotFound,
-                Detail = error.Message,
-                Instance = controller.HttpContext.Request.Path
-            },
-            ErrorType.Conflict => new ProblemDetails
-            {
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.8",
-                Title = "Conflict",
-                Status = StatusCodes.Status409Conflict,
-                Detail = error.Message,
-                Instance = controller.HttpContext.Request.Path
-            },
-            ErrorType.Unauthorized => new ProblemDetails
-            {
-                Type = "https://tools.ietf.org/html/rfc7235#section-3.1",
-                Title = "Unauthorized",
-                Status = StatusCodes.Status401Unauthorized,
-                Detail = error.Message,
-                Instance = controller.HttpContext.Request.Path
-            },
-            _ => new ProblemDetails
-            {
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
-                Title = "Bad Request",
-                Status = StatusCodes.Status400BadRequest,
-                Detail = error.Message,
-                Instance = controller.HttpContext.Request.Path
+                ["timestamp"] = DateTime.UtcNow,
+                ["errorCode"] = error.Code
             }
         };
-
-        // Add error code to extensions
-        problemDetails.Extensions["errorCode"] = error.Code;
-        problemDetails.Extensions["timestamp"] = DateTime.UtcNow;
-
-        return new ObjectResult(problemDetails)
-        {
-            StatusCode = problemDetails.Status
-        };
+        return new ObjectResult(problemDetails);
     }
 }
