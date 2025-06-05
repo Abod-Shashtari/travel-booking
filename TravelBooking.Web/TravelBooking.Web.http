@@ -18,7 +18,7 @@ POST {{TravelBooking-API}}/api/accounts/sign-in
 Content-Type: application/json
 
 {
-  "email": "Tom.doe@example.com",
+  "email": "John.doe@example.com",
   "password": "Password123"
 }
 ###
@@ -28,3 +28,14 @@ Authorization: Bearer {{token}}
 ###
 GET {{TravelBooking-API}}/api/accounts/sign-out/all-devices
 Authorization: Bearer {{token}}
+
+###
+POST {{TravelBooking-API}}/api/cities
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "New York",
+  "country": "USA",
+  "postOffice": "10001"
+}
