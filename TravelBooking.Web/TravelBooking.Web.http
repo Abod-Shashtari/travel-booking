@@ -39,3 +39,18 @@ Content-Type: application/json
   "country": "USA",
   "postOffice": "10001"
 }
+###
+POST {{TravelBooking-API}}/api/hotels
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Grand Plaza Hotel",
+  "location": {
+    "latitude": 40.7128,
+    "longitude": -74.0060
+  },
+  "cityId": "55958153-6dc5-443f-2299-08dda474bd3d",
+  "ownerId": "26b46e50-d689-4628-da7c-08dda1580ad9"
+}
+
