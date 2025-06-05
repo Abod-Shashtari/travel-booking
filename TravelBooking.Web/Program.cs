@@ -7,6 +7,7 @@ using TravelBooking.Domain.Users.Entities;
 using TravelBooking.Infrastructure;
 using TravelBooking.Infrastructure.Options;
 using TravelBooking.Web.Extensions;
+using TravelBooking.Web.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,8 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
