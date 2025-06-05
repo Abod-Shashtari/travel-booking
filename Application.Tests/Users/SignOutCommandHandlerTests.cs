@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using FluentAssertions;
 using Moq;
 using TravelBooking.Application.Users.SignOut;
 using TravelBooking.Domain.Authentication.Interfaces;
@@ -33,9 +34,10 @@ public class SignOutCommandHandlerTests
             .ReturnsAsync(1);
 
         // Act
-        await _signOutAllDevicesHandler.Handle(command, CancellationToken.None);
+        var result = await _signOutAllDevicesHandler.Handle(command, CancellationToken.None);
 
         // Assert
+        result.IsSuccess.Should().BeTrue();
         _tokenWhiteListRepositoryMock.Verify(r => r.DeactivateTokensByUserIdAsync(command.UserId,It.IsAny<CancellationToken>()), Times.Once);
         _tokenWhiteListRepositoryMock.Verify(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
@@ -53,9 +55,10 @@ public class SignOutCommandHandlerTests
             .ReturnsAsync(1);
 
         // Act
-        await _signOutHandler.Handle(command, CancellationToken.None);
+        var result = await _signOutHandler.Handle(command, CancellationToken.None);
 
         // Assert
+        result.IsSuccess.Should().BeTrue();
         _tokenWhiteListRepositoryMock.Verify(r => r.DeactivateTokenAsync(command.TokenJti,It.IsAny<CancellationToken>()), Times.Once);
         _tokenWhiteListRepositoryMock.Verify(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
