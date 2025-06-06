@@ -19,9 +19,9 @@ public class HotelRepository:IRepository<Hotel>
         _context = context;
     }
 
-    public Task<Hotel?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<Hotel?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        return await _context.Hotels.FindAsync([id], cancellationToken);
     }
 
     public Task<PaginatedList<Hotel>> GetAllAsync(int pageNumber, int pageSize, CancellationToken cancellationToken = default)
@@ -46,7 +46,7 @@ public class HotelRepository:IRepository<Hotel>
 
     public void Delete(Hotel hotel)
     {
-        throw new NotImplementedException();
+        _context.Hotels.Remove(hotel);
     }
 
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

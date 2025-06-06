@@ -20,7 +20,7 @@ public class UserRepository:IUserRepository
 
     public async Task<User?> GetByIdAsync(Guid id,CancellationToken cancellationToken=default)
     {
-        return await _context.Users.FindAsync(new object[] { id }, cancellationToken);
+        return await _context.Users.FindAsync([id], cancellationToken);
     }
 
     public Task<PaginatedList<User>> GetAllAsync(int pageNumber, int pageSize,CancellationToken cancellationToken = default)
