@@ -54,3 +54,6 @@ Content-Type: application/json
   "ownerId": "26b46e50-d689-4628-da7c-08dda1580ad9"
 }
 
+###
+GET {{TravelBooking-API}}/api/hotels?pageNumber=2&pageSize=2
+Content-Type: application/json
