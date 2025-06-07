@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using TravelBooking.Domain.Common;
 using TravelBooking.Domain.Common.Entities;
 using TravelBooking.Domain.Common.Interfaces;
@@ -21,11 +22,37 @@ public abstract class Repository<T>:IRepository<T> where T:EntityBase
         return await _dbSet.FindAsync([id], cancellationToken);
     }
 
-    public async Task<PaginatedList<T>> GetAllAsync(int pageNumber, int pageSize, CancellationToken cancellationToken = default)
+    public async Task<PaginatedList<TResult>> GetPaginatedListAsync<TResult>(Expression<Func<T, TResult>> selector,int pageNumber, int pageSize, CancellationToken cancellationToken = default)
     {
-        var totalCount = await _context.Cities.CountAsync(cancellationToken);
-        var data= await _dbSet.Skip((pageNumber-1)*pageSize).Take(pageSize).ToListAsync(cancellationToken);
-        return new PaginatedList<T>(data,totalCount,pageSize,pageNumber);
+        IQueryable<T> query = _dbSet;
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        var data = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .Select(selector)
+            .ToListAsync(cancellationToken);
+        
+        return new PaginatedList<TResult>(data,totalCount,pageSize,pageNumber);
+    }
+
+    public async Task<PaginatedList<TResult>> GetPaginatedListAsync<TResult>(ISpecification<T> specification, Expression<Func<T, TResult>> selector, int pageNumber, int pageSize,
+        CancellationToken cancellationToken = default)
+    {
+        IQueryable<T> query = _dbSet;
+
+        if (specification.Criteria != null)
+            query = query.Where(specification.Criteria);
+
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        var data = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .Select(selector)
+            .ToListAsync(cancellationToken);
+        
+        return new PaginatedList<TResult>(data,totalCount,pageSize,pageNumber);
     }
 
     public async Task<Guid> AddAsync(T entity, CancellationToken cancellationToken = default)
