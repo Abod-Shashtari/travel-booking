@@ -3,7 +3,6 @@ using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using TravelBooking.Application.Common;
 using TravelBooking.Application.Common.Behaviors;
 using TravelBooking.Application.Common.Profiles;
 using TravelBooking.Application.Users.CreateUser;

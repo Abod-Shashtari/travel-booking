@@ -5,7 +5,7 @@ using TravelBooking.Domain.Common;
 namespace TravelBooking.Application.Common.Behaviors;
 
 public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : notnull
+    where TResponse:Result where TRequest : notnull
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;
 
@@ -38,9 +38,7 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
             return await next(cancellationToken);
     
         var validationError = new ValidationError(errors);
-        var resultType = typeof(TResponse).GenericTypeArguments[0];
-        var failureResult = typeof(Result<>)
-            .MakeGenericType(resultType)
+        var failureResult = typeof(TResponse)
             .GetMethod("Failure", [typeof(Error)])
             ?.Invoke(null, [validationError]);
         
