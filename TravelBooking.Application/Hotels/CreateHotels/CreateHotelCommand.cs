@@ -6,8 +6,8 @@ using TravelBooking.Domain.Hotels.Entities;
 namespace TravelBooking.Application.Hotels.CreateHotels;
 
 public record CreateHotelCommand(
-    [Required] string Name,
-    [Required] Location Location,
-    [Required] Guid CityId,
-    [Required] Guid OwnerId
+    string Name,
+    Location Location,
+    Guid CityId,
+    Guid OwnerId
 ):IRequest<Result<Guid>>;

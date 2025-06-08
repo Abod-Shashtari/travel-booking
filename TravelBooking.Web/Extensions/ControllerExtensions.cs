@@ -7,7 +7,16 @@ public static class ControllerExtensions
 {
     public static IActionResult HandleFailure(this ControllerBase controller ,Error error)
     {
-        
+        if (error is ValidationError validationResult)
+        {
+            return new ObjectResult(
+                CreateProblemDetails(
+                    StatusCodes.Status400BadRequest,
+                    error,
+                    validationResult.Errors
+                )
+            );
+        }
         var (statusCode, title, problemType) = error.Type switch 
         { 
             ErrorType.NotFound => (
@@ -31,7 +40,6 @@ public static class ControllerExtensions
                 "https://tools.ietf.org/html/rfc9110#section-15.5.1"
             ) 
         }; 
-        
         var problemDetails = new ProblemDetails{
             Type = problemType,
             Title = title,
@@ -46,4 +54,13 @@ public static class ControllerExtensions
         };
         return new ObjectResult(problemDetails);
     }
+    
+    private static ProblemDetails CreateProblemDetails(int status, Error error, Error[] errors) => new() 
+        {
+            Title = "Validation Error",
+            Type = error.Code,
+            Detail = error.Message,
+            Status = status,
+            Extensions = { { nameof(errors), errors } }
+        };
 }
