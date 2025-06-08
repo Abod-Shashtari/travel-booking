@@ -1,6 +1,9 @@
 using AttributeBasedRegistration;
+using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using TravelBooking.Application.Common;
 using TravelBooking.Application.Common.Profiles;
 using TravelBooking.Application.Users.CreateUser;
 using TravelBooking.Domain.Users.Entities;
@@ -16,14 +19,16 @@ builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
 builder.Services.AddDbContext<TravelBookingDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
-builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddAutoMapper(typeof(UserProfile));
 
 builder.Services.AddAttributeDefinedServices(typeof(TravelBookingDbContext).Assembly);
 builder.Services.AddMediatR(configuration=>
     configuration.RegisterServicesFromAssembly(typeof(CreateUserCommand).Assembly)
 );
+builder.Services.AddValidatorsFromAssembly(typeof(CreateUserCommandValidator).Assembly);
+builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddControllers().AddJsonOptions(options =>
