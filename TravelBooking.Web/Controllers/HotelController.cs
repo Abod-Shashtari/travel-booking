@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using TravelBooking.Application.Hotels.CreateHotels;
 using TravelBooking.Application.Hotels.SearchHotel;
 using TravelBooking.Web.Extensions;
+using TravelBooking.Web.Requests.Hotels;
 
 namespace TravelBooking.Web.Controllers;
 
@@ -23,8 +24,9 @@ public class HotelController:ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> CreateHotel(CreateHotelCommand command)
+    public async Task<IActionResult> CreateHotel(CreateHotelRequest request)
     {
+        var command = _mapper.Map<CreateHotelCommand>(request);
         var result = await _sender.Send(command);
         return result.Match(_=>Created(),this.HandleFailure);
     }
