@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using TravelBooking.Domain.Common;
 using TravelBooking.Domain.Users.Entities;
 using TravelBooking.Domain.Users.Errors;
-using TravelBooking.Domain.Users.Exceptions;
 using TravelBooking.Domain.Users.Interfaces;
 
 namespace TravelBooking.Application.Users.CreateUser;

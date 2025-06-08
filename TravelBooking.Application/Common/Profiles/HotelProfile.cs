@@ -10,10 +10,11 @@ public class HotelProfile:Profile
     public HotelProfile()
     {
         CreateMap<CreateHotelCommand, Hotel>();
-        CreateMap<SearchHotelRequest, HotelFilter>();
-        CreateMap<SearchHotelRequest, SearchHotelQuery>()
-        .ForCtorParam("HotelFilter", opt => opt.MapFrom(src => src))
-        .ForCtorParam("PageNumber", opt => opt.MapFrom(src => src.PageNumber))
-        .ForCtorParam("PageSize", opt => opt.MapFrom(src => src.PageSize));
+        // CreateMap<SearchHotelRequest, HotelFilter>();
+        // CreateMap<CreateHotelRequest, CreateHotelCommand>();
+        // CreateMap<SearchHotelRequest, SearchHotelQuery>()
+        // .ForCtorParam("HotelFilter", opt => opt.MapFrom(src => src))
+        // .ForCtorParam("PageNumber", opt => opt.MapFrom(src => src.PageNumber))
+        // .ForCtorParam("PageSize", opt => opt.MapFrom(src => src.PageSize));
     }
 }
