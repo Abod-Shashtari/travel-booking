@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using AutoFixture;
+﻿using AutoFixture;
 using AutoMapper;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
@@ -31,6 +30,7 @@ public class CreateUserCommandHandlerTests
     [Fact]
     public async Task CreateUserCommandHandler_ValidRequest_ShouldCreateUserAndReturnId()
     {
+        // Arrange
         var command = _fixture.Create<CreateUserCommand>();
         var expectedUserId = _fixture.Create<Guid>();
         var hashedPassword = _fixture.Create<string>();
@@ -42,7 +42,7 @@ public class CreateUserCommandHandlerTests
         _passwordHasherMock.Setup(x => x.HashPassword(null, command.Password))
             .Returns(hashedPassword);
         
-        _mapperMock.Setup(x => x.Map<User>(command)) // Set up the mapping
+        _mapperMock.Setup(x => x.Map<User>(command))
             .Returns(user);
 
         _userRepositoryMock.Setup(x => x.AddAsync(It.IsAny<User>(),It.IsAny<CancellationToken>()))
@@ -82,41 +82,42 @@ public class CreateUserCommandHandlerTests
     public void CreateUserCommand_NotValidEmail_ShouldReturnValidationResult()
     {
         // Arrange
-        var command = new CreateUserCommand { Email = "invalid" };
+        var command = _fixture.Build<CreateUserCommand>()
+            .With(c => c.Email, "invalid")
+            .Create();
+        var validator = new CreateUserCommandValidator();
         // Act
-        var result = Validate(command);
+        var result = validator.Validate(command);
         // Assert
-        result.Should().Contain(v=>v.MemberNames.Contains(nameof(CreateUserCommand.Password)));
+        result.Errors.Should().Contain(v=>v.PropertyName==nameof(CreateUserCommand.Email));
     }
     
     [Fact]
     public void CreateUserCommand_NotValidPassword_ShouldReturnValidationResult()
     {
         // Arrange
-        var command = new CreateUserCommand { Password = "123" };
+        var command = _fixture.Build<CreateUserCommand>()
+            .With(c => c.Password, "123")
+            .Create();
+        var validator = new CreateUserCommandValidator();
         // Act
-        var result = Validate(command);
+        var result = validator.Validate(command);
         // Assert
-        result.Should().Contain(v=>v.MemberNames.Contains(nameof(CreateUserCommand.Password)));
+        result.Errors.Should().Contain(v=>v.PropertyName==nameof(CreateUserCommand.Password));
     }
     [Fact]
     public void CreateUserCommand_PasswordsDoNotMatch_ShouldReturnValidationError()
     {
         // Arrange
-        var command = new CreateUserCommand { Password = "Pass123!", ConfirmPassword = "Mismatch!" };
-
+        var command = _fixture.Build<CreateUserCommand>()
+            .With(c => c.Password, "Pass123!")
+            .With(c => c.ConfirmPassword, "Mismatch!")
+            .Create();
+        var validator = new CreateUserCommandValidator();
         // Act
-        var result = Validate(command);
+        var result = validator.Validate(command);
 
         // Assert
-        result.Should().Contain(v => v.MemberNames.Contains(nameof(CreateUserCommand.ConfirmPassword)));
-    }
-
-    private IList<ValidationResult> Validate(object obj)
-    {
-        var results = new List<ValidationResult>();
-        var context = new ValidationContext(obj, serviceProvider: null, items: null);
-        Validator.TryValidateObject(obj, context, results, validateAllProperties: true);
-        return results;
+        result.Errors.Should().Contain(v => v.PropertyName==nameof(CreateUserCommand.ConfirmPassword));
     }
 }
