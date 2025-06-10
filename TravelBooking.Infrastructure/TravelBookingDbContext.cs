@@ -1,8 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TravelBooking.Domain.Amenities.Entities;
 using TravelBooking.Domain.Authentication.Entities;
 using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Domain.Common.Entities;
+using TravelBooking.Domain.Discounts.Entities;
 using TravelBooking.Domain.Hotels.Entities;
+using TravelBooking.Domain.Rooms.Entities;
+using TravelBooking.Domain.RoomTypes.Entities;
 using TravelBooking.Domain.Users.Entities;
 
 namespace TravelBooking.Infrastructure;
@@ -13,6 +17,10 @@ public class TravelBookingDbContext:DbContext
     public DbSet<TokenWhiteList> TokenWhiteList { get; set; }
     public DbSet<Hotel> Hotels { get; set; }
     public DbSet<City> Cities { get; set; }
+    public DbSet<Amenity> Amenities { get; set; }
+    public DbSet<Room> Rooms { get; set; }
+    public DbSet<RoomType> RoomsTypes { get; set; }
+    public DbSet<Discount> Discounts { get; set; }
     public TravelBookingDbContext(DbContextOptions<TravelBookingDbContext> options):base(options)
     {
     }
