@@ -11,6 +11,7 @@ using TravelBooking.Infrastructure;
 using TravelBooking.Infrastructure.Options;
 using TravelBooking.Web.Extensions;
 using TravelBooking.Web.Middlewares;
+using TravelBooking.Web.Profiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,7 @@ builder.Services.AddDbContext<TravelBookingDbContext>(options =>
 
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddAutoMapper(typeof(UserProfile));
+builder.Services.AddAutoMapper(typeof(UserRequestProfile));
 
 builder.Services.AddAttributeDefinedServices(typeof(TravelBookingDbContext).Assembly);
 builder.Services.AddMediatR(configuration=>
