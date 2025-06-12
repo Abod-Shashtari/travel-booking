@@ -1,0 +1,27 @@
+GET {{host-api}}/room-types?pageSize=1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+###
+GET {{host-api}}/room-types/2e3c1e3f-0644-4916-2934-08dda9c7059e
+Authorization: Bearer {{token}}
+Content-Type: application/json
+###
+POST {{host-api}}/room-types
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "hotelId": "f47ac10b-58cc-4372-a567-0e02b2c3d481",
+  "name": "OK",
+  "pricePerNight": 23.99
+}
+###
+PUT {{host-api}}/room-types/f038edf5-d0f1-4a2c-b5ba-08dda8e204f0
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "hotelId": "f47ac10b-58cc-4372-a567-0e02b2c3d481",
+  "name": "premium",
+  "pricePerNight": 88.99
+}

@@ -1,0 +1,10 @@
+POST {{host-api}}/cities
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "New York",
+  "country": "USA",
+  "postOffice": "10001"
+}
+###
