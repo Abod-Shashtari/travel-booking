@@ -1,4 +1,4 @@
-﻿namespace TravelBooking.Application.Users.CreateUser;
+﻿namespace TravelBooking.Web.Requests.Users;
 
 public record CreateUserRequest(
     string FirstName,

@@ -36,12 +36,12 @@ public abstract class Repository<T>:IRepository<T> where T:EntityBase
         return new PaginatedList<TResult>(data,totalCount,pageSize,pageNumber);
     }
 
-    public async Task<PaginatedList<TResult>> GetPaginatedListAsync<TResult>(ISpecification<T> specification, Expression<Func<T, TResult>> selector, int pageNumber, int pageSize,
+    public async Task<PaginatedList<TResult>> GetPaginatedListAsync<TResult>(ISpecification<T>? specification, Expression<Func<T, TResult>> selector, int pageNumber, int pageSize,
         CancellationToken cancellationToken = default)
     {
         IQueryable<T> query = _dbSet;
 
-        if (specification.Criteria != null)
+        if (specification?.Criteria != null)
             query = query.Where(specification.Criteria);
 
         var totalCount = await query.CountAsync(cancellationToken);
@@ -62,6 +62,10 @@ public abstract class Repository<T>:IRepository<T> where T:EntityBase
     }
 
     public abstract Task<bool> IsExistAsync(T entity, CancellationToken cancellationToken = default);
+    public async Task<bool> IsExistsByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await _dbSet.AnyAsync(x => x.Id == id, cancellationToken);
+    }
 
     public void Delete(T entity)
     {
