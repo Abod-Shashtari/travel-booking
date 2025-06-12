@@ -1,0 +1,22 @@
+POST {{host-api}}/rooms
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "number": "101",
+  "roomTypeId": "f038edf5-d0f1-4a2c-b5ba-08dda8e204f0",
+  "adultCapacity": 2,
+  "childrenCapacity": 1
+}
+###
+
+PUT {{host-api}}/rooms/fafb0a9f-af18-4a2c-8c9e-08dda8e27c99
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "number": "101",
+  "roomTypeId": "f038edf5-d0f1-4a2c-b5ba-08dda8e204f0",
+  "adultCapacity": 2,
+  "childrenCapacity": 1
+}
