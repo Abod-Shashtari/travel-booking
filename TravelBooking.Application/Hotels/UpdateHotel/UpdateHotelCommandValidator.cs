@@ -1,11 +1,10 @@
 ﻿using FluentValidation;
-using TravelBooking.Domain.Hotels.Entities;
 
-namespace TravelBooking.Application.Hotels.CreateHotels;
+namespace TravelBooking.Application.Hotels.UpdateHotel;
 
-public class CreateHotelCommandValidator:AbstractValidator<CreateHotelCommand>
+public class UpdateHotelCommandValidator:AbstractValidator<UpdateHotelCommand>
 {
-    public CreateHotelCommandValidator()
+    public UpdateHotelCommandValidator()
     {
         RuleFor(x => x.Name).NotEmpty()
             .MaximumLength(150).WithMessage("Name must not exceed 150 characters");

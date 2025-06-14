@@ -2,7 +2,7 @@
 
 namespace TravelBooking.Web.Requests.Hotels;
 
-public record CreateHotelRequest(
+public record UpdateHotelRequest(
     string Name,
     string? Description,
     Location Location,

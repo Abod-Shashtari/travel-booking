@@ -15,4 +15,10 @@ public static class UserErrors
             "Invalid Email or Password", 
             ErrorType.Unauthorized
         );
+    
+    public static Error UserNotFound() =>
+        new("User.NotFound",
+            "User with the specified ID was not found",
+            ErrorType.NotFound
+        );
 }

@@ -3,7 +3,10 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TravelBooking.Application.Hotels.CreateHotels;
-using TravelBooking.Application.Hotels.SearchHotel;
+using TravelBooking.Application.Hotels.DeleteHotel;
+using TravelBooking.Application.Hotels.GetHotel;
+using TravelBooking.Application.Hotels.GetHotels;
+using TravelBooking.Application.Hotels.UpdateHotel;
 using TravelBooking.Web.Extensions;
 using TravelBooking.Web.Requests.Hotels;
 
@@ -22,20 +25,51 @@ public class HotelController:ControllerBase
         _mapper = mapper;
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetHotels([FromQuery] GetHotelsRequest request)
+    {
+        var query = _mapper.Map<GetHotelsQuery>(request);
+        var result = await _sender.Send(query);
+        return result.Match(data => Ok(data),this.HandleFailure);
+    }
+
+    [HttpGet("{hotelId}")]
+    public async Task<IActionResult> GetHotel(Guid hotelId)
+    {
+        var query = new GetHotelQuery(hotelId); 
+        var result = await _sender.Send(query);
+        return result.Match(data => Ok(data),this.HandleFailure);
+    }
+
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> CreateHotel(CreateHotelRequest request)
     {
         var command = _mapper.Map<CreateHotelCommand>(request);
         var result = await _sender.Send(command);
-        return result.Match(_=>Created(),this.HandleFailure);
+        return result.Match(
+            createdHotel=>CreatedAtAction(
+                nameof(GetHotel),
+                new { hotelId = createdHotel!.Id },
+                createdHotel
+            ),
+            this.HandleFailure
+        );
     }
-
-    [HttpGet]
-    public async Task<IActionResult> GetHotels([FromQuery] SearchHotelRequest request)
+    
+    [HttpPut("{hotelId}")]
+    public async Task<IActionResult> UpdateHotel(Guid hotelId, UpdateHotelRequest request)
     {
-        var query = _mapper.Map<SearchHotelQuery>(request);
-        var result = await _sender.Send(query);
-        return result.Match(data => Ok(data),this.HandleFailure);
+        var command = _mapper.Map<UpdateHotelCommand>(request) with { HotelId = hotelId };
+        var result = await _sender.Send(command);
+        return result.Match(NoContent,this.HandleFailure);
+    }
+    
+    [HttpDelete("{hotelId}")]
+    public async Task<IActionResult> DeleteHotel(Guid hotelId)
+    {
+        var command = new DeleteHotelCommand(hotelId);
+        var result = await _sender.Send(command);
+        return result.Match(NoContent,this.HandleFailure);
     }
 }

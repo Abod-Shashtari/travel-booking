@@ -2,7 +2,7 @@
 using TravelBooking.Domain.Common.Interfaces;
 using TravelBooking.Domain.Hotels.Entities;
 
-namespace TravelBooking.Application.Hotels.SearchHotel;
+namespace TravelBooking.Application.Hotels.GetHotels;
 
 public class HotelSearchSpecification:ISpecification<Hotel>
 {
@@ -14,7 +14,7 @@ public class HotelSearchSpecification:ISpecification<Hotel>
         Criteria = hotel =>
             (string.IsNullOrEmpty(hotelFilter.Keyword) ||
              hotel.Name.Contains(hotelFilter.Keyword) ||
-             hotel.City.Name.Contains(hotelFilter.Keyword));
+             hotel.City!.Name.Contains(hotelFilter.Keyword));
     }
 
 }

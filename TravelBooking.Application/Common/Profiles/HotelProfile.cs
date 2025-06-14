@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
+using TravelBooking.Application.Common.Models;
 using TravelBooking.Application.Hotels.CreateHotels;
-using TravelBooking.Application.Hotels.SearchHotel;
+using TravelBooking.Application.Hotels.UpdateHotel;
 using TravelBooking.Domain.Hotels.Entities;
 
 namespace TravelBooking.Application.Common.Profiles;
@@ -10,11 +11,7 @@ public class HotelProfile:Profile
     public HotelProfile()
     {
         CreateMap<CreateHotelCommand, Hotel>();
-        // CreateMap<SearchHotelRequest, HotelFilter>();
-        // CreateMap<CreateHotelRequest, CreateHotelCommand>();
-        // CreateMap<SearchHotelRequest, SearchHotelQuery>()
-        // .ForCtorParam("HotelFilter", opt => opt.MapFrom(src => src))
-        // .ForCtorParam("PageNumber", opt => opt.MapFrom(src => src.PageNumber))
-        // .ForCtorParam("PageSize", opt => opt.MapFrom(src => src.PageSize));
+        CreateMap<UpdateHotelCommand, Hotel>();
+        CreateMap<Hotel, HotelResponse>();
     }
 }
