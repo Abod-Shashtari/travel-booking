@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace TravelBooking.Application.Cities.CreateCity;
+namespace TravelBooking.Application.Cities.UpdateCity;
 
-public class CreateCityCommandValidator:AbstractValidator<CreateCityCommand>
+public class UpdateCityCommandValidator:AbstractValidator<UpdateCityCommand>
 {
-    public CreateCityCommandValidator()
+    public UpdateCityCommandValidator()
     {
         RuleFor(x => x.Name).NotEmpty()
             .MaximumLength(100).WithMessage("Name must not exceed 100 characters");
