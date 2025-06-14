@@ -41,6 +41,19 @@ public abstract class Repository<T>:IRepository<T> where T:EntityBase
         return new PaginatedList<TResult>(data,totalCount,pageSize,pageNumber);
     }
 
+    public async Task<PaginatedList<T>> GetPaginatedListAsync(int pageNumber, int pageSize, CancellationToken cancellationToken = default)
+    {
+        IQueryable<T> query = _dbSet;
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        var data = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+        
+        return new PaginatedList<T>(data,totalCount,pageSize,pageNumber);
+    }
+
     public async Task<PaginatedList<TResult>> GetPaginatedListAsync<TResult>(ISpecification<T>? specification, Expression<Func<T, TResult>> selector, int pageNumber, int pageSize,
         CancellationToken cancellationToken = default)
     {

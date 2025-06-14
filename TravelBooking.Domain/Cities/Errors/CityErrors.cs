@@ -9,4 +9,10 @@ public static class CityErrors
             "This City is already exists in the system",
             ErrorType.Conflict
         );
+    
+    public static Error CityNotFound() =>
+        new("City.NotFound",
+            "City with the specified ID was not found",
+            ErrorType.NotFound
+        );
 }
