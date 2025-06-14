@@ -1,6 +1,6 @@
 ﻿namespace TravelBooking.Web.Requests.Hotels;
 
-public record SearchHotelRequest
+public record GetHotelsRequest
 {
     public string? Keyword {get; init;}
     public int? NumberOfRooms { get; init; } = 1;

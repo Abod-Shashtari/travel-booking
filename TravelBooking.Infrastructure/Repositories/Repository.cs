@@ -22,6 +22,11 @@ public abstract class Repository<T>:IRepository<T> where T:EntityBase
         return await _dbSet.FindAsync([id], cancellationToken);
     }
 
+    public async Task<TResult?> GetByIdAsync<TResult>(Guid id, Expression<Func<T, TResult>> selector, CancellationToken cancellationToken = default)
+    {
+        return await _dbSet.Where(entity=>entity.Id==id).Select(selector).FirstOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<PaginatedList<TResult>> GetPaginatedListAsync<TResult>(Expression<Func<T, TResult>> selector,int pageNumber, int pageSize, CancellationToken cancellationToken = default)
     {
         IQueryable<T> query = _dbSet;

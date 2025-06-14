@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace TravelBooking.Application.Hotels.SearchHotel;
+namespace TravelBooking.Application.Hotels.GetHotels;
 
-public class SearchHotelQueryValidator:AbstractValidator<SearchHotelQuery>
+public class GetHotelsQueryValidator:AbstractValidator<GetHotelsQuery>
 {
-    public SearchHotelQueryValidator()
+    public GetHotelsQueryValidator()
     {
         RuleFor(x=>x.PageNumber).GreaterThan(0)
             .WithMessage("PageNumber must be greater than 0");
@@ -13,7 +13,7 @@ public class SearchHotelQueryValidator:AbstractValidator<SearchHotelQuery>
         When(x => x.HotelFilter != null, () =>
         {
             RuleFor(x => x.HotelFilter!.CheckIn)
-                .GreaterThanOrEqualTo(DateTime.Now)
+                .GreaterThanOrEqualTo(DateTime.Today)
                 .WithMessage("CheckIn must be Now or in future date");
             RuleFor(x => x.HotelFilter!.CheckOut)
                 .GreaterThan(x=>x.HotelFilter!.CheckIn)
