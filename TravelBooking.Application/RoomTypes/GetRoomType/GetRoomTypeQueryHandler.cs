@@ -2,6 +2,7 @@
 using TravelBooking.Application.Common.Models;
 using TravelBooking.Domain.Common;
 using TravelBooking.Domain.Common.Interfaces;
+using TravelBooking.Domain.Discounts.Entities;
 using TravelBooking.Domain.RoomTypes.Entities;
 using TravelBooking.Domain.RoomTypes.Errors;
 
@@ -18,8 +19,16 @@ public class GetRoomTypeQueryHandler:IRequestHandler<GetRoomTypeQuery, Result<Ro
 
     public async Task<Result<RoomTypeResponse?>> Handle(GetRoomTypeQuery request, CancellationToken cancellationToken)
     {
-        var roomType = await _roomTypeRepository.GetByIdAsync(request.RoomTypeId,cancellationToken);
+        var spec = new RoomTypeWithDiscountsSpecification();
+        var roomType = await _roomTypeRepository.GetByIdAsync(request.RoomTypeId,spec,cancellationToken);
         if (roomType == null) return Result<RoomTypeResponse?>.Failure(RoomTypeErrors.RoomTypeNotFound());
+        
+        var discountedPrice=roomType.Discounts
+            .Where(d => d.StartDate <= DateTime.Now && d.EndDate >= DateTime.Now)
+            .Aggregate(
+            roomType.PricePerNight,
+            (price,discount ) => price*(1-discount.Percentage/100)
+        );
 
         var roomTypeResponse = new RoomTypeResponse(
             roomType.Id,
@@ -27,7 +36,7 @@ public class GetRoomTypeQueryHandler:IRequestHandler<GetRoomTypeQuery, Result<Ro
             roomType.Name,
             roomType.Description,
             roomType.PricePerNight,
-            roomType.PricePerNight,
+            discountedPrice,
             roomType.CreatedAt,
             roomType.ModifiedAt
         );

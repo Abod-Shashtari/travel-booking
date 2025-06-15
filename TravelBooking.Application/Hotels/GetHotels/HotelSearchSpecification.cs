@@ -7,6 +7,8 @@ namespace TravelBooking.Application.Hotels.GetHotels;
 public class HotelSearchSpecification:ISpecification<Hotel>
 {
     public Expression<Func<Hotel, bool>>? Criteria { get; }
+    public List<Expression<Func<Hotel, object>>>? Includes { get; } = null;
+
     public HotelSearchSpecification(HotelFilter? hotelFilter)
     {
         if (hotelFilter == null) return;

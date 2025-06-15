@@ -1,8 +1,8 @@
-﻿using System.Linq.Expressions;
-using MediatR;
+﻿using MediatR;
 using TravelBooking.Application.Common.Models;
 using TravelBooking.Domain.Common;
 using TravelBooking.Domain.Common.Interfaces;
+using TravelBooking.Domain.Discounts.Entities;
 using TravelBooking.Domain.RoomTypes.Entities;
 
 namespace TravelBooking.Application.RoomTypes.GetRoomTypes;
@@ -18,25 +18,34 @@ public class GetRoomTypesQueryHandler:IRequestHandler<GetRoomTypesQuery, Result<
 
     public async Task<Result<PaginatedList<RoomTypeResponse>>> Handle(GetRoomTypesQuery request, CancellationToken cancellationToken)
     {
-        Expression<Func<RoomType, RoomTypeResponse>> selector = roomType => new RoomTypeResponse(
-            roomType.Id,
-            roomType.HotelId,
-            roomType.Name,
-            roomType.Description,
-            roomType.PricePerNight,
-            roomType.PricePerNight,
-            roomType.CreatedAt,
-            roomType.ModifiedAt
-        );
+        var spec = new RoomTypeWithDiscountsSpecification();
         
         var roomTypes= await _roomTypeRepository.GetPaginatedListAsync(
-            null,
-            selector,
+            spec,
             request.PageNumber,
             request.PageSize,
             cancellationToken
         );
         
-        return Result<PaginatedList<RoomTypeResponse>>.Success(roomTypes);
+        var roomTypesResponse = roomTypes.Data.Select(
+            rt => new RoomTypeResponse(
+                rt.Id,
+                rt.HotelId,
+                rt.Name,
+                rt.Description,
+                rt.PricePerNight,
+                CalculateDiscountedPrice(rt.Discounts,rt.PricePerNight),
+                rt.CreatedAt,
+                rt.ModifiedAt
+            )
+        ).ToList();
+        var pagedRoomTypeResponse = roomTypes.Map(roomTypesResponse);
+        return Result<PaginatedList<RoomTypeResponse>>.Success(pagedRoomTypeResponse);
+    }
+
+    private decimal CalculateDiscountedPrice(ICollection<Discount> discounts, decimal pricePerNight)
+    {
+        return discounts.Where(d => d.StartDate <= DateTime.Now && d.EndDate >= DateTime.Now)
+            .Aggregate(pricePerNight, (price, discount) => price * (1 - discount.Percentage / 100));
     }
 }
