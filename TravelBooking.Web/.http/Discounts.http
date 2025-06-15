@@ -1,0 +1,35 @@
+GET {{host-api}}/discounts
+Authorization: Bearer {{token}}
+Content-Type: application/json
+###
+GET {{host-api}}/discounts/b6bec4ef-129d-4786-b98a-08ddac19dc54
+Authorization: Bearer {{token}}
+Content-Type: application/json
+###
+POST {{host-api}}/discounts
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "roomTypeId": "f038edf5-d0f1-4a2c-b5ba-08dda8e204f0",
+  "percentage": 15.5,
+  "startDate": "2025-07-01T00:00:00",
+  "endDate": "2025-07-15T23:00:00"
+}
+
+###
+PUT {{host-api}}/discounts/b6bec4ef-129d-4786-b98a-08ddac19dc54
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "roomTypeId": "f038edf5-d0f1-4a2c-b5ba-08dda8e204f0",
+  "percentage": 15.5,
+  "startDate": "2025-07-01T00:00:00",
+  "endDate": "2025-07-14T23:00:00"
+}
+
+###
+DELETE {{host-api}}/discounts/b6bec4ef-129d-4786-b98a-08ddac19dc54
+Authorization: Bearer {{token}}
+Content-Type: application/json

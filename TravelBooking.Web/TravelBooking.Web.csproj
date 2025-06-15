@@ -27,6 +27,7 @@
     <ItemGroup>
       <Content Include=".http\AuthUser.http" />
       <Content Include=".http\Cities.http" />
+      <Content Include=".http\Discounts.http" />
       <Content Include=".http\http-client.env.json" />
       <Content Include=".http\Hotels.http" />
       <Content Include=".http\Rooms.http" />
