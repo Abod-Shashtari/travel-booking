@@ -22,6 +22,22 @@ public abstract class Repository<T>:IRepository<T> where T:EntityBase
         return await _dbSet.FindAsync([id], cancellationToken);
     }
 
+    public async Task<T?> GetByIdAsync(Guid id, ISpecification<T> specification, CancellationToken cancellationToken = default)
+    {
+        IQueryable<T> query = _dbSet;
+
+        if (specification.Criteria != null)
+            query = query.Where(specification.Criteria);
+        if (specification.Includes != null)
+        {
+            foreach (var include in specification.Includes)
+            {
+                query = query.Include(include);
+            }
+        }
+        return await query.FirstOrDefaultAsync(e=>e.Id==id,cancellationToken);
+    }
+
     public async Task<TResult?> GetByIdAsync<TResult>(Guid id, Expression<Func<T, TResult>> selector, CancellationToken cancellationToken = default)
     {
         return await _dbSet.Where(entity=>entity.Id==id).Select(selector).FirstOrDefaultAsync(cancellationToken);
@@ -54,13 +70,20 @@ public abstract class Repository<T>:IRepository<T> where T:EntityBase
         return new PaginatedList<T>(data,totalCount,pageSize,pageNumber);
     }
 
-    public async Task<PaginatedList<TResult>> GetPaginatedListAsync<TResult>(ISpecification<T>? specification, Expression<Func<T, TResult>> selector, int pageNumber, int pageSize,
+    public async Task<PaginatedList<TResult>> GetPaginatedListAsync<TResult>(ISpecification<T> specification, Expression<Func<T, TResult>> selector, int pageNumber, int pageSize,
         CancellationToken cancellationToken = default)
     {
         IQueryable<T> query = _dbSet;
 
-        if (specification?.Criteria != null)
+        if (specification.Criteria != null)
             query = query.Where(specification.Criteria);
+        if (specification.Includes != null)
+        {
+            foreach (var include in specification.Includes)
+            {
+                query = query.Include(include);
+            }
+        }
 
         var totalCount = await query.CountAsync(cancellationToken);
 
@@ -71,6 +94,31 @@ public abstract class Repository<T>:IRepository<T> where T:EntityBase
             .ToListAsync(cancellationToken);
         
         return new PaginatedList<TResult>(data,totalCount,pageSize,pageNumber);
+    }
+
+    public async Task<PaginatedList<T>> GetPaginatedListAsync(ISpecification<T> specification, int pageNumber, int pageSize,
+        CancellationToken cancellationToken = default)
+    {
+        IQueryable<T> query = _dbSet;
+
+        if (specification.Criteria != null)
+            query = query.Where(specification.Criteria);
+        if (specification.Includes != null)
+        {
+            foreach (var include in specification.Includes)
+            {
+                query = query.Include(include);
+            }
+        }
+
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        var data = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+        
+        return new PaginatedList<T>(data,totalCount,pageSize,pageNumber);
     }
 
     public async Task<Guid> AddAsync(T entity, CancellationToken cancellationToken = default)
