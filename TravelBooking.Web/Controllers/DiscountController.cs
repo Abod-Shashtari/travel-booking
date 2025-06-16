@@ -40,11 +40,11 @@ public class DiscountController:ControllerBase
         return result.Match(data => Ok(data),this.HandleFailure);
     }
     
-    [HttpPost]
+    [HttpPost("/api/room-types/{roomTypeId}/discounts")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> CreateDiscount(CreateDiscountRequest request)
+    public async Task<IActionResult> CreateDiscount(Guid roomTypeId, CreateDiscountRequest request)
     {
-        var command = _mapper.Map<CreateDiscountCommand>(request);
+        var command = _mapper.Map<CreateDiscountCommand>(request) with {RoomTypeId = roomTypeId};
         var result = await _sender.Send(command);
         return result.Match(
             createdDiscount=>CreatedAtAction(

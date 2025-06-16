@@ -1,34 +1,33 @@
-GET {{host-api}}/rooms
+GET {{host-api}}/room-types/f038edf5-d0f1-4a2c-b5ba-08dda8e204f0/rooms
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 ###
-GET {{host-api}}/rooms/1f155fc9-029c-436c-93b0-08ddab7dbb00
+GET {{host-api}}/rooms/fafb0a9f-af18-4a2c-8c9e-08dda8e27c99
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 ###
-POST {{host-api}}/rooms
+POST {{host-api}}/room-types/f038edf5-d0f1-4a2c-b5ba-08dda8e204f0/rooms
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "number": "202",
-  "roomTypeId": "64db5bfa-59ab-4406-5d30-08dda9c4e41d",
+  "number": "703",
   "adultCapacity": 3,
   "childrenCapacity": 1
 }
 ###
 
-PUT {{host-api}}/rooms/fafb0a9f-af18-4a2c-8c9e-08dda8e27c99
+PUT {{host-api}}/rooms/990e5f5b-f2f5-4545-facc-08ddacbdbe0e
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
   "number": "101",
-  "roomTypeId": "f038edf5-d0f1-4a2c-b5ba-08dda8e204f0",
-  "adultCapacity": 2,
-  "childrenCapacity": 2
+  "roomTypeId":"f038edf5-d0f1-4a2c-b5ba-08dda8e204f0",
+  "adultCapacity": 4,
+  "childrenCapacity": 4
 }
 ###
 
