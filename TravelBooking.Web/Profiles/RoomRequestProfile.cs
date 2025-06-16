@@ -10,8 +10,14 @@ public class RoomRequestProfile:Profile
 {
     public RoomRequestProfile()
     {
-        CreateMap<CreateRoomRequest, CreateRoomCommand>();
-        CreateMap<GetRoomsRequest, GetRoomsQuery>();
+        CreateMap<CreateRoomRequest, CreateRoomCommand>()
+            .ForCtorParam(
+                "RoomTypeId",
+                opt => opt.MapFrom((src, ctx) => Guid.Empty));
+        CreateMap<GetRoomsRequest, GetRoomsQuery>()
+            .ForCtorParam(
+                "RoomTypeId",
+                opt => opt.MapFrom((src, ctx) => Guid.Empty));
         CreateMap<UpdateRoomRequest, UpdateRoomCommand>()
             .ForCtorParam(
                 "RoomId",

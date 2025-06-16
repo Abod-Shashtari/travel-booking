@@ -25,10 +25,10 @@ public class RoomController:ControllerBase
         _mapper = mapper;
     }
     
-    [HttpGet]
-    public async Task<IActionResult> GetRooms([FromQuery] GetRoomsRequest request)
+    [HttpGet("/api/room-types/{roomTypeId}/rooms")]
+    public async Task<IActionResult> GetRooms(Guid roomTypeId,[FromQuery] GetRoomsRequest request)
     {
-        var query = _mapper.Map<GetRoomsQuery>(request);
+        var query = _mapper.Map<GetRoomsQuery>(request) with {RoomTypeId = roomTypeId};
         var result = await _sender.Send(query);
         return result.Match(data => Ok(data),this.HandleFailure);
     }
@@ -36,16 +36,16 @@ public class RoomController:ControllerBase
     [HttpGet("{roomId}")]
     public async Task<IActionResult> GetRoom(Guid roomId)
     {
-        var query = new GetRoomQuery(roomId); 
+        var query = new GetRoomQuery(roomId);
         var result = await _sender.Send(query);
         return result.Match(data => Ok(data),this.HandleFailure);
     }
     
-    [HttpPost]
+    [HttpPost("/api/room-types/{roomTypeId}/rooms")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> CreateRoom(CreateRoomRequest request)
+    public async Task<IActionResult> CreateRoom(Guid roomTypeId,CreateRoomRequest request)
     {
-        var command = _mapper.Map<CreateRoomCommand>(request);
+        var command = _mapper.Map<CreateRoomCommand>(request) with {RoomTypeId = roomTypeId};
         var result = await _sender.Send(command);
         return result.Match(
             createdRoom=>CreatedAtAction(
@@ -61,7 +61,7 @@ public class RoomController:ControllerBase
     [HttpPut("{roomId}")]
     public async Task<IActionResult> UpdateRoom(Guid roomId,UpdateRoomRequest request)
     {
-        var command = _mapper.Map<UpdateRoomRequest, UpdateRoomCommand>(request) with { RoomId = roomId };
+        var command = _mapper.Map<UpdateRoomCommand>(request) with { RoomId = roomId };
         var result = await _sender.Send(command);
         return result.Match(NoContent,this.HandleFailure);
     }

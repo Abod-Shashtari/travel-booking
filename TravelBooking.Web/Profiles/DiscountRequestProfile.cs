@@ -11,7 +11,11 @@ public class DiscountRequestProfile:Profile
     public DiscountRequestProfile()
     {
         CreateMap<GetDiscountsRequest, GetDiscountsQuery>();
-        CreateMap<CreateDiscountRequest, CreateDiscountCommand>();
+        CreateMap<CreateDiscountRequest, CreateDiscountCommand>()
+            .ForCtorParam(
+            "RoomTypeId", 
+            opt => opt.MapFrom((src, ctx) => Guid.Empty)
+        );
         CreateMap<UpdateDiscountRequest, UpdateDiscountCommand>()
             .ForCtorParam(
                 "DiscountId", 

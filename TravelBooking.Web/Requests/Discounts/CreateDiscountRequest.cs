@@ -1,3 +1,3 @@
 ﻿namespace TravelBooking.Web.Requests.Discounts;
 
-public record CreateDiscountRequest(Guid RoomTypeId, decimal Percentage, DateTime StartDate, DateTime EndDate);
+public record CreateDiscountRequest(decimal Percentage, DateTime StartDate, DateTime EndDate);
