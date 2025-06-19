@@ -13,18 +13,18 @@ namespace Application.Tests.Users;
 public class CreateUserCommandHandlerTests
 {
     private readonly IFixture _fixture;
-    private readonly Mock<IUserRepository> _userRepositoryMock;
-    private readonly Mock<IPasswordHasher<User>> _passwordHasherMock;
+    private readonly Mock<IUserRepository> _userRepository;
+    private readonly Mock<IPasswordHasher<User>> _passwordHasher;
     private readonly CreateUserCommandHandler _handler;
-    private readonly Mock<IMapper> _mapperMock;
+    private readonly Mock<IMapper> _mapper;
 
     public CreateUserCommandHandlerTests()
     {
         _fixture = new Fixture();
-        _userRepositoryMock = new Mock<IUserRepository>();
-        _passwordHasherMock = new Mock<IPasswordHasher<User>>();
-        _mapperMock=new Mock<IMapper>();
-        _handler = new CreateUserCommandHandler(_userRepositoryMock.Object, _passwordHasherMock.Object, _mapperMock.Object);
+        _userRepository = new Mock<IUserRepository>();
+        _passwordHasher = new Mock<IPasswordHasher<User>>();
+        _mapper=new Mock<IMapper>();
+        _handler = new CreateUserCommandHandler(_userRepository.Object, _passwordHasher.Object, _mapper.Object);
     }
 
     [Fact]
@@ -36,19 +36,19 @@ public class CreateUserCommandHandlerTests
         var hashedPassword = _fixture.Create<string>();
         var user = _fixture.Create<User>();
 
-        _userRepositoryMock.Setup(x => x.GetByEmailAsync(command.Email,It.IsAny<CancellationToken>()))
+        _userRepository.Setup(x => x.GetByEmailAsync(command.Email,It.IsAny<CancellationToken>()))
             .ReturnsAsync((User)null);
 
-        _passwordHasherMock.Setup(x => x.HashPassword(null, command.Password))
+        _passwordHasher.Setup(x => x.HashPassword(null, command.Password))
             .Returns(hashedPassword);
         
-        _mapperMock.Setup(x => x.Map<User>(command))
+        _mapper.Setup(x => x.Map<User>(command))
             .Returns(user);
 
-        _userRepositoryMock.Setup(x => x.AddAsync(It.IsAny<User>(),It.IsAny<CancellationToken>()))
+        _userRepository.Setup(x => x.AddAsync(It.IsAny<User>(),It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedUserId);
 
-        _userRepositoryMock.Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
+        _userRepository.Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(1);
 
         // Act
@@ -57,7 +57,7 @@ public class CreateUserCommandHandlerTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().Be(expectedUserId);
-        _userRepositoryMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _userRepository.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -66,7 +66,7 @@ public class CreateUserCommandHandlerTests
         // Arrange
         var command = _fixture.Create<CreateUserCommand>();
         var existingUser = new User { Email = command.Email };
-        _userRepositoryMock.Setup(x => x.GetByEmailAsync(command.Email,It.IsAny<CancellationToken>()))
+        _userRepository.Setup(x => x.GetByEmailAsync(command.Email,It.IsAny<CancellationToken>()))
             .ReturnsAsync(existingUser);
 
         // Act
@@ -75,7 +75,7 @@ public class CreateUserCommandHandlerTests
         // Assert
         result.IsFailure.Should().BeTrue();
         result.Error.Should().Be(UserErrors.EmailAlreadyUsed(command.Email));
-        _userRepositoryMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
+        _userRepository.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]
