@@ -21,5 +21,6 @@ public class Hotel:AuditEntity
     [Required]
     public Guid OwnerId { get; set; }
     public User? Owner { get; set; }
+    public Guid? ThumbnailImageId { get; set; }
     public ICollection<RoomType> RoomTypes { get; set; } = [];
 }

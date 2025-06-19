@@ -5,5 +5,6 @@ public record CityResponse(
     Guid Id,
     string Name,
     string Country,
-    string PostOffice
+    string PostOffice,
+    int NumberOfHotels
 );

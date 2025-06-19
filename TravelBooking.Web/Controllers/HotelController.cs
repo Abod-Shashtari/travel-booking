@@ -2,10 +2,12 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TravelBooking.Application.Cities.SetThumbnail;
 using TravelBooking.Application.Hotels.CreateHotels;
 using TravelBooking.Application.Hotels.DeleteHotel;
 using TravelBooking.Application.Hotels.GetHotel;
 using TravelBooking.Application.Hotels.GetHotels;
+using TravelBooking.Application.Hotels.SetThumbnail;
 using TravelBooking.Application.Hotels.UpdateHotel;
 using TravelBooking.Web.Extensions;
 using TravelBooking.Web.Requests.Hotels;
@@ -72,4 +74,13 @@ public class HotelController:ControllerBase
         var result = await _sender.Send(command);
         return result.Match(NoContent,this.HandleFailure);
     }
+        
+    [HttpPut("{hotelId}/thumbnail")]
+    public async Task<IActionResult> SetThumbnail(Guid hotelId,[FromBody] Guid imageId)
+    {
+        var command = new SetHotelThumbnailCommand(hotelId, imageId);
+        var result = await _sender.Send(command);
+        return result.Match(NoContent,this.HandleFailure);
+    }
+
 }

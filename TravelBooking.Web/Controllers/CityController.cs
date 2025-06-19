@@ -6,6 +6,7 @@ using TravelBooking.Application.Cities.CreateCity;
 using TravelBooking.Application.Cities.DeleteCity;
 using TravelBooking.Application.Cities.GetCities;
 using TravelBooking.Application.Cities.GetCity;
+using TravelBooking.Application.Cities.SetThumbnail;
 using TravelBooking.Application.Cities.UpdateCity;
 using TravelBooking.Web.Extensions;
 using TravelBooking.Web.Requests.Cities;
@@ -69,6 +70,14 @@ public class CityController:ControllerBase
     public async Task<IActionResult> DeleteCity(Guid cityId)
     {
         var command = new DeleteCityCommand(cityId);
+        var result = await _sender.Send(command);
+        return result.Match(NoContent,this.HandleFailure);
+    }
+    
+    [HttpPut("{cityId}/thumbnail")]
+    public async Task<IActionResult> SetThumbnail(Guid cityId,[FromBody] Guid imageId)
+    {
+        var command = new SetCityThumbnailCommand(cityId, imageId);
         var result = await _sender.Send(command);
         return result.Match(NoContent,this.HandleFailure);
     }
