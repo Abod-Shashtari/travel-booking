@@ -21,11 +21,9 @@ public class GetRoomsQueryHandler:IRequestHandler<GetRoomsQuery, Result<Paginate
 
     public async Task<Result<PaginatedList<RoomResponse>>> Handle(GetRoomsQuery request, CancellationToken cancellationToken)
     {
-        var specification = new RoomsByRoomTypeIdSpecification(request.RoomTypeId);
+        var specification = new RoomsByRoomTypeIdSpecification(request.RoomTypeId,request.PageNumber, request.PageSize);
         var rooms = await _roomRepository.GetPaginatedListAsync(
             specification,
-            request.PageNumber,
-            request.PageSize,
             cancellationToken
         );
 

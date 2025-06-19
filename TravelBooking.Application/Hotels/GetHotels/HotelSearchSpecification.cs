@@ -1,15 +1,15 @@
 ﻿using System.Linq.Expressions;
+using TravelBooking.Application.Common.Models;
+using TravelBooking.Domain.Common;
 using TravelBooking.Domain.Common.Interfaces;
 using TravelBooking.Domain.Hotels.Entities;
 
 namespace TravelBooking.Application.Hotels.GetHotels;
 
-public class HotelSearchSpecification:ISpecification<Hotel>
+public class HotelSearchSpecification:PaginationSpecification<Hotel>
 {
-    public Expression<Func<Hotel, bool>>? Criteria { get; }
-    public List<Expression<Func<Hotel, object>>>? Includes { get; } = null;
-
-    public HotelSearchSpecification(HotelFilter? hotelFilter)
+    public HotelSearchSpecification(HotelFilter? hotelFilter,int pageNumber,int pageSize) :
+        base(pageNumber, pageSize,hotel=>hotel.CreatedAt,true)
     {
         if (hotelFilter == null) return;
         

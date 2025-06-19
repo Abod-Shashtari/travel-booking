@@ -17,7 +17,7 @@ public class GetHotelsQueryHandler:IRequestHandler<GetHotelsQuery, Result<Pagina
 
     public async Task<Result<PaginatedList<HotelResponse>>> Handle(GetHotelsQuery request, CancellationToken cancellationToken)
     {
-        var spec = new HotelSearchSpecification(request.HotelFilter);
+        var spec = new HotelSearchSpecification(request.HotelFilter, request.PageNumber, request.PageSize);
         
         Expression<Func<Hotel, HotelResponse>> selector = hotel => new HotelResponse(
             hotel.Id,
@@ -34,8 +34,6 @@ public class GetHotelsQueryHandler:IRequestHandler<GetHotelsQuery, Result<Pagina
         var hotels = await _hotelRepository.GetPaginatedListAsync(
             spec,
             selector,
-            request.PageNumber,
-            request.PageSize,
             cancellationToken
         );
         

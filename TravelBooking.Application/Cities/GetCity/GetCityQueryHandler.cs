@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using MediatR;
 using TravelBooking.Application.Common.Models;
 using TravelBooking.Domain.Cities.Entities;
@@ -20,7 +21,14 @@ public class GetCityQueryHandler:IRequestHandler<GetCityQuery,Result<CityRespons
     }
     public async Task<Result<CityResponse?>> Handle(GetCityQuery request, CancellationToken cancellationToken)
     {
-        var city = await _cityRepository.GetByIdAsync(request.CityId, cancellationToken);
+        Expression<Func<City, CityResponse>> selector = city => new CityResponse(
+            city.Id,
+            city.Name,
+            city.Country,
+            city.PostOffice,
+            city.Hotels.Count
+        );
+        var city = await _cityRepository.GetByIdAsync(request.CityId, selector, cancellationToken);
         if (city == null) return Result<CityResponse?>.Failure(CityErrors.CityNotFound());
         var cityResponse = _mapper.Map<CityResponse>(city);
         return Result<CityResponse?>.Success(cityResponse);
