@@ -18,12 +18,10 @@ public class GetRoomTypesQueryHandler:IRequestHandler<GetRoomTypesQuery, Result<
 
     public async Task<Result<PaginatedList<RoomTypeResponse>>> Handle(GetRoomTypesQuery request, CancellationToken cancellationToken)
     {
-        var spec = new RoomTypeWithDiscountsSpecification();
+        var spec = new RoomTypeWithDiscountsSpecification(request.PageNumber, request.PageSize);
         
         var roomTypes= await _roomTypeRepository.GetPaginatedListAsync(
             spec,
-            request.PageNumber,
-            request.PageSize,
             cancellationToken
         );
         

@@ -20,9 +20,9 @@ public class GetAmenitiesQueryHandler:IRequestHandler<GetAmenitiesQuery, Result<
 
     public async Task<Result<PaginatedList<AmenityResponse>>> Handle(GetAmenitiesQuery request, CancellationToken cancellationToken)
     {
+        var specification = new PaginationSpecification<Amenity>(request.PageNumber, request.PageSize,amenity=>amenity.CreatedAt,true);
         var amenities= await _amenityRepository.GetPaginatedListAsync(
-            request.PageNumber,
-            request.PageSize,
+            specification,
             cancellationToken
         );
 

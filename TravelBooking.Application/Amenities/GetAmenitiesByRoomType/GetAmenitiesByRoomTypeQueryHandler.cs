@@ -17,11 +17,9 @@ public class GetAmenitiesByRoomTypeQueryHandler:IRequestHandler<GetAmenitiesByRo
     
     public async Task<Result<PaginatedList<AmenityResponse>>> Handle(GetAmenitiesByRoomTypeQuery request, CancellationToken cancellationToken)
     {
-        var specification = new AmenitiesByRoomTypeSpecification(request.RoomTypeId);
+        var specification = new AmenitiesByRoomTypeSpecification(request.RoomTypeId,request.PageNumber, request.PageSize);
         var amenities=await _amenityRepository.GetPaginatedListAsync(
             specification,
-            request.PageNumber,
-            request.PageSize,
             cancellationToken
         );
         

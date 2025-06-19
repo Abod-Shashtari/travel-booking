@@ -3,5 +3,6 @@
 public enum EntityType
 {
     Hotel,
-    RoomType
+    RoomType,
+    City
 }

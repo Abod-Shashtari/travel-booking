@@ -1,15 +1,11 @@
-﻿using System.Linq.Expressions;
-using TravelBooking.Domain.Amenities.Entities;
-using TravelBooking.Domain.Common.Interfaces;
+﻿using TravelBooking.Domain.Amenities.Entities;
 
 namespace TravelBooking.Application.Common.Models;
 
-public class AmenitiesByRoomTypeSpecification:ISpecification<Amenity>
+public class AmenitiesByRoomTypeSpecification:PaginationSpecification<Amenity>
 {
-    public Expression<Func<Amenity, bool>>? Criteria { get; }
-    public List<Expression<Func<Amenity, object>>>? Includes { get; } = null;
-
-    public AmenitiesByRoomTypeSpecification(Guid roomTypeId)
+    public AmenitiesByRoomTypeSpecification(Guid roomTypeId,int pageNumber,int pageSize) :
+        base(pageNumber, pageSize,amenity=>amenity.CreatedAt,true)
     {
         Criteria = a => a.RoomsTypes.Any(rt=>rt.Id==roomTypeId);
     }

@@ -21,9 +21,9 @@ public class GetDiscountsQueryHandler:IRequestHandler<GetDiscountsQuery, Result<
 
     public async Task<Result<PaginatedList<DiscountResponse>>> Handle(GetDiscountsQuery request, CancellationToken cancellationToken)
     {
+        var specification = new PaginationSpecification<Discount>(request.PageNumber, request.PageSize,discount=>discount.CreatedAt,true);
         var discounts= await _discountRepository.GetPaginatedListAsync(
-            request.PageNumber,
-            request.PageSize,
+            specification,
             cancellationToken
         );
 

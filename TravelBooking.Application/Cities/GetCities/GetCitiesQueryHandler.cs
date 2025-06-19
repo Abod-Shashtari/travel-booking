@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using MediatR;
 using TravelBooking.Application.Common.Models;
 using TravelBooking.Domain.Cities.Entities;
@@ -20,9 +21,17 @@ public class GetCitiesQueryHandler:IRequestHandler<GetCitiesQuery, Result<Pagina
 
     public async Task<Result<PaginatedList<CityResponse>>> Handle(GetCitiesQuery request, CancellationToken cancellationToken)
     {
+        var specification = new PaginationSpecification<City>(request.PageNumber, request.PageSize,city=>city.CreatedAt,true);
+        Expression<Func<City, CityResponse>> selector = city => new CityResponse(
+            city.Id,
+            city.Name,
+            city.Country,
+            city.PostOffice,
+            city.Hotels.Count
+        );
         var cities= await _cityRepository.GetPaginatedListAsync(
-            request.PageNumber,
-            request.PageSize,
+            specification,
+            selector,
             cancellationToken
         );
 
