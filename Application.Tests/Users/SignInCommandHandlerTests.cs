@@ -16,25 +16,25 @@ namespace Application.Tests.Users;
 public class SignInCommandHandlerTests
 {
     private readonly IFixture _fixture;
-    private readonly Mock<IUserRepository> _userRepositoryMock;
-    private readonly Mock<IPasswordHasher<User>> _passwordHasherMock;
-    private readonly Mock<IJwtTokenGenerator> _jwtTokenGeneratorMock;
-    private readonly Mock<ITokenWhiteListRepository> _tokenWhiteListRepositoryMock;
+    private readonly Mock<IUserRepository> _userRepository;
+    private readonly Mock<IPasswordHasher<User>> _passwordHasher;
+    private readonly Mock<IJwtTokenGenerator> _jwtTokenGenerator;
+    private readonly Mock<ITokenWhiteListRepository> _tokenWhiteListRepository;
     private readonly SignInCommandHandler _handler;
 
     public SignInCommandHandlerTests()
     {
         _fixture = new Fixture();
-        _userRepositoryMock = new Mock<IUserRepository>();
-        _passwordHasherMock = new Mock<IPasswordHasher<User>>();
-        _jwtTokenGeneratorMock = new Mock<IJwtTokenGenerator>();
-        _tokenWhiteListRepositoryMock = new Mock<ITokenWhiteListRepository>();
+        _userRepository = new Mock<IUserRepository>();
+        _passwordHasher = new Mock<IPasswordHasher<User>>();
+        _jwtTokenGenerator = new Mock<IJwtTokenGenerator>();
+        _tokenWhiteListRepository = new Mock<ITokenWhiteListRepository>();
 
         _handler = new SignInCommandHandler(
-            _userRepositoryMock.Object,
-            _passwordHasherMock.Object,
-            _jwtTokenGeneratorMock.Object,
-            _tokenWhiteListRepositoryMock.Object);
+            _userRepository.Object,
+            _passwordHasher.Object,
+            _jwtTokenGenerator.Object,
+            _tokenWhiteListRepository.Object);
     }
 
     [Fact]
@@ -53,18 +53,18 @@ public class SignInCommandHandlerTests
             DateTime.UtcNow.AddHours(1)
         );
 
-        _userRepositoryMock.Setup(x => x.GetByEmailAsync(command.Email,It.IsAny<CancellationToken>()))
+        _userRepository.Setup(x => x.GetByEmailAsync(command.Email,It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
 
-        _passwordHasherMock.Setup(x => x.VerifyHashedPassword(user, user.HashedPassword, command.Password))
+        _passwordHasher.Setup(x => x.VerifyHashedPassword(user, user.HashedPassword, command.Password))
             .Returns(PasswordVerificationResult.Success);
 
-        _jwtTokenGeneratorMock.Setup(x => x.GenerateToken(user))
+        _jwtTokenGenerator.Setup(x => x.GenerateToken(user))
             .Returns(jwtToken);
 
-        _tokenWhiteListRepositoryMock.Setup(x => x.AddAsync(It.IsAny<TokenWhiteList>(),It.IsAny<CancellationToken>()));
+        _tokenWhiteListRepository.Setup(x => x.AddAsync(It.IsAny<TokenWhiteList>(),It.IsAny<CancellationToken>()));
 
-        _tokenWhiteListRepositoryMock.Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
+        _tokenWhiteListRepository.Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(1);
 
         // Act
@@ -73,7 +73,7 @@ public class SignInCommandHandlerTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().Be(jwtToken.Token);
-        _tokenWhiteListRepositoryMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _tokenWhiteListRepository.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -82,7 +82,7 @@ public class SignInCommandHandlerTests
         // Arrange
         var command = _fixture.Create<SignInCommand>();
 
-        _userRepositoryMock.Setup(x => x.GetByEmailAsync(command.Email,It.IsAny<CancellationToken>()))
+        _userRepository.Setup(x => x.GetByEmailAsync(command.Email,It.IsAny<CancellationToken>()))
             .ReturnsAsync((User)null);
 
         // Act
@@ -91,7 +91,7 @@ public class SignInCommandHandlerTests
         // Assert
         result.IsFailure.Should().BeTrue();
         result.Error.Should().Be(UserErrors.InvalidCredentialException());
-        _tokenWhiteListRepositoryMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
+        _tokenWhiteListRepository.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]
@@ -104,10 +104,10 @@ public class SignInCommandHandlerTests
             .With(u => u.HashedPassword, "hashed_password")
             .Create();
 
-        _userRepositoryMock.Setup(x => x.GetByEmailAsync(command.Email,It.IsAny<CancellationToken>()))
+        _userRepository.Setup(x => x.GetByEmailAsync(command.Email,It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
 
-        _passwordHasherMock.Setup(x =>
+        _passwordHasher.Setup(x =>
                 x.VerifyHashedPassword(user, user.HashedPassword, command.Password))
             .Returns(PasswordVerificationResult.Failed);
 
@@ -117,6 +117,6 @@ public class SignInCommandHandlerTests
         // Assert
         result.IsFailure.Should().BeTrue();
         result.Error.Should().Be(UserErrors.InvalidCredentialException());
-        _tokenWhiteListRepositoryMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
+        _tokenWhiteListRepository.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
 }

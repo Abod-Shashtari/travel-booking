@@ -8,16 +8,16 @@ namespace Application.Tests.Users;
 
 public class SignOutCommandHandlerTests
 {
-    private readonly Mock<ITokenWhiteListRepository> _tokenWhiteListRepositoryMock;
+    private readonly Mock<ITokenWhiteListRepository> _tokenWhiteListRepository;
     private readonly SignOutAllDevicesCommandHandler _signOutAllDevicesHandler;
     private readonly SignOutCommandHandler _signOutHandler;
     private readonly IFixture _fixture;
 
     public SignOutCommandHandlerTests()
     {
-        _tokenWhiteListRepositoryMock = new Mock<ITokenWhiteListRepository>();
-        _signOutAllDevicesHandler = new SignOutAllDevicesCommandHandler(_tokenWhiteListRepositoryMock.Object);
-        _signOutHandler = new SignOutCommandHandler(_tokenWhiteListRepositoryMock.Object);
+        _tokenWhiteListRepository = new Mock<ITokenWhiteListRepository>();
+        _signOutAllDevicesHandler = new SignOutAllDevicesCommandHandler(_tokenWhiteListRepository.Object);
+        _signOutHandler = new SignOutCommandHandler(_tokenWhiteListRepository.Object);
         _fixture = new Fixture();
     }
 
@@ -27,10 +27,10 @@ public class SignOutCommandHandlerTests
         // Arrange
         var command = _fixture.Create<SignOutAllDevicesCommand>();
 
-        _tokenWhiteListRepositoryMock.Setup(r => r.DeactivateTokensByUserIdAsync(command.UserId,It.IsAny<CancellationToken>()))
+        _tokenWhiteListRepository.Setup(r => r.DeactivateTokensByUserIdAsync(command.UserId,It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
-        _tokenWhiteListRepositoryMock.Setup(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()))
+        _tokenWhiteListRepository.Setup(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(1);
 
         // Act
@@ -38,8 +38,8 @@ public class SignOutCommandHandlerTests
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        _tokenWhiteListRepositoryMock.Verify(r => r.DeactivateTokensByUserIdAsync(command.UserId,It.IsAny<CancellationToken>()), Times.Once);
-        _tokenWhiteListRepositoryMock.Verify(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _tokenWhiteListRepository.Verify(r => r.DeactivateTokensByUserIdAsync(command.UserId,It.IsAny<CancellationToken>()), Times.Once);
+        _tokenWhiteListRepository.Verify(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -48,10 +48,10 @@ public class SignOutCommandHandlerTests
         // Arrange
         var command = _fixture.Create<SignOutCommand>();
 
-        _tokenWhiteListRepositoryMock.Setup(r => r.DeactivateTokenAsync(command.TokenJti,It.IsAny<CancellationToken>()))
+        _tokenWhiteListRepository.Setup(r => r.DeactivateTokenAsync(command.TokenJti,It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
-        _tokenWhiteListRepositoryMock.Setup(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()))
+        _tokenWhiteListRepository.Setup(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(1);
 
         // Act
@@ -59,7 +59,7 @@ public class SignOutCommandHandlerTests
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        _tokenWhiteListRepositoryMock.Verify(r => r.DeactivateTokenAsync(command.TokenJti,It.IsAny<CancellationToken>()), Times.Once);
-        _tokenWhiteListRepositoryMock.Verify(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _tokenWhiteListRepository.Verify(r => r.DeactivateTokenAsync(command.TokenJti,It.IsAny<CancellationToken>()), Times.Once);
+        _tokenWhiteListRepository.Verify(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 }
