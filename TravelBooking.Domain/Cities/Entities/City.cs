@@ -12,5 +12,6 @@ public class City:AuditEntity
     public string Country { get; set; } = string.Empty;
     [MaxLength(20)]
     public string PostOffice { get; set; } = string.Empty;
+    public Guid? ThumbnailImageId { get; set; }
     public ICollection<Hotel> Hotels { get; set; } = [];
 }

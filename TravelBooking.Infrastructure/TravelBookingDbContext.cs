@@ -5,6 +5,7 @@ using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Domain.Common.Entities;
 using TravelBooking.Domain.Discounts.Entities;
 using TravelBooking.Domain.Hotels.Entities;
+using TravelBooking.Domain.Images.Entities;
 using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.RoomTypes.Entities;
 using TravelBooking.Domain.Users.Entities;
@@ -21,6 +22,7 @@ public class TravelBookingDbContext:DbContext
     public DbSet<Room> Rooms { get; set; }
     public DbSet<RoomType> RoomsTypes { get; set; }
     public DbSet<Discount> Discounts { get; set; }
+    public DbSet<Image> Images { get; set; }
     public TravelBookingDbContext(DbContextOptions<TravelBookingDbContext> options):base(options)
     {
     }
