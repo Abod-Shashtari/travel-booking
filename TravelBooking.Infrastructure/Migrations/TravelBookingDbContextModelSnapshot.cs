@@ -35,7 +35,7 @@ namespace TravelBooking.Infrastructure.Migrations
 
                     b.HasIndex("RoomsTypesId");
 
-                    b.ToTable("AmenityRoomType");
+                    b.ToTable("AmenityRoomType", (string)null);
                 });
 
             modelBuilder.Entity("TravelBooking.Domain.Amenities.Entities.Amenity", b =>
@@ -61,7 +61,7 @@ namespace TravelBooking.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Amenities");
+                    b.ToTable("Amenities", (string)null);
                 });
 
             modelBuilder.Entity("TravelBooking.Domain.Authentication.Entities.TokenWhiteList", b =>
@@ -85,7 +85,7 @@ namespace TravelBooking.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TokenWhiteList");
+                    b.ToTable("TokenWhiteList", (string)null);
                 });
 
             modelBuilder.Entity("TravelBooking.Domain.Cities.Entities.City", b =>
@@ -115,12 +115,9 @@ namespace TravelBooking.Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<Guid?>("ThumbnailImageId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
-                    b.ToTable("Cities");
+                    b.ToTable("Cities", (string)null);
                 });
 
             modelBuilder.Entity("TravelBooking.Domain.Discounts.Entities.Discount", b =>
@@ -151,7 +148,7 @@ namespace TravelBooking.Infrastructure.Migrations
 
                     b.HasIndex("RoomTypeId");
 
-                    b.ToTable("Discounts");
+                    b.ToTable("Discounts", (string)null);
                 });
 
             modelBuilder.Entity("TravelBooking.Domain.Hotels.Entities.Hotel", b =>
@@ -181,9 +178,6 @@ namespace TravelBooking.Infrastructure.Migrations
                     b.Property<Guid>("OwnerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ThumbnailImageId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.ComplexProperty<Dictionary<string, object>>("Location", "TravelBooking.Domain.Hotels.Entities.Hotel.Location#Location", b1 =>
                         {
                             b1.IsRequired();
@@ -201,34 +195,7 @@ namespace TravelBooking.Infrastructure.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Hotels");
-                });
-
-            modelBuilder.Entity("TravelBooking.Domain.Images.Entities.Image", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<Guid>("EntityId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("EntityType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Images");
+                    b.ToTable("Hotels", (string)null);
                 });
 
             modelBuilder.Entity("TravelBooking.Domain.RoomTypes.Entities.RoomType", b =>
@@ -262,7 +229,7 @@ namespace TravelBooking.Infrastructure.Migrations
 
                     b.HasIndex("HotelId");
 
-                    b.ToTable("RoomsTypes");
+                    b.ToTable("RoomsTypes", (string)null);
                 });
 
             modelBuilder.Entity("TravelBooking.Domain.Rooms.Entities.Room", b =>
@@ -295,7 +262,7 @@ namespace TravelBooking.Infrastructure.Migrations
 
                     b.HasIndex("RoomTypeId");
 
-                    b.ToTable("Rooms");
+                    b.ToTable("Rooms", (string)null);
                 });
 
             modelBuilder.Entity("TravelBooking.Domain.Users.Entities.User", b =>
@@ -335,7 +302,7 @@ namespace TravelBooking.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("AmenityRoomType", b =>
