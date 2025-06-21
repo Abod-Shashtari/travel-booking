@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using TravelBooking.Application.Common.Models;
 using TravelBooking.Domain.Amenities.Entities;
 using TravelBooking.Domain.Common;
@@ -9,10 +10,12 @@ namespace TravelBooking.Application.Amenities.GetAmenitiesByRoomType;
 public class GetAmenitiesByRoomTypeQueryHandler:IRequestHandler<GetAmenitiesByRoomTypeQuery, Result<PaginatedList<AmenityResponse>>>
 {
     private readonly IRepository<Amenity> _amenityRepository;
+    private readonly IMapper _mapper;
 
-    public GetAmenitiesByRoomTypeQueryHandler(IRepository<Amenity> amenityRepository)
+    public GetAmenitiesByRoomTypeQueryHandler(IRepository<Amenity> amenityRepository, IMapper mapper)
     {
         _amenityRepository = amenityRepository;
+        _mapper = mapper;
     }
     
     public async Task<Result<PaginatedList<AmenityResponse>>> Handle(GetAmenitiesByRoomTypeQuery request, CancellationToken cancellationToken)
@@ -23,16 +26,8 @@ public class GetAmenitiesByRoomTypeQueryHandler:IRequestHandler<GetAmenitiesByRo
             cancellationToken
         );
         
-        var amenitiesResponse = amenities.Data.Select(
-            a => new AmenityResponse(
-                a.Id,
-                a.Name,
-                a.Description,
-                a.CreatedAt,
-                a.ModifiedAt
-            )
-        ).ToList();
-        var pagedAmenitiesResponse = amenities.Map(amenitiesResponse);
-        return Result<PaginatedList<AmenityResponse>>.Success(pagedAmenitiesResponse);
+        var mappedItems = _mapper.Map<List<AmenityResponse>>(amenities.Data);
+        var amenitiesResponse = amenities.Map(mappedItems);
+        return Result<PaginatedList<AmenityResponse>>.Success(amenitiesResponse);
     }
 }
