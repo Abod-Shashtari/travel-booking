@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using TravelBooking.Application.Hotels.CreateHotels;
+using TravelBooking.Application.Hotels.CreateHotel;
 using TravelBooking.Application.Hotels.GetHotels;
 using TravelBooking.Application.Hotels.UpdateHotel;
 using TravelBooking.Web.Requests.Hotels;
