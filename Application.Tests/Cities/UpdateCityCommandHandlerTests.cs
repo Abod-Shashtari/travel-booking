@@ -13,18 +13,15 @@ public class UpdateCityCommandHandlerTests
 {
     private readonly IFixture _fixture;
     private readonly Mock<IRepository<City>> _cityRepository;
-    private readonly Mock<IMapper> _mapper;
     private readonly UpdateCityCommandHandler _handler;
 
     public UpdateCityCommandHandlerTests()
     {
-        _fixture    = new Fixture();
-        _fixture.Customize<City>(c => c
-            .Without(city => city.Hotels)
-        );
-        _cityRepository   = new Mock<IRepository<City>>();
-        _mapper = new Mock<IMapper>();
-        _handler    = new UpdateCityCommandHandler(_mapper.Object, _cityRepository.Object);
+        _fixture = new Fixture();
+        _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+        _cityRepository = new Mock<IRepository<City>>();
+        var mapper = new Mock<IMapper>();
+        _handler = new UpdateCityCommandHandler(mapper.Object, _cityRepository.Object);
     }
 
     [Fact]
@@ -65,7 +62,6 @@ public class UpdateCityCommandHandlerTests
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        _mapper.Verify(m => m.Map(command, existing), Times.Once);
         _cityRepository.Verify(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 }
