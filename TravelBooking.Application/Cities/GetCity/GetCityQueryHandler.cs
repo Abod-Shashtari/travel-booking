@@ -12,12 +12,10 @@ namespace TravelBooking.Application.Cities.GetCity;
 public class GetCityQueryHandler:IRequestHandler<GetCityQuery,Result<CityResponse?>>
 {
     private readonly IRepository<City> _cityRepository;
-    private readonly IMapper _mapper;
     
-    public GetCityQueryHandler(IRepository<City> cityRepository, IMapper mapper)
+    public GetCityQueryHandler(IRepository<City> cityRepository)
     {
         _cityRepository = cityRepository;
-        _mapper = mapper;
     }
     public async Task<Result<CityResponse?>> Handle(GetCityQuery request, CancellationToken cancellationToken)
     {
@@ -28,9 +26,8 @@ public class GetCityQueryHandler:IRequestHandler<GetCityQuery,Result<CityRespons
             city.PostOffice,
             city.Hotels.Count
         );
-        var city = await _cityRepository.GetByIdAsync(request.CityId, selector, cancellationToken);
-        if (city == null) return Result<CityResponse?>.Failure(CityErrors.CityNotFound());
-        var cityResponse = _mapper.Map<CityResponse>(city);
+        var cityResponse = await _cityRepository.GetByIdAsync(request.CityId, selector, cancellationToken);
+        if (cityResponse == null) return Result<CityResponse?>.Failure(CityErrors.CityNotFound());
         return Result<CityResponse?>.Success(cityResponse);
     }
 }

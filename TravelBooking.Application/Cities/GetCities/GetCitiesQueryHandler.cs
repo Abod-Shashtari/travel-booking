@@ -10,12 +10,10 @@ namespace TravelBooking.Application.Cities.GetCities;
 
 public class GetCitiesQueryHandler:IRequestHandler<GetCitiesQuery, Result<PaginatedList<CityResponse>>>
 {
-    private readonly IMapper _mapper;
     private readonly IRepository<City> _cityRepository;
 
-    public GetCitiesQueryHandler(IMapper mapper, IRepository<City> cityRepository)
+    public GetCitiesQueryHandler(IRepository<City> cityRepository)
     {
-        _mapper = mapper;
         _cityRepository = cityRepository;
     }
 
@@ -34,10 +32,7 @@ public class GetCitiesQueryHandler:IRequestHandler<GetCitiesQuery, Result<Pagina
             selector,
             cancellationToken
         );
-
-        var mappedItems = _mapper.Map<List<CityResponse>>(cities.Data);
-        var citiesResponse = new PaginatedList<CityResponse>(mappedItems, cities.TotalCount, request.PageSize, request.PageNumber);
         
-        return Result<PaginatedList<CityResponse>>.Success(citiesResponse);
+        return Result<PaginatedList<CityResponse>>.Success(cities);
     }
 }

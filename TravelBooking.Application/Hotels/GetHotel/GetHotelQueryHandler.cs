@@ -14,14 +14,10 @@ namespace TravelBooking.Application.Hotels.GetHotel;
 public class GetHotelQueryHandler:IRequestHandler<GetHotelQuery, Result<HotelResponse?>>
 {
     private readonly IRepository<Hotel> _hotelRepository;
-    private readonly IRepository<Image> _imageRepository;
-    private readonly IMapper _mapper;
 
-    public GetHotelQueryHandler(IRepository<Hotel> hotelRepository, IMapper mapper, IRepository<Image> imageRepository)
+    public GetHotelQueryHandler(IRepository<Hotel> hotelRepository)
     {
         _hotelRepository = hotelRepository;
-        _mapper = mapper;
-        _imageRepository = imageRepository;
     }
 
     public async Task<Result<HotelResponse?>> Handle(GetHotelQuery request, CancellationToken cancellationToken)
@@ -37,9 +33,8 @@ public class GetHotelQueryHandler:IRequestHandler<GetHotelQuery, Result<HotelRes
             hotel.CreatedAt,
             hotel.ModifiedAt
         );
-        var hotel = await _hotelRepository.GetByIdAsync(request.HotelId,selector, cancellationToken);
-        if (hotel == null) return Result<HotelResponse?>.Failure(HotelErrors.HotelNotFound());
-        var hotelResponse = _mapper.Map<HotelResponse>(hotel);
+        var hotelResponse = await _hotelRepository.GetByIdAsync(request.HotelId,selector, cancellationToken);
+        if (hotelResponse == null) return Result<HotelResponse?>.Failure(HotelErrors.HotelNotFound());
         return Result<HotelResponse?>.Success(hotelResponse);
     }
 }
