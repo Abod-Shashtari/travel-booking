@@ -10,7 +10,7 @@ using TravelBooking.Domain.Hotels.Errors;
 using TravelBooking.Domain.Users.Errors;
 using TravelBooking.Domain.Users.Interfaces;
 
-namespace TravelBooking.Application.Hotels.CreateHotels;
+namespace TravelBooking.Application.Hotels.CreateHotel;
 
 public class CreateHotelCommandHandler:IRequestHandler<CreateHotelCommand, Result<HotelResponse?>>
 {

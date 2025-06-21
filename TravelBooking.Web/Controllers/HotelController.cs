@@ -2,8 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TravelBooking.Application.Cities.SetThumbnail;
-using TravelBooking.Application.Hotels.CreateHotels;
+using TravelBooking.Application.Hotels.CreateHotel;
 using TravelBooking.Application.Hotels.DeleteHotel;
 using TravelBooking.Application.Hotels.GetHotel;
 using TravelBooking.Application.Hotels.GetHotels;
