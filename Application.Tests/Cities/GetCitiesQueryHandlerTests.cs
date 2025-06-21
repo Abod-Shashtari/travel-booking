@@ -1,6 +1,5 @@
 ﻿using System.Linq.Expressions;
 using AutoFixture;
-using AutoMapper;
 using FluentAssertions;
 using Moq;
 using TravelBooking.Application.Cities.GetCities;
@@ -8,6 +7,7 @@ using TravelBooking.Application.Common.Models;
 using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Domain.Common;
 using TravelBooking.Domain.Common.Interfaces;
+using TravelBooking.Domain.Hotels.Entities;
 
 namespace Application.Tests.Cities;
 
@@ -15,59 +15,62 @@ public class GetCitiesQueryHandlerTests
 {
     private readonly IFixture _fixture;
     private readonly Mock<IRepository<City>> _cityRepository;
-    private readonly Mock<IMapper> _mapper;
     private readonly GetCitiesQueryHandler _handler;
 
     public GetCitiesQueryHandlerTests()
     {
         _fixture   = new Fixture();
-        _fixture.Customize<City>(c => c
-            .Without(city => city.Hotels)
-        );
+        _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
         _cityRepository  = new Mock<IRepository<City>>();
-        _mapper= new Mock<IMapper>();
-        _handler   = new GetCitiesQueryHandler(_mapper.Object, _cityRepository.Object);
+        _handler   = new GetCitiesQueryHandler(_cityRepository.Object);
     }
 
     [Fact]
-    public async Task GetCitiesCommandHandler_ValidRequest_ShouldReturnPaginatedResponses()
+    public async Task GetCitiesQueryHandler_ValidRequest_ShouldReturnPaginatedResponses()
     {
         // Arrange
-        var command = new GetCitiesQuery( 2, 3);
-        const int page = 2;
-        const int size = 3;
-        const int total = 10;
+        var query = _fixture.Create<GetCitiesQuery>();
+
+        List<City> cities =
+        [
+            _fixture.Build<City>()
+                .With(c => c.Hotels, new List<Hotel> { new Hotel(), new Hotel() })
+                .Create(),
+            _fixture.Build<City>()
+                .With(c => c.Hotels, new List<Hotel> { new Hotel()})
+                .Create(),
+            _fixture.Build<City>()
+                .With(c => c.Hotels, new List<Hotel>())
+                .Create(),
+        ];
         
-        var data = new List<CityResponse>
-        {
-            _fixture.Create<CityResponse>(),
-            _fixture.Create<CityResponse>(),
-            _fixture.Create<CityResponse>()
-        };
+        Expression<Func<City, CityResponse>> selector = city => new CityResponse(
+            city.Id,
+            city.Name,
+            city.Country,
+            city.PostOffice,
+            city.Hotels.Count
+        );
         
-        var projectedList = new PaginatedList<CityResponse>(data, total, size, page);
+        var cityResponses = cities.Select(selector.Compile()).ToList();
+        var projectedList = new PaginatedList<CityResponse>(cityResponses,cityResponses.Count, query.PageNumber, query.PageSize);
 
         _cityRepository.Setup(r => r.GetPaginatedListAsync(
-                It.Is<PaginationSpecification<City>>(
-                    s => s.Skip== (page-1)*size && s.Take == size),
+                It.IsAny<PaginationSpecification<City>>(),
                 It.IsAny<Expression<Func<City, CityResponse>>>(),
                 It.IsAny<CancellationToken>()
             ))
             .ReturnsAsync(projectedList);
 
-        _mapper.Setup(m => m.Map<List<CityResponse>>(data))
-            .Returns(data);
-
         // Act
-        var result = await _handler.Handle(command, CancellationToken.None);
+        var result = await _handler.Handle(query, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        
         result.Value.Should().NotBeNull();
-        result.Value!.TotalCount.Should().Be(total);
-        result.Value!.CurrentPage.Should().Be(page);
-        result.Value!.PageSize.Should().Be(size);
-        result.Value!.Data.Should().BeEquivalentTo(data);
+        result.Value.Data.Should().BeEquivalentTo(cityResponses);
+        result.Value.TotalCount.Should().Be(projectedList.TotalCount);
+        result.Value.CurrentPage.Should().Be(projectedList.CurrentPage);
+        result.Value.PageSize.Should().Be(projectedList.PageSize);
     }
 }

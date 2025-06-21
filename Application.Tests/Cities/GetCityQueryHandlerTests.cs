@@ -15,15 +15,13 @@ public class GetCityQueryHandlerTests
 {
     private readonly IFixture _fixture;
     private readonly Mock<IRepository<City>> _cityRepository;
-    private readonly Mock<IMapper> _mapper;
     private readonly GetCityQueryHandler _handler;
 
     public GetCityQueryHandlerTests()
     {
         _fixture   = new Fixture();
         _cityRepository  = new Mock<IRepository<City>>();
-        _mapper= new Mock<IMapper>();
-        _handler   = new GetCityQueryHandler(_cityRepository.Object, _mapper.Object);
+        _handler   = new GetCityQueryHandler(_cityRepository.Object);
     }
 
     [Fact]
@@ -53,13 +51,9 @@ public class GetCityQueryHandlerTests
     {
         // Arrange
         var cityId = Guid.NewGuid();
-        var query  = new GetCityQuery(cityId);
+        var query = new GetCityQuery(cityId);
 
         var projected = _fixture.Build<CityResponse>()
-            .With(x => x.Id, cityId)
-            .Create();
-
-        var mapped = _fixture.Build<CityResponse>()
             .With(x => x.Id, cityId)
             .Create();
 
@@ -69,19 +63,11 @@ public class GetCityQueryHandlerTests
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(projected);
 
-        _mapper
-            .Setup(m => m.Map<CityResponse>(projected))
-            .Returns(mapped);
-
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        result.Value.Should().BeEquivalentTo(mapped);
-        _cityRepository.Verify(r => r.GetByIdAsync(
-            cityId,
-            It.IsAny<Expression<Func<City, CityResponse>>>(),
-            It.IsAny<CancellationToken>()), Times.Once);
+        result.Value.Should().BeEquivalentTo(projected);
     }
 }

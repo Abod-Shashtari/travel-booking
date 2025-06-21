@@ -20,9 +20,7 @@ public class CreateCityCommandHandlerTests
     public CreateCityCommandHandlerTests()
     {
         _fixture     = new Fixture();
-        _fixture.Customize<City>(c => c
-            .Without(city => city.Hotels)
-        );
+        _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
         _cityRepository    = new Mock<IRepository<City>>();
         _mapper  = new Mock<IMapper>();
         _handler     = new CreateCityCommandHandler(_cityRepository.Object, _mapper.Object);
@@ -68,9 +66,7 @@ public class CreateCityCommandHandlerTests
     {
         // Arrange
         var command = _fixture.Create<CreateCityCommand>();
-        var city = _fixture.Build<City>()
-            .Without(c => c.Hotels)
-            .Create();
+        var city = _fixture.Create<City>();
 
         _mapper
             .Setup(m => m.Map<City>(command))

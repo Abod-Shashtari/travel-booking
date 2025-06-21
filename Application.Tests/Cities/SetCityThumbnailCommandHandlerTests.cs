@@ -20,9 +20,7 @@ public class SetCityThumbnailCommandHandlerTests
     public SetCityThumbnailCommandHandlerTests()
     {
         _fixture = new Fixture();
-        _fixture.Customize<City>(c => c
-            .Without(city => city.Hotels)
-        );
+        _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
         _cityRepository = new Mock<IRepository<City>>();
         _imageRepository = new Mock<IRepository<Image>>();
         _handler = new SetCityThumbnailCommandHandler(

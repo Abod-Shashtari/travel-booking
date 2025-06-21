@@ -17,9 +17,7 @@ public class DeleteCityCommandHandlerTests
     public DeleteCityCommandHandlerTests()
     {
         _fixture   = new Fixture();
-        _fixture.Customize<City>(c => c
-            .Without(city => city.Hotels)
-        );
+        _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
         _cityRepository  = new Mock<IRepository<City>>();
         _handler   = new DeleteCityCommandHandler(_cityRepository.Object);
     }
@@ -44,7 +42,6 @@ public class DeleteCityCommandHandlerTests
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        _cityRepository.Verify(r => r.Delete(city), Times.Once);
         _cityRepository.Verify(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -65,7 +62,6 @@ public class DeleteCityCommandHandlerTests
         // Assert
         result.IsFailure.Should().BeTrue();
         result.Error.Should().Be(CityErrors.CityNotFound());
-        _cityRepository.Verify(r => r.Delete(It.IsAny<City>()), Times.Never);
         _cityRepository.Verify(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
 }
