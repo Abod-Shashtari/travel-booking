@@ -22,7 +22,7 @@ public class UploadImageCommandHandler:IRequestHandler<UploadImageCommand, Resul
     {
         var entityType= Enum.GetValues<EntityType>()
             .FirstOrDefault(e => string.Equals(e.ToString(), request.EntityName, StringComparison.OrdinalIgnoreCase));
-        if (!Enum.IsDefined(entityType))
+        if(!Enum.IsDefined(typeof(EntityType), request.EntityName))
             return Result.Failure(ImageErrors.ImageInvalidEntityType());
         
         var url = await _imageService.AddImageAsync(request.Image,cancellationToken);
