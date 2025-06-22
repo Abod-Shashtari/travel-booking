@@ -1,8 +1,11 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using TravelBooking.Application.Images.DeleteImage;
+using TravelBooking.Application.Images.GetImages;
 using TravelBooking.Application.Images.UploadImage;
 using TravelBooking.Web.Extensions;
+using TravelBooking.Web.Requests.Images;
 
 namespace TravelBooking.Web.Controllers;
 
@@ -10,10 +13,12 @@ namespace TravelBooking.Web.Controllers;
 public class ImageController:ControllerBase
 {
     private readonly ISender _sender;
+    private readonly IMapper _mapper;
     
-    public ImageController(ISender sender)
+    public ImageController(ISender sender, IMapper mapper)
     {
         _sender = sender;
+        _mapper = mapper;
     }
 
     [HttpPost("/api/{entityName}/{entityId}/images")]
@@ -34,5 +39,13 @@ public class ImageController:ControllerBase
         var command = new DeleteImageCommand(imageId);
         var result = await _sender.Send(command);
         return result.Match(NoContent,this.HandleFailure);
+    }
+    
+    [HttpGet("/api/{entityName}/{entityId}/images")]
+    public async Task<IActionResult> GetImages(string entityName, Guid entityId,[FromQuery]GetImagesRequest request)
+    {
+        var query = _mapper.Map<GetImagesQuery>(request) with {EntityName = entityName, EntityId = entityId };
+        var result = await _sender.Send(query);
+        return result.Match(Ok,this.HandleFailure);
     }
 }

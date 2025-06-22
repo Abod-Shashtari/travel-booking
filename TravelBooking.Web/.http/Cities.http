@@ -2,7 +2,7 @@ GET {{host-api}}/cities
 Authorization: Bearer {{token}}
 Content-Type: application/json
 ###
-GET {{host-api}}/cities/55958153-6dc5-443f-2299-08dda474bd3d
+GET {{host-api}}/cities/d290f1ee-6c54-4b01-90e6-d701748f0851
 Authorization: Bearer {{token}}
 Content-Type: application/json
 ###
@@ -29,3 +29,9 @@ Content-Type: application/json
 DELETE {{host-api}}/cities/7b11747b-30aa-4e33-e757-08ddab8bd0b1
 Authorization: Bearer {{token}}
 Content-Type: application/json
+###
+PUT {{host-api}}/cities/d290f1ee-6c54-4b01-90e6-d701748f0851/thumbnail
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+"10fd6042-ca29-43ba-723b-08ddb175a566"

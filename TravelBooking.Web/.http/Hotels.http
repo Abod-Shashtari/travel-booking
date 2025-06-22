@@ -38,3 +38,14 @@ Content-Type: application/json
 DELETE {{host-api}}/hotels/e8110e93-c3a7-4530-70ff-08ddab530a01
 Authorization: Bearer {{token}}
 Content-Type: application/json
+###
+PUT {{host-api}}/hotels/29b714b4-3440-4fad-e7f4-08dda4b6f00d/thumbnail
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+"2bb2ee12-ed69-47da-4a69-08ddaf362c84"
+###
+
+GET {{host-api}}/hotels/29b714b4-3440-4fad-e7f4-08dda4b6f00d/images
+Authorization: Bearer {{token}}
+Content-Type: application/json
