@@ -1,0 +1,38 @@
+﻿using System.Linq.Expressions;
+using MediatR;
+using TravelBooking.Application.Common.Models;
+using TravelBooking.Domain.Common;
+using TravelBooking.Domain.Common.Interfaces;
+using TravelBooking.Domain.Images.Entities;
+using TravelBooking.Domain.Images.Errors;
+
+namespace TravelBooking.Application.Images.GetImages;
+
+public class GetImagesQueryHandler:IRequestHandler<GetImagesQuery, Result<PaginatedList<ImageResponse>?>>
+{
+    private readonly IRepository<Image> _imageRepository;
+    
+    public GetImagesQueryHandler(IRepository<Image> imageRepository)
+    {
+        _imageRepository = imageRepository;
+    }
+
+    public async Task<Result<PaginatedList<ImageResponse>?>> Handle(GetImagesQuery request, CancellationToken cancellationToken)
+    {
+        if (!Enum.TryParse<EntityType>(request.EntityName, ignoreCase: true, out var entityType))
+            return Result<PaginatedList<ImageResponse>?>.Failure(ImageErrors.ImageInvalidEntityType());
+        
+        Expression<Func<Image, bool>> criteria = image =>
+            image.EntityType == entityType && image.EntityId == request.EntityId;
+        
+        ISpecification<Image> spec = new ImageSpecification(criteria,request.PageSize,request.PageNumber);
+        
+        var imagesPaginated= await _imageRepository.GetPaginatedListAsync(
+            spec,
+            selector: img => new ImageResponse(img.Id,img.Url),
+            cancellationToken: cancellationToken
+        );
+        
+        return Result<PaginatedList<ImageResponse>?>.Success(imagesPaginated);
+    }
+}
