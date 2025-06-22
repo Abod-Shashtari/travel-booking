@@ -49,7 +49,11 @@ public class GetCitiesQueryHandlerTests
             city.Name,
             city.Country,
             city.PostOffice,
-            city.Hotels.Count
+            city.Hotels.Count,
+            new ImageResponse(
+                city.ThumbnailImageId,
+                city.ThumbnailImage != null?city.ThumbnailImage.Url:""
+            )
         );
         
         var cityResponses = cities.Select(selector.Compile()).ToList();

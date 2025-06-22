@@ -41,7 +41,11 @@ public class GetHotelsQueryHandlerTests
             hotel.CityId,
             hotel.OwnerId,
             hotel.CreatedAt,
-            hotel.ModifiedAt
+            hotel.ModifiedAt,
+            new ImageResponse(
+                hotel.ThumbnailImageId,
+                hotel.ThumbnailImage != null?hotel.ThumbnailImage.Url:""
+            )
         );
         
         var hotelResponses = hotels.Select(selector.Compile()).ToList();
