@@ -11,5 +11,6 @@ public record HotelResponse(
     Guid CityId=default,
     Guid OwnerId=default,
     DateTimeOffset CreatedAt=default,
-    DateTimeOffset? ModifiedAt=null
+    DateTimeOffset? ModifiedAt=null,
+    ImageResponse? Thumbnail=null
 );

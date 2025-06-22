@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Domain.Common.Entities;
-using TravelBooking.Domain.Rooms.Entities;
+using TravelBooking.Domain.Images.Entities;
 using TravelBooking.Domain.RoomTypes.Entities;
 using TravelBooking.Domain.Users.Entities;
 
@@ -22,5 +22,6 @@ public class Hotel:AuditEntity
     public Guid OwnerId { get; set; }
     public User? Owner { get; set; }
     public Guid? ThumbnailImageId { get; set; }
+    public Image? ThumbnailImage { get; set; }
     public ICollection<RoomType> RoomTypes { get; set; } = [];
 }

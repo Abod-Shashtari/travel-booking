@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using AutoMapper;
 using MediatR;
 using TravelBooking.Application.Common.Models;
 using TravelBooking.Domain.Cities.Entities;
@@ -25,7 +24,11 @@ public class GetCitiesQueryHandler:IRequestHandler<GetCitiesQuery, Result<Pagina
             city.Name,
             city.Country,
             city.PostOffice,
-            city.Hotels.Count
+            city.Hotels.Count,
+            new ImageResponse(
+                city.ThumbnailImageId,
+                city.ThumbnailImage != null ? city.ThumbnailImage.Url : ""
+            )
         );
         var cities= await _cityRepository.GetPaginatedListAsync(
             specification,

@@ -24,7 +24,11 @@ public class GetCityQueryHandler:IRequestHandler<GetCityQuery,Result<CityRespons
             city.Name,
             city.Country,
             city.PostOffice,
-            city.Hotels.Count
+            city.Hotels.Count,
+            new ImageResponse(
+                city.ThumbnailImageId,
+                city.ThumbnailImage != null ? city.ThumbnailImage.Url : ""
+            )
         );
         var cityResponse = await _cityRepository.GetByIdAsync(request.CityId, selector, cancellationToken);
         if (cityResponse == null) return Result<CityResponse?>.Failure(CityErrors.CityNotFound());

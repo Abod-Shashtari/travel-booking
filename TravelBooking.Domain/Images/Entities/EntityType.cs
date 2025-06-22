@@ -2,7 +2,7 @@
 
 public enum EntityType
 {
-    Hotel,
-    RoomType,
-    City
+    Hotels,
+    RoomTypes,
+    Cities
 }
