@@ -19,7 +19,8 @@ public class GetImagesQueryHandler:IRequestHandler<GetImagesQuery, Result<Pagina
 
     public async Task<Result<PaginatedList<ImageResponse>?>> Handle(GetImagesQuery request, CancellationToken cancellationToken)
     {
-        if (!Enum.TryParse<EntityType>(request.EntityName, ignoreCase: true, out var entityType))
+        var requestEntityName=request.EntityName.Replace("-","");
+        if (!Enum.TryParse<EntityType>(requestEntityName, ignoreCase: true, out var entityType))
             return Result<PaginatedList<ImageResponse>?>.Failure(ImageErrors.ImageInvalidEntityType());
         
         Expression<Func<Image, bool>> criteria = image =>

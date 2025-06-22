@@ -24,7 +24,8 @@ public class UploadImageCommandHandler:IRequestHandler<UploadImageCommand, Resul
 
     public async Task<Result<ImageFullResponse?>> Handle(UploadImageCommand request, CancellationToken cancellationToken)
     {
-        if (!Enum.TryParse<EntityType>(request.EntityName, ignoreCase: true, out var entityType))
+        var requestEntityName=request.EntityName.Replace("-","");
+        if (!Enum.TryParse<EntityType>(requestEntityName, ignoreCase: true, out var entityType))
             return Result<ImageFullResponse?>.Failure(ImageErrors.ImageInvalidEntityType());
         
         var url = await _imageService.AddImageAsync(request.Image,cancellationToken);
