@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using TravelBooking.Application.Common.Models;
-using TravelBooking.Application.Hotels.CreateHotels;
+using TravelBooking.Application.Hotels.CreateHotel;
 using TravelBooking.Application.Hotels.UpdateHotel;
 using TravelBooking.Domain.Hotels.Entities;
 
