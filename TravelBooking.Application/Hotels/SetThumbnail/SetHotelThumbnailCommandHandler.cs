@@ -29,6 +29,7 @@ public class SetHotelThumbnailCommandHandler:IRequestHandler<SetHotelThumbnailCo
         if (hotel == null) return Result.Failure(HotelErrors.HotelNotFound());
         
         hotel.ThumbnailImageId = request.ImageId;
+        await _hotelRepository.SaveChangesAsync(cancellationToken);
         return Result.Success();
     }
 }

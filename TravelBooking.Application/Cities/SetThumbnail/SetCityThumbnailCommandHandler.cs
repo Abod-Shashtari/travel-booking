@@ -28,6 +28,7 @@ public class SetCityThumbnailCommandHandler:IRequestHandler<SetCityThumbnailComm
         if (city == null) return Result.Failure(CityErrors.CityNotFound());
         
         city.ThumbnailImageId = request.ImageId;
+        await _cityRepository.SaveChangesAsync(cancellationToken);
         return Result.Success();
     }
 }
