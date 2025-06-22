@@ -30,6 +30,18 @@ public class TravelBookingDbContext:DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Hotel>().ComplexProperty(h=>h.Location);
+        
+        modelBuilder.Entity<Hotel>()
+            .HasOne(h=>h.ThumbnailImage)
+            .WithMany()
+            .HasForeignKey(p => p.ThumbnailImageId)
+            .IsRequired(false);
+        
+        modelBuilder.Entity<City>()
+            .HasOne(h=>h.ThumbnailImage)
+            .WithMany()
+            .HasForeignKey(p => p.ThumbnailImageId)
+            .IsRequired(false);
     }
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken=default)
     {

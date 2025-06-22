@@ -1,13 +1,10 @@
 ﻿using System.Linq.Expressions;
-using System.Net.Mime;
-using AutoMapper;
 using MediatR;
 using TravelBooking.Application.Common.Models;
 using TravelBooking.Domain.Common;
 using TravelBooking.Domain.Common.Interfaces;
 using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Domain.Hotels.Errors;
-using TravelBooking.Domain.Images.Entities;
 
 namespace TravelBooking.Application.Hotels.GetHotel;
 
@@ -31,7 +28,11 @@ public class GetHotelQueryHandler:IRequestHandler<GetHotelQuery, Result<HotelRes
             hotel.CityId,
             hotel.OwnerId,
             hotel.CreatedAt,
-            hotel.ModifiedAt
+            hotel.ModifiedAt,
+            new ImageResponse(
+                hotel.ThumbnailImageId,
+                hotel.ThumbnailImage != null ? hotel.ThumbnailImage.Url : ""
+            )
         );
         var hotelResponse = await _hotelRepository.GetByIdAsync(request.HotelId,selector, cancellationToken);
         if (hotelResponse == null) return Result<HotelResponse?>.Failure(HotelErrors.HotelNotFound());

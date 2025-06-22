@@ -28,7 +28,11 @@ public class GetHotelsQueryHandler:IRequestHandler<GetHotelsQuery, Result<Pagina
             hotel.CityId,
             hotel.OwnerId,
             hotel.CreatedAt,
-            hotel.ModifiedAt
+            hotel.ModifiedAt,
+            new ImageResponse(
+                hotel.ThumbnailImageId,
+                hotel.ThumbnailImage != null ? hotel.ThumbnailImage.Url : ""
+            )
         );
         
         var hotels = await _hotelRepository.GetPaginatedListAsync(

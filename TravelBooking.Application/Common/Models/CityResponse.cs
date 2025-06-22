@@ -6,5 +6,6 @@ public record CityResponse(
     string Name,
     string Country,
     string PostOffice,
-    int NumberOfHotels
+    int NumberOfHotels,
+    ImageResponse? Thumbnail
 );

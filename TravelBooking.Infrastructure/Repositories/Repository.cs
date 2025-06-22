@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using TravelBooking.Domain.Common;
 using TravelBooking.Domain.Common.Entities;
 using TravelBooking.Domain.Common.Interfaces;
@@ -45,6 +46,9 @@ public abstract class Repository<T>:IRepository<T> where T:EntityBase
         
         var data = await query.ToListAsync(cancellationToken);
         
+        if(specification.Skip==null || specification.Take==null)
+            return new PaginatedList<T>(data,totalCount, data.Count , 1);
+        
         return new PaginatedList<T>(data,totalCount, (int)specification.Skip! / (int)specification.Take! + 1, (int)specification.Take!);
     }
 
@@ -54,6 +58,9 @@ public abstract class Repository<T>:IRepository<T> where T:EntityBase
         var (query, totalCount) = await ApplySpecificationForPages(specification, cancellationToken);
         
         var data = await query.Select(selector).ToListAsync(cancellationToken);
+        
+        if(specification.Skip==null || specification.Take==null)
+            return new PaginatedList<TResult>(data,totalCount, data.Count , 1);
         
         return new PaginatedList<TResult>(data,totalCount, (int)specification.Skip! / (int)specification.Take! + 1, (int)specification.Take!);
     }
