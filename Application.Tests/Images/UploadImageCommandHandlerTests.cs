@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
+using AutoMapper;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Moq;
@@ -27,7 +28,8 @@ public class UploadImageCommandHandlerTests
 
         _imageService = new Mock<IImageService>();
         _imageRepository = new Mock<IRepository<Image>>();
-        _handler = new UploadImageCommandHandler(_imageService.Object, _imageRepository.Object);
+        var mapper = new Mock<IMapper>();
+        _handler = new UploadImageCommandHandler(_imageService.Object, _imageRepository.Object, mapper.Object);
     }
 
     [Fact]
