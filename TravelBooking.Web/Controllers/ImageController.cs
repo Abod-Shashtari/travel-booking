@@ -21,7 +21,11 @@ public class ImageController:ControllerBase
     {
         var command = new UploadImageCommand(entityName, entityId, image);
         var result = await _sender.Send(command);
-        return result.Match(Ok,this.HandleFailure);
+        return result.Match(
+            data=>
+                Created($"/api/{data!.EntityType.ToString().ToLower()}/{data.EntityId}/images",data),
+            this.HandleFailure
+        );
     }
     
     [HttpDelete("/api/images/{imageId}")]
