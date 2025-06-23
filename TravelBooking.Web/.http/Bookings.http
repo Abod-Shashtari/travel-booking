@@ -1,0 +1,28 @@
+POST {{host-api}}/user/bookings
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "hotelId": "29b714b4-3440-4fad-e7f4-08dda4b6f00d",
+  "rooms": [
+    "c5bedee5-482a-4199-906c-08ddab7e1435"
+  ],
+  "checkIn": "2025-06-28T15:00:00+03:00",
+  "checkOut": "2025-06-29T15:00:00+03:00"
+}
+###
+GET {{host-api}}/user/bookings
+Authorization: Bearer {{token}}
+Content-Type: application/json
+###
+POST {{host-api}}/user/bookings/135970eb-cfa4-42d6-aad2-08ddb28e5c61/cancel
+Authorization: Bearer {{token}}
+Content-Type: application/json
+###
+POST {{host-api}}/user/bookings/5f94a632-37c9-4ef2-1e90-08ddb296fcca/confirm
+Authorization: Bearer {{token}}
+Content-Type: application/json
+###
+POST {{host-api}}/user/bookings/5f94a632-37c9-4ef2-1e90-08ddb296fcca/complete
+Authorization: Bearer {{token}}
+Content-Type: application/json

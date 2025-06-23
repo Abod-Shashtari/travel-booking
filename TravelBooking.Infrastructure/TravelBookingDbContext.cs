@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TravelBooking.Domain.Amenities.Entities;
 using TravelBooking.Domain.Authentication.Entities;
+using TravelBooking.Domain.Bookings.Entities;
 using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Domain.Common.Entities;
 using TravelBooking.Domain.Discounts.Entities;
@@ -23,6 +24,7 @@ public class TravelBookingDbContext:DbContext
     public DbSet<RoomType> RoomsTypes { get; set; }
     public DbSet<Discount> Discounts { get; set; }
     public DbSet<Image> Images { get; set; }
+    public DbSet<Booking> Bookings { get; set; }
     public TravelBookingDbContext(DbContextOptions<TravelBookingDbContext> options):base(options)
     {
     }
@@ -42,6 +44,17 @@ public class TravelBookingDbContext:DbContext
             .WithMany()
             .HasForeignKey(p => p.ThumbnailImageId)
             .IsRequired(false);
+        
+        modelBuilder.Entity<Booking>()
+            .HasOne(b => b.User)
+            .WithMany(u => u.Bookings)
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        modelBuilder.Entity<Hotel>()
+            .HasMany(h => h.Bookings)
+            .WithOne(b => b.Hotel)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Restrict);
     }
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken=default)
     {
