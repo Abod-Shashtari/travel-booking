@@ -21,7 +21,9 @@ public class CompleteBookingCommandHandler:IRequestHandler<CompleteBookingComman
         if (booking == null)
             return Result.Failure(BookingErrors.BookingNotFound());
 
-        booking.Status = BookingStatus.Completed;
+        if(booking.Status == BookingStatus.Confirmed)
+            booking.Status = BookingStatus.Completed;
+        else return Result.Failure(BookingErrors.BookingCannotBeCompleted());
         
         await _bookingRepository.SaveChangesAsync(cancellationToken);
 
