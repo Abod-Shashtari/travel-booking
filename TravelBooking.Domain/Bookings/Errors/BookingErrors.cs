@@ -27,6 +27,12 @@ public static class BookingErrors
             "The booking could not be confirmed.",
             ErrorType.BadRequest
         );
+    public static Error BookingCannotBeCompleted() =>
+        new(
+            "Booking.CannotBeCompleted",
+            "The booking could not be completed.",
+            ErrorType.BadRequest
+        );
     
     public static Error UserNotOwnerOfBooking() =>
         new("Booking.UserNotOwner",
