@@ -9,6 +9,7 @@ using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Domain.Images.Entities;
 using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.RoomTypes.Entities;
+using TravelBooking.Domain.UserActivity.Entites;
 using TravelBooking.Domain.Users.Entities;
 
 namespace TravelBooking.Infrastructure;
@@ -25,6 +26,7 @@ public class TravelBookingDbContext:DbContext
     public DbSet<Discount> Discounts { get; set; }
     public DbSet<Image> Images { get; set; }
     public DbSet<Booking> Bookings { get; set; }
+    public DbSet<HotelVisit> HotelVisits { get; set; }
     public TravelBookingDbContext(DbContextOptions<TravelBookingDbContext> options):base(options)
     {
     }
@@ -53,6 +55,12 @@ public class TravelBookingDbContext:DbContext
         modelBuilder.Entity<Hotel>()
             .HasMany(h => h.Bookings)
             .WithOne(b => b.Hotel)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        modelBuilder.Entity<HotelVisit>()
+            .HasOne(h => h.User)
+            .WithMany(u=>u.HotelVisits)
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
     }

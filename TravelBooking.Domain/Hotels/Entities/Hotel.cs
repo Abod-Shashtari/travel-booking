@@ -4,6 +4,7 @@ using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Domain.Common.Entities;
 using TravelBooking.Domain.Images.Entities;
 using TravelBooking.Domain.RoomTypes.Entities;
+using TravelBooking.Domain.UserActivity.Entites;
 using TravelBooking.Domain.Users.Entities;
 
 namespace TravelBooking.Domain.Hotels.Entities;
@@ -26,4 +27,5 @@ public class Hotel:AuditEntity
     public Image? ThumbnailImage { get; set; }
     public ICollection<RoomType> RoomTypes { get; set; } = [];
     public ICollection<Booking> Bookings { get; set; } = [];
+    public ICollection<HotelVisit> HotelVisits { get; set; } = [];
 }
