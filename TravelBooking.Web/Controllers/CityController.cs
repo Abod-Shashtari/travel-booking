@@ -6,6 +6,7 @@ using TravelBooking.Application.Cities.CreateCity;
 using TravelBooking.Application.Cities.DeleteCity;
 using TravelBooking.Application.Cities.GetCities;
 using TravelBooking.Application.Cities.GetCity;
+using TravelBooking.Application.Cities.GetTrendingCities;
 using TravelBooking.Application.Cities.SetThumbnail;
 using TravelBooking.Application.Cities.UpdateCity;
 using TravelBooking.Web.Extensions;
@@ -29,6 +30,14 @@ public class CityController:ControllerBase
     public async Task<IActionResult> GetCities([FromQuery] GetCitiesRequest request)
     {
         var query = _mapper.Map<GetCitiesQuery>(request);
+        var result = await _sender.Send(query);
+        return result.Match(data => Ok(data),this.HandleFailure);
+    }
+    
+    [HttpGet("trending-destinations")]
+    public async Task<IActionResult> GetTrendingCities()
+    {
+        var query = new GetTrendingCitiesQuery(); 
         var result = await _sender.Send(query);
         return result.Match(data => Ok(data),this.HandleFailure);
     }
