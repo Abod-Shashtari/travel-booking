@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -58,7 +59,10 @@ public class HotelController:ControllerBase
     [HttpGet("{hotelId}")]
     public async Task<IActionResult> GetHotel(Guid hotelId)
     {
-        var query = new GetHotelQuery(hotelId); 
+        var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+        if (userId == null) return BadRequest("Token does not contain a User ID.");
+        
+        var query = new GetHotelQuery(new Guid(userId.Value),hotelId); 
         var result = await _sender.Send(query);
         return result.Match(Ok,this.HandleFailure);
     }
