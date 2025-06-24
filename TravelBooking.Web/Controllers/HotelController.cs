@@ -9,6 +9,7 @@ using TravelBooking.Application.Hotels.GetHotel;
 using TravelBooking.Application.Hotels.GetHotels;
 using TravelBooking.Application.Hotels.SetThumbnail;
 using TravelBooking.Application.Hotels.UpdateHotel;
+using TravelBooking.Application.UserActivity.GetRecentlyVisitedHotels;
 using TravelBooking.Web.Extensions;
 using TravelBooking.Web.Requests.Hotels;
 
@@ -32,7 +33,7 @@ public class HotelController:ControllerBase
     {
         var query = _mapper.Map<GetHotelsQuery>(request);
         var result = await _sender.Send(query);
-        return result.Match(data => Ok(data),this.HandleFailure);
+        return result.Match(Ok,this.HandleFailure);
     }
     
     [HttpGet("featured-deals")]
@@ -40,7 +41,18 @@ public class HotelController:ControllerBase
     {
         var query = new GetFeaturedHotelsQuery();
         var result = await _sender.Send(query);
-        return result.Match(data => Ok(data),this.HandleFailure);
+        return result.Match(Ok,this.HandleFailure);
+    }
+    
+    [HttpGet("/api/user/recently-visited-hotels")]
+    public async Task<IActionResult> GetRecentlyVisitedHotels()
+    {
+        var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+        if (userId == null) return BadRequest("Token does not contain a User ID.");
+        
+        var query = new GetRecentlyVisitedHotelsQuery(new Guid(userId.Value));
+        var result = await _sender.Send(query);
+        return result.Match(Ok,this.HandleFailure);
     }
 
     [HttpGet("{hotelId}")]
@@ -48,7 +60,7 @@ public class HotelController:ControllerBase
     {
         var query = new GetHotelQuery(hotelId); 
         var result = await _sender.Send(query);
-        return result.Match(data => Ok(data),this.HandleFailure);
+        return result.Match(Ok,this.HandleFailure);
     }
 
     [HttpPost]
