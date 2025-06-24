@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TravelBooking.Application.Hotels.CreateHotel;
 using TravelBooking.Application.Hotels.DeleteHotel;
+using TravelBooking.Application.Hotels.GetFeaturedHotels;
 using TravelBooking.Application.Hotels.GetHotel;
 using TravelBooking.Application.Hotels.GetHotels;
 using TravelBooking.Application.Hotels.SetThumbnail;
@@ -30,6 +31,14 @@ public class HotelController:ControllerBase
     public async Task<IActionResult> GetHotels([FromQuery] GetHotelsRequest request)
     {
         var query = _mapper.Map<GetHotelsQuery>(request);
+        var result = await _sender.Send(query);
+        return result.Match(data => Ok(data),this.HandleFailure);
+    }
+    
+    [HttpGet("featured-deals")]
+    public async Task<IActionResult> GetFeaturedHotels()
+    {
+        var query = new GetFeaturedHotelsQuery();
         var result = await _sender.Send(query);
         return result.Match(data => Ok(data),this.HandleFailure);
     }
