@@ -2,6 +2,10 @@ GET {{host-api}}/cities
 Authorization: Bearer {{token}}
 Content-Type: application/json
 ###
+GET {{host-api}}/cities/trending-destinations
+Authorization: Bearer {{token}}
+Content-Type: application/json
+###
 GET {{host-api}}/cities/d290f1ee-6c54-4b01-90e6-d701748f0851
 Authorization: Bearer {{token}}
 Content-Type: application/json
