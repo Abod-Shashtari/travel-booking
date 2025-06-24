@@ -6,6 +6,10 @@ GET {{host-api}}/hotels
 Authorization: Bearer {{token}}
 Content-Type: application/json
 ###
+GET {{host-api}}/hotels/featured-deals
+Authorization: Bearer {{token}}
+Content-Type: application/json
+###
 POST {{host-api}}/hotels
 Authorization: Bearer {{token}}
 Content-Type: application/json
