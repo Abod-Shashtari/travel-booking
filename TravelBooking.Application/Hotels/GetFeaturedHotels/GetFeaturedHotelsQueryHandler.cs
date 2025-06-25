@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using MediatR;
 using TravelBooking.Application.Common.Models;
+using TravelBooking.Application.Hotels.Specifications;
 using TravelBooking.Domain.Common;
 using TravelBooking.Domain.Common.Interfaces;
 using TravelBooking.Domain.Hotels.Entities;

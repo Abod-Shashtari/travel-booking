@@ -3,6 +3,7 @@ using AutoMapper;
 using FluentAssertions;
 using Moq;
 using TravelBooking.Application.Bookings.GetBookings;
+using TravelBooking.Application.Bookings.Specifications;
 using TravelBooking.Application.Common.Models;
 using TravelBooking.Domain.Bookings.Entities;
 using TravelBooking.Domain.Common;

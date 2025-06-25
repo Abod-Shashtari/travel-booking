@@ -1,7 +1,9 @@
 ﻿using System.Linq.Expressions;
+using TravelBooking.Application.Common.Models;
+using TravelBooking.Application.Common.Specifications;
 using TravelBooking.Domain.Bookings.Entities;
 
-namespace TravelBooking.Application.Common.Models;
+namespace TravelBooking.Application.Bookings.Specifications;
 
 public class GetBookingsOfUserSpecification:PaginationSpecification<Booking>
 {

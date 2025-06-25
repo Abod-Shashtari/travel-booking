@@ -1,6 +1,7 @@
-﻿using TravelBooking.Domain.UserActivity.Entites;
+﻿using TravelBooking.Application.Common.Specifications;
+using TravelBooking.Domain.UserActivity.Entites;
 
-namespace TravelBooking.Application.Common.Models;
+namespace TravelBooking.Application.Hotels.Specifications;
 
 public class GetHotelVisitedSpecification:Specification<HotelVisit>
 {

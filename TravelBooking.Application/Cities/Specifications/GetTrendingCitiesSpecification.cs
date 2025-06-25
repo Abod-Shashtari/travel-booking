@@ -1,6 +1,8 @@
-﻿using TravelBooking.Domain.Cities.Entities;
+﻿using TravelBooking.Application.Common.Models;
+using TravelBooking.Application.Common.Specifications;
+using TravelBooking.Domain.Cities.Entities;
 
-namespace TravelBooking.Application.Common.Models;
+namespace TravelBooking.Application.Cities.Specifications;
 
 public class GetTrendingCitiesSpecification:PaginationSpecification<City>
 {

@@ -3,6 +3,7 @@ using FluentAssertions;
 using Moq;
 using TravelBooking.Application.Common.Models;
 using TravelBooking.Application.RoomTypes.GetRoomTypes;
+using TravelBooking.Application.RoomTypes.Specifications;
 using TravelBooking.Domain.Common;
 using TravelBooking.Domain.Common.Interfaces;
 using TravelBooking.Domain.Discounts.Entities;

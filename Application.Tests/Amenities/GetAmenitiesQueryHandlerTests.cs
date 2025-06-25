@@ -4,6 +4,7 @@ using FluentAssertions;
 using Moq;
 using TravelBooking.Application.Amenities.GetAmenities;
 using TravelBooking.Application.Common.Models;
+using TravelBooking.Application.Common.Specifications;
 using TravelBooking.Domain.Amenities.Entities;
 using TravelBooking.Domain.Common;
 using TravelBooking.Domain.Common.Interfaces;

@@ -4,6 +4,7 @@ using FluentAssertions;
 using Moq;
 using TravelBooking.Application.Common.Models;
 using TravelBooking.Application.Rooms.GetRooms;
+using TravelBooking.Application.Rooms.Specifications;
 using TravelBooking.Domain.Common;
 using TravelBooking.Domain.Common.Interfaces;
 using TravelBooking.Domain.Rooms.Entities;

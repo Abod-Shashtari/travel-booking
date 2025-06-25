@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using TravelBooking.Application.Bookings.Specifications;
 using TravelBooking.Application.Common.Models;
 using TravelBooking.Domain.Bookings.Entities;
 using TravelBooking.Domain.Bookings.Errors;
