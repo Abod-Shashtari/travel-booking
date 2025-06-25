@@ -2,6 +2,7 @@
 using FluentAssertions;
 using Moq;
 using TravelBooking.Application.Amenities.RemoveAmenityFromRoomType;
+using TravelBooking.Application.Amenities.Specifications;
 using TravelBooking.Application.Common.Models;
 using TravelBooking.Domain.Amenities.Entities;
 using TravelBooking.Domain.Amenities.Errors;

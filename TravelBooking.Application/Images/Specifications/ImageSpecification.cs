@@ -1,7 +1,8 @@
 ﻿using System.Linq.Expressions;
+using TravelBooking.Application.Common.Specifications;
 using TravelBooking.Domain.Images.Entities;
 
-namespace TravelBooking.Application.Common.Models;
+namespace TravelBooking.Application.Images.Specifications;
 
 public class ImageSpecification:PaginationSpecification<Image>
 {

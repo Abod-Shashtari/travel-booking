@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using TravelBooking.Domain.Common.Interfaces;
 
-namespace TravelBooking.Application.Common.Models;
+namespace TravelBooking.Application.Common.Specifications;
 
 public class Specification<T>: ISpecification<T>
 {

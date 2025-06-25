@@ -3,6 +3,7 @@ using AutoMapper;
 using FluentAssertions;
 using Moq;
 using TravelBooking.Application.Common.Models;
+using TravelBooking.Application.Common.Specifications;
 using TravelBooking.Application.Discounts.GetDiscounts;
 using TravelBooking.Domain.Common;
 using TravelBooking.Domain.Common.Interfaces;

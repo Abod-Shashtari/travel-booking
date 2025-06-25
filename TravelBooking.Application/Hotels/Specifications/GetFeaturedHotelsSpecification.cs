@@ -1,6 +1,7 @@
-﻿using TravelBooking.Domain.Hotels.Entities;
+﻿using TravelBooking.Application.Common.Specifications;
+using TravelBooking.Domain.Hotels.Entities;
 
-namespace TravelBooking.Application.Common.Models;
+namespace TravelBooking.Application.Hotels.Specifications;
 
 public class GetFeaturedHotelsSpecification:PaginationSpecification<Hotel>
 {

@@ -1,6 +1,8 @@
-﻿using TravelBooking.Domain.Amenities.Entities;
+﻿using TravelBooking.Application.Common.Models;
+using TravelBooking.Application.Common.Specifications;
+using TravelBooking.Domain.Amenities.Entities;
 
-namespace TravelBooking.Application.Common.Models;
+namespace TravelBooking.Application.Amenities.Specifications;
 
 public class AmenitiesByRoomTypeSpecification:PaginationSpecification<Amenity>
 {

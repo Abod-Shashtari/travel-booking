@@ -4,6 +4,7 @@ using FluentAssertions;
 using Moq;
 using TravelBooking.Application.Common.Models;
 using TravelBooking.Application.UserActivity.GetRecentlyVisitedHotels;
+using TravelBooking.Application.UserActivity.Specifications;
 using TravelBooking.Domain.Common;
 using TravelBooking.Domain.Common.Interfaces;
 using TravelBooking.Domain.UserActivity.Entites;

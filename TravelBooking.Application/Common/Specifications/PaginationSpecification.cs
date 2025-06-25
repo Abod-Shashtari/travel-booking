@@ -1,7 +1,8 @@
 ﻿using System.Linq.Expressions;
+using TravelBooking.Application.Common.Models;
 using TravelBooking.Domain.Common.Entities;
 
-namespace TravelBooking.Application.Common.Models;
+namespace TravelBooking.Application.Common.Specifications;
 
 public class PaginationSpecification<T>:Specification<T> where T : EntityBase
 {

@@ -1,6 +1,7 @@
-﻿using TravelBooking.Domain.Rooms.Entities;
+﻿using TravelBooking.Application.Common.Specifications;
+using TravelBooking.Domain.Rooms.Entities;
 
-namespace TravelBooking.Application.Common.Models;
+namespace TravelBooking.Application.Rooms.Specifications;
 
 public class RoomsByRoomTypeIdSpecification:PaginationSpecification<Room>
 {

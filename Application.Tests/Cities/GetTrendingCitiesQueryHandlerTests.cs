@@ -3,6 +3,7 @@ using AutoFixture;
 using FluentAssertions;
 using Moq;
 using TravelBooking.Application.Cities.GetTrendingCities;
+using TravelBooking.Application.Cities.Specifications;
 using TravelBooking.Application.Common.Models;
 using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Domain.Common;

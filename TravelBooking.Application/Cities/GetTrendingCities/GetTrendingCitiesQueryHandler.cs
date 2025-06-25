@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using MediatR;
+using TravelBooking.Application.Cities.Specifications;
 using TravelBooking.Application.Common.Models;
 using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Domain.Common;
