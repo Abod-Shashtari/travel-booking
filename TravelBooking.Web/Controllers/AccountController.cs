@@ -45,8 +45,7 @@ public class AccountController:ControllerBase
     public async Task<IActionResult> SignOutUser()
     {
         var jtiClaim = User.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti);
-        if (jtiClaim == null) return BadRequest("Token does not contain a JTI.");
-        var result=await _sender.Send(new SignOutCommand(jtiClaim.Value));
+        var result=await _sender.Send(new SignOutCommand(jtiClaim!.Value));
         return result.Match(NoContent, this.HandleFailure);
         
     }

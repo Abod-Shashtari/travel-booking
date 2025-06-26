@@ -48,10 +48,7 @@ public class HotelController:ControllerBase
     [HttpGet("/api/user/recently-visited-hotels")]
     public async Task<IActionResult> GetRecentlyVisitedHotels()
     {
-        var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-        if (userId == null) return BadRequest("Token does not contain a User ID.");
-        
-        var query = new GetRecentlyVisitedHotelsQuery(new Guid(userId.Value));
+        var query = new GetRecentlyVisitedHotelsQuery(this.GetUserId());
         var result = await _sender.Send(query);
         return result.Match(Ok,this.HandleFailure);
     }
@@ -59,10 +56,7 @@ public class HotelController:ControllerBase
     [HttpGet("{hotelId}")]
     public async Task<IActionResult> GetHotel(Guid hotelId)
     {
-        var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-        if (userId == null) return BadRequest("Token does not contain a User ID.");
-        
-        var query = new GetHotelQuery(new Guid(userId.Value),hotelId); 
+        var query = new GetHotelQuery(this.GetUserId(),hotelId); 
         var result = await _sender.Send(query);
         return result.Match(Ok,this.HandleFailure);
     }
