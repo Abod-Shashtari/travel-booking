@@ -32,6 +32,7 @@
       <Content Include=".http\Discounts.http" />
       <Content Include=".http\http-client.env.json" />
       <Content Include=".http\Hotels.http" />
+      <Content Include=".http\Reviews.http" />
       <Content Include=".http\Rooms.http" />
       <Content Include=".http\RoomTypes.http" />
     </ItemGroup>

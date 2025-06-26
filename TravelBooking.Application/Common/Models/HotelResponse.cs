@@ -10,6 +10,7 @@ public record HotelResponse(
     string CityName="",
     Guid CityId=default,
     Guid OwnerId=default,
+    double? StarRating=null,
     DateTimeOffset CreatedAt=default,
     DateTimeOffset? ModifiedAt=null,
     ImageResponse? Thumbnail=null

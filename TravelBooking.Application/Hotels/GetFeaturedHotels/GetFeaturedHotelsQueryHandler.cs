@@ -29,6 +29,7 @@ public class GetFeaturedHotelsQueryHandler:IRequestHandler<GetFeaturedHotelsQuer
             hotel.City!.Name,
             hotel.CityId,
             hotel.OwnerId,
+            hotel.StarRating,
             hotel.CreatedAt,
             hotel.ModifiedAt,
             new ImageResponse(

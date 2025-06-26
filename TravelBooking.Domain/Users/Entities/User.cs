@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TravelBooking.Domain.Common.Entities;
 using TravelBooking.Domain.Bookings.Entities;
+using TravelBooking.Domain.Reviews.Entities;
 using TravelBooking.Domain.UserActivity.Entites;
 
 namespace TravelBooking.Domain.Users.Entities;
@@ -18,4 +19,5 @@ public class User:AuditEntity
     public UserRole UserRole { get; set; } = UserRole.User;
     public ICollection<Booking> Bookings { get; set; } = [];
     public ICollection<HotelVisit> HotelVisits { get; set; } = [];
+    public ICollection<Review> Reviews { get; set; } = [];
 }

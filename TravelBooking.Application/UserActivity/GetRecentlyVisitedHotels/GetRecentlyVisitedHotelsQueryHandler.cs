@@ -29,6 +29,7 @@ public class GetRecentlyVisitedHotelsQueryHandler:IRequestHandler<GetRecentlyVis
             hotelVisit.Hotel!.City!.Name,
             hotelVisit.Hotel!.CityId,
             hotelVisit.Hotel!.OwnerId,
+            hotelVisit.Hotel!.StarRating,
             hotelVisit.Hotel!.CreatedAt,
             hotelVisit.Hotel!.ModifiedAt,
             new ImageResponse(
