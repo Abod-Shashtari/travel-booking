@@ -15,10 +15,11 @@ public class SignOutCommandHandlerTests
 
     public SignOutCommandHandlerTests()
     {
+        _fixture = new Fixture();
+        _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
         _tokenWhiteListRepository = new Mock<ITokenWhiteListRepository>();
         _signOutAllDevicesHandler = new SignOutAllDevicesCommandHandler(_tokenWhiteListRepository.Object);
         _signOutHandler = new SignOutCommandHandler(_tokenWhiteListRepository.Object);
-        _fixture = new Fixture();
     }
 
     [Fact]
