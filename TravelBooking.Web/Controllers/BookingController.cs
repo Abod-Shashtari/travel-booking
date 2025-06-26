@@ -28,10 +28,7 @@ public class BookingController:ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateBooking(CreateBookingRequest request)
     {
-        var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-        if (userId == null) return BadRequest("Token does not contain a User ID.");
-        
-        var command = _mapper.Map<CreateBookingCommand>(request) with {UserId = new Guid(userId.Value)};
+        var command = _mapper.Map<CreateBookingCommand>(request) with {UserId = this.GetUserId()};
         var result = await _sender.Send(command);
         return result.Match(data=>
                 Created($"/api/user/bookings/",data),
@@ -41,10 +38,7 @@ public class BookingController:ControllerBase
     [HttpPost("{bookingId}/cancel")]
     public async Task<IActionResult> CancelBooking(Guid bookingId)
     {
-        var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-        if (userId == null) return BadRequest("Token does not contain a User ID.");
-        
-        var command = new CancelBookingCommand(new Guid(userId.Value),bookingId);
+        var command = new CancelBookingCommand(this.GetUserId(),bookingId);
         var result = await _sender.Send(command);
         return result.Match(NoContent, this.HandleFailure);
     }
@@ -52,10 +46,7 @@ public class BookingController:ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetBookings([FromQuery] GetBookingsRequest request)
     {
-        var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-        if (userId == null) return BadRequest("Token does not contain a User ID.");
-        
-        var query = _mapper.Map<GetBookingsQuery>(request) with {UserId = new Guid(userId.Value)};
+        var query = _mapper.Map<GetBookingsQuery>(request) with {UserId = this.GetUserId()};
         var result = await _sender.Send(query);
         return result.Match(Ok, this.HandleFailure);
     }
@@ -63,10 +54,7 @@ public class BookingController:ControllerBase
     [HttpPost("{bookingId}/confirm")]
     public async Task<IActionResult> ConfirmBooking(Guid bookingId)
     {
-        var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-        if (userId == null) return BadRequest("Token does not contain a User ID.");
-        
-        var command = new ConfirmBookingCommand(new Guid(userId.Value),bookingId);
+        var command = new ConfirmBookingCommand(this.GetUserId(),bookingId);
         var result = await _sender.Send(command);
         return result.Match(NoContent, this.HandleFailure);
     }

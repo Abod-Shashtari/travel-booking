@@ -34,10 +34,7 @@ public class ReviewController:ControllerBase
     [HttpPost("/api/hotels/{hotelId}/reviews")]
     public async Task<IActionResult> PostReview(PostReviewRequest request,Guid hotelId)
     {
-        var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-        if (userId == null) return BadRequest("Token does not contain a User ID.");
-        
-        var command = _mapper.Map<PostReviewCommand>(request) with {HotelId = hotelId, UserId = new Guid(userId.Value)};
+        var command = _mapper.Map<PostReviewCommand>(request) with {HotelId = hotelId, UserId = this.GetUserId()};
         var result = await _sender.Send(command);
         return result.Match(data=>
                 Created($"/api/hotels/{hotelId}/reviews/",data),
@@ -47,12 +44,9 @@ public class ReviewController:ControllerBase
     [HttpPut("/api/reviews/{reviewId}")]
     public async Task<IActionResult> PostReview(UpdateReviewRequest request,Guid reviewId)
     {
-        var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-        if (userId == null) return BadRequest("Token does not contain a User ID.");
-        
         var command = _mapper.Map<UpdateReviewCommand>(request) with
         {
-            UserId = new Guid(userId.Value),
+            UserId = this.GetUserId(),
             ReviewId = reviewId
         };
         var result = await _sender.Send(command);
@@ -62,10 +56,7 @@ public class ReviewController:ControllerBase
     [HttpDelete("/api/reviews/{reviewId}")]
     public async Task<IActionResult> DeleteReview(Guid reviewId)
     {
-        var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-        if (userId == null) return BadRequest("Token does not contain a User ID.");
-
-        var command = new DeleteReviewCommand(new Guid(userId.Value),reviewId);
+        var command = new DeleteReviewCommand(this.GetUserId(),reviewId);
         var result = await _sender.Send(command);
         return result.Match(NoContent,this.HandleFailure);
     }

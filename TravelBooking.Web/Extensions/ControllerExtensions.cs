@@ -1,10 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using TravelBooking.Domain.Common;
 
 namespace TravelBooking.Web.Extensions;
 
 public static class ControllerExtensions
 {
+    public static Guid GetUserId(this ControllerBase controller)
+    {
+        var userIdClaim = controller.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+        return new Guid(userIdClaim!.Value);
+    }
+
     public static IActionResult HandleFailure(this ControllerBase controller ,Error error)
     {
         if (error is ValidationError validationResult)
