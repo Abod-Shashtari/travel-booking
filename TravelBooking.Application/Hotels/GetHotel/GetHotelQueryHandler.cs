@@ -31,6 +31,7 @@ public class GetHotelQueryHandler:IRequestHandler<GetHotelQuery, Result<HotelRes
             hotel.City!.Name,
             hotel.CityId,
             hotel.OwnerId,
+            hotel.StarRating,
             hotel.CreatedAt,
             hotel.ModifiedAt,
             new ImageResponse(
