@@ -3,9 +3,9 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "hotelId": "29b714b4-3440-4fad-e7f4-08dda4b6f00d",
+  "hotelId": "f47ac10b-58cc-4372-a567-0e02b2c3d482",
   "rooms": [
-    "c5bedee5-482a-4199-906c-08ddab7e1435"
+    "9f546671-d9af-4fd4-af26-9c6b19187e8c"
   ],
   "checkIn": "2025-06-28T15:00:00+03:00",
   "checkOut": "2025-06-29T15:00:00+03:00"

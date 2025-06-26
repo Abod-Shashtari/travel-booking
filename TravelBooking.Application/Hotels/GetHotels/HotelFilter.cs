@@ -6,5 +6,10 @@ public record HotelFilter(
     DateTime? CheckOut,
     int? NumberOfRooms,
     int? NumberOfAdults,
-    int? NumberOfChildren
+    int? NumberOfChildren,
+    decimal? MinPrice,
+    decimal? MaxPrice,
+    double? StarRating,
+    List<string>? RoomTypes,
+    List<string>? Amenities
 );

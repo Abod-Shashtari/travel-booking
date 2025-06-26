@@ -8,7 +8,7 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "textReview": "nice and bad hotel!!",
+  "textReview": "Nice hotel!!",
   "starRating": 4.5
 }
 ###
@@ -21,7 +21,7 @@ Content-Type: application/json
   "starRating": 4.7
 }
 ###
-DELETE {{host-api}}/reviews/2112269f-92cf-4cda-acfd-08ddb4227d82
+DELETE {{host-api}}/reviews/f508ea39-2af1-42db-e0db-08ddb4a7d889
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
