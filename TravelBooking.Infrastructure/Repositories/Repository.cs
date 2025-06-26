@@ -49,7 +49,7 @@ public abstract class Repository<T>:IRepository<T> where T:EntityBase
         if(specification.Skip==null || specification.Take==null)
             return new PaginatedList<T>(data,totalCount, data.Count , 1);
         
-        return new PaginatedList<T>(data,totalCount, (int)specification.Skip! / (int)specification.Take! + 1, (int)specification.Take!);
+        return new PaginatedList<T>(data,totalCount, (int)specification.Take!, (int)specification.Skip! / (int)specification.Take! + 1);
     }
 
     public async Task<PaginatedList<TResult>> GetPaginatedListAsync<TResult>(ISpecification<T> specification, Expression<Func<T, TResult>> selector,
@@ -62,7 +62,7 @@ public abstract class Repository<T>:IRepository<T> where T:EntityBase
         if(specification.Skip==null || specification.Take==null)
             return new PaginatedList<TResult>(data,totalCount, data.Count , 1);
         
-        return new PaginatedList<TResult>(data,totalCount, (int)specification.Skip! / (int)specification.Take! + 1, (int)specification.Take!);
+        return new PaginatedList<TResult>(data,totalCount, (int)specification.Take!, (int)specification.Skip! / (int)specification.Take! + 1);
     }
 
     private async Task<(IQueryable<T>, int)> ApplySpecificationForPages(ISpecification<T> specification,CancellationToken cancellationToken)
