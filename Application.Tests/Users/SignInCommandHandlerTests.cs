@@ -25,6 +25,7 @@ public class SignInCommandHandlerTests
     public SignInCommandHandlerTests()
     {
         _fixture = new Fixture();
+        _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
         _userRepository = new Mock<IUserRepository>();
         _passwordHasher = new Mock<IPasswordHasher<User>>();
         _jwtTokenGenerator = new Mock<IJwtTokenGenerator>();

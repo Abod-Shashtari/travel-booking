@@ -21,6 +21,7 @@ public class CreateUserCommandHandlerTests
     public CreateUserCommandHandlerTests()
     {
         _fixture = new Fixture();
+        _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
         _userRepository = new Mock<IUserRepository>();
         _passwordHasher = new Mock<IPasswordHasher<User>>();
         _mapper=new Mock<IMapper>();
