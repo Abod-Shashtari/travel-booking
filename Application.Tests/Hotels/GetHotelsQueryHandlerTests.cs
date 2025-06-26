@@ -41,6 +41,7 @@ public class GetHotelsQueryHandlerTests
             hotel.City!.Name,
             hotel.CityId,
             hotel.OwnerId,
+            hotel.StarRating,
             hotel.CreatedAt,
             hotel.ModifiedAt,
             new ImageResponse(
