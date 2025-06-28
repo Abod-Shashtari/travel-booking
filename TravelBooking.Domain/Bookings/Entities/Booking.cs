@@ -23,5 +23,6 @@ public class Booking:AuditEntity
     [Required]
     public DateTimeOffset CheckOut { get; set; }
     [Required]
-    public BookingStatus  Status { get; set; }
+    public BookingStatus Status { get; set; }
+    public string? ConfirmationNumber { get; set; }
 }
