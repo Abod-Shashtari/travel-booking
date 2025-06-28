@@ -32,6 +32,10 @@ public abstract class Repository<T>:IRepository<T> where T:EntityBase
         {
             query = query.Include(include);
         }
+        foreach (var includeString in specification.IncludeStrings)
+        {
+            query = query.Include(includeString);
+        }
         return await query.FirstOrDefaultAsync(e=>e.Id==id,cancellationToken);
     }
 
@@ -73,6 +77,10 @@ public abstract class Repository<T>:IRepository<T> where T:EntityBase
         foreach (var include in specification.Includes)
         {
             query = query.Include(include);
+        }
+        foreach (var includeString in specification.IncludeStrings)
+        {
+            query = query.Include(includeString);
         }
         
         if (specification.OrderBy != null)
