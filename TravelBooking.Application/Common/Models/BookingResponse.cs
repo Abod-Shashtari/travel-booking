@@ -1,6 +1,4 @@
-﻿using TravelBooking.Domain.Bookings.Entities;
-
-namespace TravelBooking.Application.Common.Models;
+﻿namespace TravelBooking.Application.Common.Models;
 
 public record BookingResponse(
     Guid Id,
