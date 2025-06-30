@@ -1,4 +1,4 @@
-﻿namespace TravelBooking.Application.Hotels.GetHotels;
+﻿namespace TravelBooking.Application.Hotels.SearchHotels;
 
 public record HotelFilter(
     string? Keyword,
