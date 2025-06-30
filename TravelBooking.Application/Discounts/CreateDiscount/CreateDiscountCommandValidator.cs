@@ -7,11 +7,18 @@ public class CreateDiscountCommandValidator:AbstractValidator<CreateDiscountComm
 {
     public CreateDiscountCommandValidator()
     {
-        // RuleFor(x => x.Name).NotEmpty()
-        //     .MaximumLength(100).WithMessage("Name must not exceed 100 characters");
-        // RuleFor(x => x.Country).NotEmpty()
-        //     .MaximumLength(100).WithMessage("Country Name must not exceed 100 characters");
-        // RuleFor(x => x.PostOffice).NotEmpty()
-        //     .MaximumLength(20).WithMessage("Post Office must not exceed 20 characters");
+        RuleFor(x => x.RoomTypeId).NotEmpty();
+        
+        RuleFor(x => x.Percentage)
+            .NotEmpty().WithMessage("Please specify a percentage")
+            .InclusiveBetween(1,100)
+            .WithMessage("The Percentage must be between 1 and 100");
+        
+        RuleFor(x => x.StartDate)
+            .GreaterThanOrEqualTo(DateTime.Today)
+            .WithMessage("start date must be Now or in future date");
+        RuleFor(x => x.EndDate)
+            .GreaterThan(x=>x.StartDate)
+            .WithMessage("end date must be Grater than start date");
     }
 }
