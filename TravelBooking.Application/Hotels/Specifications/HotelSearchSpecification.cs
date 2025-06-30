@@ -1,5 +1,6 @@
 ﻿using TravelBooking.Application.Common.Specifications;
 using TravelBooking.Application.Hotels.GetHotels;
+using TravelBooking.Application.Hotels.SearchHotels;
 using TravelBooking.Domain.Bookings.Entities;
 using TravelBooking.Domain.Hotels.Entities;
 

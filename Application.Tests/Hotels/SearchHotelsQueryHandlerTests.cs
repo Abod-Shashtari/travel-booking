@@ -4,6 +4,7 @@ using FluentAssertions;
 using Moq;
 using TravelBooking.Application.Common.Models;
 using TravelBooking.Application.Hotels.GetHotels;
+using TravelBooking.Application.Hotels.SearchHotels;
 using TravelBooking.Application.Hotels.Specifications;
 using TravelBooking.Domain.Common;
 using TravelBooking.Domain.Common.Interfaces;
@@ -11,26 +12,26 @@ using TravelBooking.Domain.Hotels.Entities;
 
 namespace Application.Tests.Hotels;
 
-public class GetHotelsQueryHandlerTests
+public class SearchHotelsQueryHandlerTests
 {
     private readonly IFixture _fixture;
     private readonly Mock<IRepository<Hotel>> _hotelRepository;
-    private readonly GetHotelsQueryHandler _handler;
+    private readonly SearchHotelsQueryHandler _handler;
 
-    public GetHotelsQueryHandlerTests()
+    public SearchHotelsQueryHandlerTests()
     {
         _fixture = new Fixture();
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 
         _hotelRepository = new Mock<IRepository<Hotel>>();
-        _handler = new GetHotelsQueryHandler(_hotelRepository.Object);
+        _handler = new SearchHotelsQueryHandler(_hotelRepository.Object);
     }
 
     [Fact]
     public async Task GetHotelsQueryHandler_ValidRequest_ShouldReturnSuccess()
     {
         // Arrange
-        var query = _fixture.Create<GetHotelsQuery>();
+        var query = _fixture.Create<SearchHotelsQuery>();
         var hotels=_fixture.CreateMany<Hotel>().ToList();
 
         Expression<Func<Hotel, HotelResponse>> selector = hotel => new HotelResponse(

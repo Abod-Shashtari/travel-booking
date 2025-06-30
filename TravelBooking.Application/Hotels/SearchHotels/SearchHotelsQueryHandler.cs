@@ -1,25 +1,24 @@
 ﻿using System.Linq.Expressions;
 using MediatR;
 using TravelBooking.Application.Common.Models;
-using TravelBooking.Application.Common.Specifications;
-using TravelBooking.Application.Hotels.SearchHotels;
+using TravelBooking.Application.Hotels.Specifications;
 using TravelBooking.Domain.Common;
 using TravelBooking.Domain.Common.Interfaces;
 using TravelBooking.Domain.Hotels.Entities;
 
-namespace TravelBooking.Application.Hotels.GetHotels;
+namespace TravelBooking.Application.Hotels.SearchHotels;
 
-public class GetHotelsQueryHandler:IRequestHandler<SearchHotelsQuery, Result<PaginatedList<HotelResponse>>>
+public class SearchHotelsQueryHandler:IRequestHandler<SearchHotelsQuery, Result<PaginatedList<HotelResponse>>>
 {
     private readonly IRepository<Hotel> _hotelRepository;
-    public GetHotelsQueryHandler(IRepository<Hotel> hotelRepository)
+    public SearchHotelsQueryHandler(IRepository<Hotel> hotelRepository)
     {
         _hotelRepository = hotelRepository;
     }
 
     public async Task<Result<PaginatedList<HotelResponse>>> Handle(SearchHotelsQuery request, CancellationToken cancellationToken)
     {
-        var spec = new PaginationSpecification<Hotel>(request.PageNumber, request.PageSize,x=>x.CreatedAt,true);
+        var spec = new HotelSearchSpecification(request.HotelFilter, request.PageNumber, request.PageSize);
         
         Expression<Func<Hotel, HotelResponse>> selector = hotel => new HotelResponse(
             hotel.Id,
