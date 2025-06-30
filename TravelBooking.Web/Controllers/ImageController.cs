@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TravelBooking.Application.Images.DeleteImage;
 using TravelBooking.Application.Images.GetImages;
@@ -22,6 +23,7 @@ public class ImageController:ControllerBase
     }
 
     [HttpPost("/api/{entityName}/{entityId}/images")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UploadImage(string entityName, Guid entityId, IFormFile image)
     {
         var command = new UploadImageCommand(entityName, entityId, image);
@@ -34,6 +36,7 @@ public class ImageController:ControllerBase
     }
     
     [HttpDelete("/api/images/{imageId}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteImage(Guid imageId)
     {
         var command = new DeleteImageCommand(imageId);

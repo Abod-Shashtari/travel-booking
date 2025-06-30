@@ -29,6 +29,7 @@ public class AmenityController:ControllerBase
     }
     
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetAmenities([FromQuery] GetAmenitiesRequest request)
     {
         var query = _mapper.Map<GetAmenitiesQuery>(request);
@@ -87,6 +88,7 @@ public class AmenityController:ControllerBase
     }
     
     [HttpDelete("{amenityId}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteAmenity(Guid amenityId)
     {
         var command = new DeleteAmenityCommand(amenityId);
@@ -95,6 +97,7 @@ public class AmenityController:ControllerBase
     }
     
     [HttpDelete("/api/room-types/{roomTypeId}/amenities/{amenityId}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> RemoveAmenityFromRoomType(Guid roomTypeId,Guid amenityId)
     {
         var command = new RemoveAmenityFromRoomTypeCommand(roomTypeId, amenityId);

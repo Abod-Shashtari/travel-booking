@@ -14,6 +14,7 @@ namespace TravelBooking.Web.Controllers;
 
 [ApiController]
 [Route("api/discounts")]
+[Authorize(Roles = "Admin")]
 public class DiscountController:ControllerBase
 {
     private readonly ISender _sender;
@@ -41,7 +42,6 @@ public class DiscountController:ControllerBase
     }
     
     [HttpPost("/api/room-types/{roomTypeId}/discounts")]
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> CreateDiscount(Guid roomTypeId, CreateDiscountRequest request)
     {
         var command = _mapper.Map<CreateDiscountCommand>(request) with {RoomTypeId = roomTypeId};
@@ -56,7 +56,6 @@ public class DiscountController:ControllerBase
         );
     }
 
-    [Authorize(Roles = "Admin")]
     [HttpPut("{discountId}")]
     public async Task<IActionResult> UpdateDiscount(Guid discountId,UpdateDiscountRequest request)
     {

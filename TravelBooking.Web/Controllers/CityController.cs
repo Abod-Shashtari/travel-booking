@@ -27,6 +27,7 @@ public class CityController:ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetCities([FromQuery] GetCitiesRequest request)
     {
         var query = _mapper.Map<GetCitiesQuery>(request);
@@ -43,6 +44,7 @@ public class CityController:ControllerBase
     }
 
     [HttpGet("{cityId}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetCity(Guid cityId)
     {
         var query = new GetCityQuery(cityId); 
@@ -76,6 +78,7 @@ public class CityController:ControllerBase
     }
     
     [HttpDelete("{cityId}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteCity(Guid cityId)
     {
         var command = new DeleteCityCommand(cityId);
@@ -84,6 +87,7 @@ public class CityController:ControllerBase
     }
     
     [HttpPut("{cityId}/thumbnail")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> SetThumbnail(Guid cityId,[FromBody] Guid imageId)
     {
         var command = new SetCityThumbnailCommand(cityId, imageId);
