@@ -14,7 +14,6 @@ namespace TravelBooking.Web.Controllers;
 
 [Route("api/room-types")]
 [ApiController]
-// [Authorize]
 public class RoomTypeController:ControllerBase
 {
     private readonly ISender _sender;
@@ -27,6 +26,7 @@ public class RoomTypeController:ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetRoomTypes([FromQuery] GetRoomTypesRequest request)
     {
         var query = _mapper.Map<GetRoomTypesQuery>(request);
@@ -43,7 +43,7 @@ public class RoomTypeController:ControllerBase
     }
 
     [HttpPost]
-    // [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> CreateTypeRoom(CreateRoomTypeRequest request)
     {
         var command = _mapper.Map<CreateRoomTypeCommand>(request);
@@ -59,7 +59,7 @@ public class RoomTypeController:ControllerBase
     }
     
     [HttpPut("{roomTypeId}")]
-    // [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateTypeRoom(Guid roomTypeId, UpdateRoomTypeRequest request)
     {
         var command = _mapper.Map<UpdateRoomTypeCommand>(request) with { RoomTypeId = roomTypeId };
@@ -68,12 +68,11 @@ public class RoomTypeController:ControllerBase
     }
     
     [HttpDelete("{roomTypeId}")]
-    // [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteTypeRoom(Guid roomTypeId)
     {
         var command = new DeleteRoomTypeCommand(roomTypeId);
         var result = await _sender.Send(command);
         return result.Match(NoContent,this.HandleFailure);
     }
-    
 }

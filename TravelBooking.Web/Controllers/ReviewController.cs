@@ -1,6 +1,6 @@
-﻿using System.Security.Claims;
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TravelBooking.Application.Reviews.DeleteReview;
 using TravelBooking.Application.Reviews.GetReviews;
@@ -32,6 +32,7 @@ public class ReviewController:ControllerBase
     }
     
     [HttpPost("/api/hotels/{hotelId}/reviews")]
+    [Authorize]
     public async Task<IActionResult> PostReview(PostReviewRequest request,Guid hotelId)
     {
         var command = _mapper.Map<PostReviewCommand>(request) with {HotelId = hotelId, UserId = this.GetUserId()};
@@ -42,6 +43,7 @@ public class ReviewController:ControllerBase
     }
     
     [HttpPut("/api/reviews/{reviewId}")]
+    [Authorize]
     public async Task<IActionResult> PostReview(UpdateReviewRequest request,Guid reviewId)
     {
         var command = _mapper.Map<UpdateReviewCommand>(request) with
@@ -54,6 +56,7 @@ public class ReviewController:ControllerBase
     }
     
     [HttpDelete("/api/reviews/{reviewId}")]
+    [Authorize]
     public async Task<IActionResult> DeleteReview(Guid reviewId)
     {
         var command = new DeleteReviewCommand(this.GetUserId(),reviewId);

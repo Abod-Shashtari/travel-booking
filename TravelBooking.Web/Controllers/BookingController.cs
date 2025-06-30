@@ -10,7 +10,6 @@ using TravelBooking.Application.Bookings.ConfirmBooking;
 using TravelBooking.Application.Bookings.CreateBooking;
 using TravelBooking.Application.Bookings.GetBookings;
 using TravelBooking.Application.Bookings.GetPdfBookingInvoice;
-using TravelBooking.Application.Common.Interfaces;
 using TravelBooking.Infrastructure.Options;
 using TravelBooking.Web.Extensions;
 using TravelBooking.Web.Requests.Bookings;
@@ -19,6 +18,7 @@ namespace TravelBooking.Web.Controllers;
 
 [ApiController]
 [Route("api/user/bookings")]
+[Authorize]
 public class BookingController:ControllerBase
 {
     private readonly ISender _sender;
@@ -78,7 +78,6 @@ public class BookingController:ControllerBase
     }
     
     [HttpGet("{bookingId}/pdf-invoice")]
-    [Authorize]
     public async Task<IActionResult> GetPdfBookingInvoice(Guid bookingId)
     {
         var query = new GetPdfBookingInvoiceQuery(bookingId,this.GetUserId());
@@ -89,7 +88,8 @@ public class BookingController:ControllerBase
         );
     }
     
-    [HttpPost("{bookingId}/complete")]
+    [HttpPost("/api/bookings/{bookingId}/complete")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> CompleteBooking(Guid bookingId)
     {
         var command = new CompleteBookingCommand(bookingId);

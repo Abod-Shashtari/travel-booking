@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +7,7 @@ using TravelBooking.Application.Hotels.DeleteHotel;
 using TravelBooking.Application.Hotels.GetFeaturedHotels;
 using TravelBooking.Application.Hotels.GetHotel;
 using TravelBooking.Application.Hotels.GetHotels;
+using TravelBooking.Application.Hotels.SearchHotels;
 using TravelBooking.Application.Hotels.SetThumbnail;
 using TravelBooking.Application.Hotels.UpdateHotel;
 using TravelBooking.Application.UserActivity.GetRecentlyVisitedHotels;
@@ -29,7 +29,16 @@ public class HotelController:ControllerBase
         _mapper = mapper;
     }
 
+    [HttpGet("search")]
+    public async Task<IActionResult> SearchHotels([FromQuery] SearchHotelsRequest request)
+    {
+        var query = _mapper.Map<SearchHotelsQuery>(request);
+        var result = await _sender.Send(query);
+        return result.Match(Ok,this.HandleFailure);
+    }
+    
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetHotels([FromQuery] GetHotelsRequest request)
     {
         var query = _mapper.Map<GetHotelsQuery>(request);
@@ -46,6 +55,7 @@ public class HotelController:ControllerBase
     }
     
     [HttpGet("/api/user/recently-visited-hotels")]
+    [Authorize]
     public async Task<IActionResult> GetRecentlyVisitedHotels()
     {
         var query = new GetRecentlyVisitedHotelsQuery(this.GetUserId());
@@ -78,6 +88,7 @@ public class HotelController:ControllerBase
     }
     
     [HttpPut("{hotelId}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateHotel(Guid hotelId, UpdateHotelRequest request)
     {
         var command = _mapper.Map<UpdateHotelCommand>(request) with { HotelId = hotelId };
@@ -86,6 +97,7 @@ public class HotelController:ControllerBase
     }
     
     [HttpDelete("{hotelId}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteHotel(Guid hotelId)
     {
         var command = new DeleteHotelCommand(hotelId);
@@ -94,6 +106,7 @@ public class HotelController:ControllerBase
     }
         
     [HttpPut("{hotelId}/thumbnail")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> SetThumbnail(Guid hotelId,[FromBody] Guid imageId)
     {
         var command = new SetHotelThumbnailCommand(hotelId, imageId);

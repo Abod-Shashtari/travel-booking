@@ -57,8 +57,8 @@ public class RoomController:ControllerBase
         );
     }
 
-    [Authorize(Roles = "Admin")]
     [HttpPut("{roomId}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateRoom(Guid roomId,UpdateRoomRequest request)
     {
         var command = _mapper.Map<UpdateRoomCommand>(request) with { RoomId = roomId };
@@ -67,6 +67,7 @@ public class RoomController:ControllerBase
     }
     
     [HttpDelete("{roomId}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteRoom(Guid roomId)
     {
         var command = new DeleteRoomCommand(roomId);
