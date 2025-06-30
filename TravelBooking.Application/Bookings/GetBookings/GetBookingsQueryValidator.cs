@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
-using TravelBooking.Application.Hotels.GetHotels;
+using TravelBooking.Application.Hotels.SearchHotels;
 
 namespace TravelBooking.Application.Bookings.GetBookings;
 
-public class GetBookingsQueryValidator:AbstractValidator<GetHotelsQuery>
+public class GetBookingsQueryValidator:AbstractValidator<SearchHotelsQuery>
 {
     public GetBookingsQueryValidator()
     {
