@@ -32,6 +32,17 @@ public class BookingController:ControllerBase
         _stripeOptions = stripeOptions.Value;
     }
 
+    /// <summary>
+    /// Creates a new booking for the authenticated user.
+    /// </summary>
+    /// <param name="request">The request containing booking details</param>
+    /// <returns>The created booking</returns>
+    /// <response code="404">Some entity Not Found</response>
+    /// <response code="409">Booking is already exists</response>
+    /// <response code="201">Booking created</response>
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [HttpPost]
     public async Task<IActionResult> CreateBooking(CreateBookingRequest request)
     {
@@ -42,6 +53,21 @@ public class BookingController:ControllerBase
             this.HandleFailure);
     }
     
+    /// <summary>
+    /// Cancels an existing booking by ID for the authenticated user.
+    /// </summary>
+    /// <param name="bookingId">The ID of the booking to cancel</param>
+    /// <returns>No content</returns>
+    /// <response code="401">Unauthorized access</response>
+    /// <response code="404">Booking not found</response>
+    /// <response code="400">This booking can't be canceled</response>
+    /// <response code="403">User is not allowed to cancel</response>
+    /// <response code="204">booking canceled</response>
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost("{bookingId}/cancel")]
     public async Task<IActionResult> CancelBooking(Guid bookingId)
     {
@@ -50,6 +76,15 @@ public class BookingController:ControllerBase
         return result.Match(NoContent, this.HandleFailure);
     }
     
+    /// <summary>
+    /// Retrieves all bookings made by the authenticated user with optional filtering.
+    /// </summary>
+    /// <param name="request">pagination options</param>
+    /// <returns>A list of user bookings</returns>
+    /// <response code="401">Unauthorized access</response>
+    /// <response code="200">The bookings returned</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [HttpGet]
     public async Task<IActionResult> GetBookings([FromQuery] GetBookingsRequest request)
     {
@@ -58,6 +93,15 @@ public class BookingController:ControllerBase
         return result.Match(Ok, this.HandleFailure);
     }
 
+    /// <summary>
+    /// Handles Stripe webhook for confirming successful bookings.
+    /// </summary>
+    /// <returns>No content</returns>
+    /// <remarks>This endpoint is used by Stripe for successful charge.</remarks>
+    /// <response code="200">Webhook processed successfully</response>
+    /// <response code="400">Something wrong with webhook</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost("confirm/stripe-webhook")]
     public async Task<IActionResult> ConfirmBooking()
     {
@@ -77,6 +121,19 @@ public class BookingController:ControllerBase
         return result.Match(NoContent, this.HandleFailure);
     }
     
+    /// <summary>
+    /// Retrieves a PDF invoice for a specific booking.
+    /// </summary>
+    /// <param name="bookingId">The ID of the booking</param>
+    /// <returns>The PDF invoice file</returns>
+    /// <response code="401">Unauthorized access</response>
+    /// <response code="404">Booking not found</response>
+    /// <response code="403">User not allowed to download the pdf</response>
+    /// <response code="200">return pdf file</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [HttpGet("{bookingId}/pdf-invoice")]
     public async Task<IActionResult> GetPdfBookingInvoice(Guid bookingId)
     {
@@ -88,6 +145,19 @@ public class BookingController:ControllerBase
         );
     }
     
+    /// <summary>
+    /// Marks a booking as completed (Admin only).
+    /// </summary>
+    /// <param name="bookingId">The ID of the booking to complete</param>
+    /// <returns>No content</returns>
+    /// <response code="401">Unauthorized access</response>
+    /// <response code="404">Booking not found</response>
+    /// <response code="400">Booking can't set as complete</response>
+    /// <response code="204">Booking completed</response>
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost("/api/bookings/{bookingId}/complete")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> CompleteBooking(Guid bookingId)

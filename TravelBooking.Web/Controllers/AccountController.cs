@@ -24,6 +24,13 @@ public class AccountController:ControllerBase
         _mapper = mapper;
     }
 
+    /// <summary>
+    /// Registers a new user account.
+    /// </summary>
+    /// <param name="request">The request containing user registration information</param>
+    /// <returns> The created user</returns>
+    /// <response code="409">This email is already registered</response>
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [HttpPost("sign-up")]
     public async Task<IActionResult> SignUp(CreateUserRequest request)
     {
@@ -32,6 +39,13 @@ public class AccountController:ControllerBase
         return result.Match(data => Ok(data), this.HandleFailure);
     }
 
+    /// <summary>
+    /// Authenticates a user and returns an access token.
+    /// </summary>
+    /// <param name="request">The request containing login credentials</param>
+    /// <returns>The authentication token if successful</returns>
+    /// <response code="401">This user is not authorized</response>
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [HttpPost("sign-in")]
     public async Task<IActionResult> SignIn(SignInRequest request)
     {
@@ -40,6 +54,12 @@ public class AccountController:ControllerBase
         return result.Match(data => Ok(data), this.HandleFailure);
     }
 
+    /// <summary>
+    /// Signs out the currently authenticated user from the current device.
+    /// </summary>
+    /// <returns>No content</returns>
+    /// <response code="401">This user is not authorized</response>
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [HttpGet("sign-out")]
     [Authorize]
     public async Task<IActionResult> SignOutUser()
@@ -47,9 +67,14 @@ public class AccountController:ControllerBase
         var jtiClaim = User.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti);
         var result=await _sender.Send(new SignOutCommand(jtiClaim!.Value));
         return result.Match(NoContent, this.HandleFailure);
-        
     }
     
+    /// <summary>
+    /// Signs out the currently authenticated user from all devices.
+    /// </summary>
+    /// <returns>No content</returns>
+    /// <response code="401">This user is not authorized</response>
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [HttpGet("sign-out/all-devices")]
     [Authorize]
     public async Task<IActionResult> SignOutAllDevices()
@@ -59,5 +84,4 @@ public class AccountController:ControllerBase
         var result=await _sender.Send(new SignOutAllDevicesCommand(Guid.Parse(userId.Value)));
         return result.Match(NoContent, this.HandleFailure);
     }
-    
 }

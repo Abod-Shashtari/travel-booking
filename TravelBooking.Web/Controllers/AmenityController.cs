@@ -28,6 +28,13 @@ public class AmenityController:ControllerBase
         _mapper = mapper;
     }
     
+    /// <summary>
+    /// Retrieves a paginated list of all amenities.
+    /// </summary>
+    /// <param name="request">Pagination options for the amenity list</param>
+    /// <returns>A list of amenities</returns>
+    /// <response code="401">Unauthorized access</response>
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [HttpGet]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetAmenities([FromQuery] GetAmenitiesRequest request)
@@ -37,6 +44,13 @@ public class AmenityController:ControllerBase
         return result.Match(data => Ok(data),this.HandleFailure);
     }
     
+    /// <summary>
+    /// Retrieves all amenities associated with a specific room type.
+    /// </summary>
+    /// <param name="roomTypeId">The ID of the room type</param>
+    /// <returns>List of amenities for the specified room type</returns>
+    /// <response code="404">Room type not found</response>
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("/api/room-types/{roomTypeId}/amenities")]
     public async Task<IActionResult> GetAmenitiesByRoomType(Guid roomTypeId)
     {
@@ -45,6 +59,13 @@ public class AmenityController:ControllerBase
         return result.Match(data => Ok(data),this.HandleFailure);
     }
 
+    /// <summary>
+    /// Retrieves details of a specific amenity by its ID.
+    /// </summary>
+    /// <param name="amenityId">The ID of the amenity</param>
+    /// <returns>The requested amenity</returns>
+    /// <response code="404">Amenity not found</response>
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{amenityId}")]
     public async Task<IActionResult> GetAmenity(Guid amenityId)
     {
@@ -53,6 +74,15 @@ public class AmenityController:ControllerBase
         return result.Match(data => Ok(data),this.HandleFailure);
     }
     
+    /// <summary>
+    /// Creates a new amenity.
+    /// </summary>
+    /// <param name="request">The request containing amenity data</param>
+    /// <returns>The created amenity</returns>
+    /// <response code="401">Unauthorized access</response>
+    /// <response code="409">Amenity is already exists</response>
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> CreateAmenity(CreateAmenityRequest request)
@@ -69,6 +99,16 @@ public class AmenityController:ControllerBase
         );
     }
     
+    /// <summary>
+    /// Adds an existing amenity to a specific room type.
+    /// </summary>
+    /// <param name="roomTypeId">The ID of the room type</param>
+    /// <param name="request">The request containing the amenity ID</param>
+    /// <returns>No content</returns>
+    /// <response code="401">Unauthorized access</response>
+    /// <response code="404">Room type or amenity Not found</response>
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPost("/api/room-types/{roomTypeId}/amenities")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> AddAmenity(Guid roomTypeId, AddAmenityToRoomTypeRequest request)
@@ -78,6 +118,16 @@ public class AmenityController:ControllerBase
         return result.Match(NoContent, this.HandleFailure);
     }
 
+    /// <summary>
+    /// Updates an existing amenity.
+    /// </summary>
+    /// <param name="amenityId">The ID of the amenity</param>
+    /// <param name="request">The request containing updated amenity data</param>
+    /// <returns>No content</returns>
+    /// <response code="401">Unauthorized access</response>
+    /// <response code="404">amenity Not found</response>
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Authorize(Roles = "Admin")]
     [HttpPut("{amenityId}")]
     public async Task<IActionResult> UpdateAmenity(Guid amenityId,UpdateAmenityRequest request)
@@ -87,6 +137,16 @@ public class AmenityController:ControllerBase
         return result.Match(NoContent,this.HandleFailure);
     }
     
+    
+    /// <summary>
+    /// Deletes a specific amenity.
+    /// </summary>
+    /// <param name="amenityId">The ID of the amenity to delete</param>
+    /// <returns>No content</returns>
+    /// <response code="401">Unauthorized access</response>
+    /// <response code="404">amenity Not found</response>
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpDelete("{amenityId}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteAmenity(Guid amenityId)
@@ -96,6 +156,16 @@ public class AmenityController:ControllerBase
         return result.Match(NoContent,this.HandleFailure);
     }
     
+    /// <summary>
+    /// Removes a specific amenity from a specific room type.
+    /// </summary>
+    /// <param name="roomTypeId">The ID of the room type</param>
+    /// <param name="amenityId">The ID of the amenity to remove</param>
+    /// <returns>No content</returns>
+    /// <response code="401">Unauthorized access</response>
+    /// <response code="404">Room type or amenity Not found</response>
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpDelete("/api/room-types/{roomTypeId}/amenities/{amenityId}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> RemoveAmenityFromRoomType(Guid roomTypeId,Guid amenityId)

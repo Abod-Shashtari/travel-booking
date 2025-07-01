@@ -22,6 +22,21 @@ public class ImageController:ControllerBase
         _mapper = mapper;
     }
 
+    /// <summary>
+    /// Uploads an image for a specific entity (Admin only).
+    /// </summary>
+    /// <param name="entityName">The name/type of the entity (e.g., "hotels", "room-types")</param>
+    /// <param name="entityId">The ID of the target entity</param>
+    /// <param name="image">The image file to upload</param>
+    /// <returns>Created Image</returns>
+    /// <response code="201">Image uploaded successfully</response>
+    /// <response code="400">Invalid input or unsupported entity type</response>
+    /// <response code="401">Unauthorized access</response>
+    /// <response code="409">This Image already exists</response>
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [HttpPost("/api/{entityName}/{entityId}/images")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UploadImage(string entityName, Guid entityId, IFormFile image)
@@ -35,6 +50,17 @@ public class ImageController:ControllerBase
         );
     }
     
+    /// <summary>
+    /// Deletes an image by ID (Admin only).
+    /// </summary>
+    /// <param name="imageId">The ID of the image to delete</param>
+    /// <returns>No content</returns>
+    /// <response code="204">Image deleted successfully</response>
+    /// <response code="404">Image not found</response>
+    /// <response code="401">Unauthorized access</response>
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [HttpDelete("/api/images/{imageId}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteImage(Guid imageId)
@@ -44,6 +70,17 @@ public class ImageController:ControllerBase
         return result.Match(NoContent,this.HandleFailure);
     }
     
+    /// <summary>
+    /// Retrieves images associated with a specific entity.
+    /// </summary>
+    /// <param name="entityName">The name/type of the entity</param>
+    /// <param name="entityId">The ID of the target entity</param>
+    /// <param name="request">pagination options</param>
+    /// <returns>List of images</returns>
+    /// <response code="200">Images retrieved successfully</response>
+    /// <response code="400">Invalid entity or parameters</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpGet("/api/{entityName}/{entityId}/images")]
     public async Task<IActionResult> GetImages(string entityName, Guid entityId,[FromQuery]GetImagesRequest request)
     {

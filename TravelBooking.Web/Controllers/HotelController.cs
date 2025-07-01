@@ -29,6 +29,17 @@ public class HotelController:ControllerBase
         _mapper = mapper;
     }
 
+    /// <summary>
+    /// Searches for hotels based on filters like city, dates, price, etc.
+    /// </summary>
+    /// <param name="request">Search criteria for hotels</param>
+    /// <returns>List of hotels matching the criteria</returns>
+    /// <response code="200">Hotels found successfully</response>
+    /// <response code="400">Invalid search parameters</response>
+    /// <response code="409">hotel already exists</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [HttpGet("search")]
     public async Task<IActionResult> SearchHotels([FromQuery] SearchHotelsRequest request)
     {
@@ -37,6 +48,15 @@ public class HotelController:ControllerBase
         return result.Match(Ok,this.HandleFailure);
     }
     
+    /// <summary>
+    /// Retrieves a list of hotels (Admin only).
+    /// </summary>
+    /// <param name="request">The request contains pagination options</param>
+    /// <returns>Paginated list of hotels</returns>
+    /// <response code="200">Hotels retrieved</response>
+    /// <response code="401">Unauthorized access</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [HttpGet]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetHotels([FromQuery] GetHotelsRequest request)
@@ -46,6 +66,12 @@ public class HotelController:ControllerBase
         return result.Match(Ok,this.HandleFailure);
     }
     
+    /// <summary>
+    /// Gets a list of featured hotel deals.
+    /// </summary>
+    /// <returns>List of featured hotel deals</returns>
+    /// <response code="200">Featured deals returned</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [HttpGet("featured-deals")]
     public async Task<IActionResult> GetFeaturedHotels()
     {
@@ -54,6 +80,14 @@ public class HotelController:ControllerBase
         return result.Match(Ok,this.HandleFailure);
     }
     
+    /// <summary>
+    /// Retrieves the user's recently visited hotels.
+    /// </summary>
+    /// <returns>List of recently visited hotels</returns>
+    /// <response code="200">Recently visited hotels returned</response>
+    /// <response code="401">Unauthorized access</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [HttpGet("/api/user/recently-visited-hotels")]
     [Authorize]
     public async Task<IActionResult> GetRecentlyVisitedHotels()
@@ -63,6 +97,15 @@ public class HotelController:ControllerBase
         return result.Match(Ok,this.HandleFailure);
     }
 
+    /// <summary>
+    /// Retrieves the details of a specific hotel.
+    /// </summary>
+    /// <param name="hotelId">The ID of the hotel</param>
+    /// <returns>Hotel details</returns>
+    /// <response code="200">Hotel retrieved successfully</response>
+    /// <response code="404">Hotel not found</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{hotelId}")]
     public async Task<IActionResult> GetHotel(Guid hotelId)
     {
@@ -71,6 +114,19 @@ public class HotelController:ControllerBase
         return result.Match(Ok,this.HandleFailure);
     }
 
+    /// <summary>
+    /// Creates a new hotel (Admin only).
+    /// </summary>
+    /// <param name="request">The request containing hotel details</param>
+    /// <returns>The created hotel</returns>
+    /// <response code="201">Hotel created successfully</response>
+    /// <response code="400">Invalid hotel data</response>
+    /// <response code="401">Unauthorized access</response>
+    /// <response code="404">Some field Not Found</response>
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> CreateHotel(CreateHotelRequest request)
@@ -87,6 +143,19 @@ public class HotelController:ControllerBase
         );
     }
     
+    /// <summary>
+    /// Updates an existing hotel (Admin only).
+    /// </summary>
+    /// <param name="hotelId">The ID of the hotel</param>
+    /// <param name="request">The request containing updated hotel info</param>
+    /// <returns>No content</returns>
+    /// <response code="204">Hotel updated successfully</response>
+    /// <response code="400">Invalid update data</response>
+    /// <response code="404">Hotel or other fields not found</response>
+    /// <response code="401">Unauthorized access</response>
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPut("{hotelId}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateHotel(Guid hotelId, UpdateHotelRequest request)
@@ -96,6 +165,17 @@ public class HotelController:ControllerBase
         return result.Match(NoContent,this.HandleFailure);
     }
     
+    /// <summary>
+    /// Deletes a specific hotel (Admin only).
+    /// </summary>
+    /// <param name="hotelId">The ID of the hotel</param>
+    /// <returns>No content</returns>
+    /// <response code="204">Hotel deleted</response>
+    /// <response code="404">Hotel not found</response>
+    /// <response code="401">Unauthorized access</response>
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [HttpDelete("{hotelId}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteHotel(Guid hotelId)
@@ -105,6 +185,18 @@ public class HotelController:ControllerBase
         return result.Match(NoContent,this.HandleFailure);
     }
         
+    /// <summary>
+    /// Sets the thumbnail image for a hotel (Admin only).
+    /// </summary>
+    /// <param name="hotelId">The ID of the hotel</param>
+    /// <param name="imageId">The ID of the image to set as thumbnail</param>
+    /// <returns>No content</returns>
+    /// <response code="204">Thumbnail set successfully</response>
+    /// <response code="404">Hotel or image not found</response>
+    /// <response code="401">Unauthorized access</response>
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [HttpPut("{hotelId}/thumbnail")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> SetThumbnail(Guid hotelId,[FromBody] Guid imageId)
