@@ -3,6 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
         <ImplicitUsings>enable</ImplicitUsings>
       <UserSecretsId>e179b725-4a87-4c98-af6e-e807508bd448</UserSecretsId>
       <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
