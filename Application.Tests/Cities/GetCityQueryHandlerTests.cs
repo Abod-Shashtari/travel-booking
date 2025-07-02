@@ -1,6 +1,5 @@
 ﻿using System.Linq.Expressions;
 using AutoFixture;
-using AutoMapper;
 using FluentAssertions;
 using Moq;
 using TravelBooking.Application.Cities.GetCity;
@@ -36,7 +35,7 @@ public class GetCityQueryHandlerTests
                 cityId,
                 It.IsAny<Expression<Func<City, CityResponse>>>(),
                 It.IsAny<CancellationToken>()))
-            .ReturnsAsync((CityResponse)null);
+            .ReturnsAsync((CityResponse?)null);
 
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);

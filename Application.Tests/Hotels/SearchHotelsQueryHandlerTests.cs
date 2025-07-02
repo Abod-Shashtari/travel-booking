@@ -3,7 +3,6 @@ using AutoFixture;
 using FluentAssertions;
 using Moq;
 using TravelBooking.Application.Common.Models;
-using TravelBooking.Application.Hotels.GetHotels;
 using TravelBooking.Application.Hotels.SearchHotels;
 using TravelBooking.Application.Hotels.Specifications;
 using TravelBooking.Domain.Common;

@@ -58,7 +58,7 @@ public class GetDiscountQueryHandlerTests
 
         _discountRepository
             .Setup(r => r.GetByIdAsync(command.DiscountId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((Discount)null);
+            .ReturnsAsync((Discount?)null);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);

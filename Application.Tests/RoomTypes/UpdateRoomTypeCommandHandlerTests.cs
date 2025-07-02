@@ -83,7 +83,7 @@ public class UpdateRoomTypeCommandHandlerTests
         _hotelRepository.Setup(r => r.IsExistsByIdAsync(command.HotelId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
         _roomTypeRepository.Setup(r => r.GetByIdAsync(command.RoomTypeId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((RoomType)null);
+            .ReturnsAsync((RoomType?)null);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);

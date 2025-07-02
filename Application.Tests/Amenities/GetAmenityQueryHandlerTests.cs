@@ -38,7 +38,7 @@ public class GetAmenityQueryHandlerTests
             .Setup(r => r.GetByIdAsync(
                 amenityId,
                 It.IsAny<CancellationToken>()))
-            .ReturnsAsync((Amenity)null);
+            .ReturnsAsync((Amenity?)null);
 
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);

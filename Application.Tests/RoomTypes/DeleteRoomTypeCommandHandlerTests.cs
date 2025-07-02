@@ -31,7 +31,7 @@ public class DeleteRoomTypeCommandHandlerTests
 
         _roomTypeRepository
             .Setup(r => r.GetByIdAsync(roomTypeId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((RoomType)null);
+            .ReturnsAsync((RoomType?)null);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
