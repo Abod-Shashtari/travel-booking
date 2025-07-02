@@ -57,7 +57,7 @@ public class UpdateAmenityCommandHandlerTests
 
         _amenityRepositoryMock
             .Setup(repo => repo.GetByIdAsync(command.AmenityId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((Amenity)null);
+            .ReturnsAsync((Amenity?)null);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);

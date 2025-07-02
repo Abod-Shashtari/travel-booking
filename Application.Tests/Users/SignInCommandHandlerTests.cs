@@ -84,7 +84,7 @@ public class SignInCommandHandlerTests
         var command = _fixture.Create<SignInCommand>();
 
         _userRepository.Setup(x => x.GetByEmailAsync(command.Email,It.IsAny<CancellationToken>()))
-            .ReturnsAsync((User)null);
+            .ReturnsAsync((User?)null);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);

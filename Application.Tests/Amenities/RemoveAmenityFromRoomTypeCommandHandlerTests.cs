@@ -3,7 +3,6 @@ using FluentAssertions;
 using Moq;
 using TravelBooking.Application.Amenities.RemoveAmenityFromRoomType;
 using TravelBooking.Application.Amenities.Specifications;
-using TravelBooking.Application.Common.Models;
 using TravelBooking.Domain.Amenities.Entities;
 using TravelBooking.Domain.Amenities.Errors;
 using TravelBooking.Domain.Common.Interfaces;
@@ -71,7 +70,7 @@ public class RemoveAmenityFromRoomTypeCommandHandlerTests
         var command = _fixture.Create<RemoveAmenityFromRoomTypeCommand>();
 
         _amenityRepository.Setup(r => r.GetByIdAsync(command.AmenityId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((Amenity)null);
+            .ReturnsAsync((Amenity?)null);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -97,7 +96,7 @@ public class RemoveAmenityFromRoomTypeCommandHandlerTests
                 command.RoomTypeId,
                 It.IsAny<RoomTypesWithAmenitySpecification>(),
                 It.IsAny<CancellationToken>()))
-            .ReturnsAsync((RoomType)null);
+            .ReturnsAsync((RoomType?)null);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);

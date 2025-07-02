@@ -59,7 +59,7 @@ public class SetCityThumbnailCommandHandlerTests
             .ReturnsAsync(true);
         _cityRepository
             .Setup(r => r.GetByIdAsync(command.CityId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((City)null);
+            .ReturnsAsync((City?)null);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);

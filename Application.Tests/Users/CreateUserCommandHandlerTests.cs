@@ -38,7 +38,7 @@ public class CreateUserCommandHandlerTests
         var user = _fixture.Create<User>();
 
         _userRepository.Setup(x => x.GetByEmailAsync(command.Email,It.IsAny<CancellationToken>()))
-            .ReturnsAsync((User)null);
+            .ReturnsAsync((User?)null);
 
         _passwordHasher.Setup(x => x.HashPassword(null, command.Password))
             .Returns(hashedPassword);

@@ -31,7 +31,7 @@ public class UpdateCityCommandHandlerTests
         var command = _fixture.Create<UpdateCityCommand>();
         _cityRepository
             .Setup(r => r.GetByIdAsync(command.CityId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((City)null);
+            .ReturnsAsync((City?)null);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);

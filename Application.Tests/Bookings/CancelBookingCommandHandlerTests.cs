@@ -32,7 +32,7 @@ public class CancelBookingCommandHandlerTests
         var command = _fixture.Create<CancelBookingCommand>();
         _bookingRepository
             .Setup(r => r.GetByIdAsync(command.BookingId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((Booking)null);
+            .ReturnsAsync((Booking?)null);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);

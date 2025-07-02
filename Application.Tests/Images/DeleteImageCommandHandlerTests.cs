@@ -36,7 +36,7 @@ public class DeleteImageCommandHandlerTests
         var command = new DeleteImageCommand(imageGuid);
         
         _imageRepository.Setup(r => r.GetByIdAsync(command.ImageId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((Image)null);
+            .ReturnsAsync((Image?)null);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
