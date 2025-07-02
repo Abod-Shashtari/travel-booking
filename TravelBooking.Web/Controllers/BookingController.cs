@@ -103,6 +103,7 @@ public class BookingController:ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost("confirm/stripe-webhook")]
+    [AllowAnonymous]
     public async Task<IActionResult> ConfirmBooking()
     {
         var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
