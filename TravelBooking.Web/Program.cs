@@ -58,6 +58,9 @@ builder.WebHost.UseSentry();
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
+    using var scope = app.Services.CreateScope();
+    var context = scope.ServiceProvider.GetRequiredService<TravelBookingDbContext>();
+    context.Database.Migrate();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
