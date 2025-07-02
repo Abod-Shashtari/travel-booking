@@ -3,32 +3,32 @@ using AutoFixture;
 using FluentAssertions;
 using Moq;
 using TravelBooking.Application.Common.Models;
+using TravelBooking.Application.Common.Specifications;
 using TravelBooking.Application.Hotels.GetHotels;
 using TravelBooking.Application.Hotels.SearchHotels;
-using TravelBooking.Application.Hotels.Specifications;
 using TravelBooking.Domain.Common;
 using TravelBooking.Domain.Common.Interfaces;
 using TravelBooking.Domain.Hotels.Entities;
 
 namespace Application.Tests.Hotels;
 
-public class SearchHotelsQueryHandlerTests
+public class GetHotelsQueryHandlerTests
 {
     private readonly IFixture _fixture;
     private readonly Mock<IRepository<Hotel>> _hotelRepository;
-    private readonly SearchHotelsQueryHandler _handler;
+    private readonly GetHotelsQueryHandler _handler;
 
-    public SearchHotelsQueryHandlerTests()
+    public GetHotelsQueryHandlerTests()
     {
         _fixture = new Fixture();
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 
         _hotelRepository = new Mock<IRepository<Hotel>>();
-        _handler = new SearchHotelsQueryHandler(_hotelRepository.Object);
+        _handler = new GetHotelsQueryHandler(_hotelRepository.Object);
     }
 
     [Fact]
-    public async Task SearchHotelsQueryHandler_ValidRequest_ShouldReturnSuccess()
+    public async Task GetHotelsQueryHandler_ValidRequest_ShouldReturnSuccess()
     {
         // Arrange
         var query = _fixture.Create<SearchHotelsQuery>();
@@ -56,7 +56,7 @@ public class SearchHotelsQueryHandlerTests
         
         _hotelRepository
             .Setup(r => r.GetPaginatedListAsync(
-                It.IsAny<HotelSearchSpecification>(),
+                It.IsAny<PaginationSpecification<Hotel>>(),
                 It.IsAny<Expression<Func<Hotel, HotelResponse>>>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(projectedList);
