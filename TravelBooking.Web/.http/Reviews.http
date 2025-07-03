@@ -1,0 +1,27 @@
+GET {{host-api}}/hotels/f47ac10b-58cc-4372-a567-0e02b2c3d482/reviews
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+###
+POST {{host-api}}/hotels/f47ac10b-58cc-4372-a567-0e02b2c3d482/reviews
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "textReview": "Nice hotel!!",
+  "starRating": 4.5
+}
+###
+PUT {{host-api}}/reviews/6bbbec1d-f174-4e53-1eb5-08ddb42fb165
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "textReview": "nice and bad hotel!!",
+  "starRating": 4.7
+}
+###
+DELETE {{host-api}}/reviews/f508ea39-2af1-42db-e0db-08ddb4a7d889
+Authorization: Bearer {{token}}
+Content-Type: application/json
+

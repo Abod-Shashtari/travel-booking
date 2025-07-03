@@ -1,0 +1,44 @@
+GET {{host-api}}/amenities
+Authorization: Bearer {{token}}
+Content-Type: application/json
+###
+GET {{host-api}}/room-types/f038edf5-d0f1-4a2c-b5ba-08dda8e204f0/amenities
+Authorization: Bearer {{token}}
+Content-Type: application/json
+###
+GET {{host-api}}/amenities/7bcceede-de7d-43cb-708e-08ddacf63625
+Authorization: Bearer {{token}}
+Content-Type: application/json
+###
+POST {{host-api}}/amenities
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "WIFI",
+  "description": "Internet connection"
+}
+###
+POST {{host-api}}/room-types/f038edf5-d0f1-4a2c-b5ba-08dda8e204f0/amenities
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "amenityId": "7bcceede-de7d-43cb-708e-08ddacf63625"
+}
+###
+PUT {{host-api}}/amenities/7bcceede-de7d-43cb-708e-08ddacf63625
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "WIFI"
+}
+###
+DELETE {{host-api}}/amenities/7bcceede-de7d-43cb-708e-08ddacf63625
+Authorization: Bearer {{token}}
+Content-Type: application/json
+###
+DELETE {{host-api}}/room-types/f038edf5-d0f1-4a2c-b5ba-08dda8e204f0/amenities/7bcceede-de7d-43cb-708e-08ddacf63625
+Authorization: Bearer {{token}}
+Content-Type: application/json

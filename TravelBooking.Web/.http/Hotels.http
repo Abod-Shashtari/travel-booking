@@ -1,0 +1,59 @@
+GET {{host-api}}/hotels/29b714b4-3440-4fad-e7f4-08dda4b6f00d
+Authorization: Bearer {{token}}
+Content-Type: application/json
+###
+GET {{host-api}}/hotels/search?MinPrice=470&MaxPrice=800&Amenities=Food&Amenities=WIFI&NumberOfRooms=1&NumberOfAdults=2&NumberOfChildren=2&CheckIn=2025-06-30T15:00:00+03:00&CheckOut=2025-07-01T15:00:00+03:00&StarRating=3.8
+Authorization: Bearer {{token}}
+Content-Type: application/json
+###
+GET {{host-api}}/hotels/featured-deals
+Authorization: Bearer {{token}}
+Content-Type: application/json
+###
+GET {{host-api}}/user/recently-visited-hotels
+Authorization: Bearer {{token}}
+Content-Type: application/json
+###
+POST {{host-api}}/hotels
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "HotelX",
+  "location": {
+    "latitude": 40.7128,
+    "longitude": -74.0060
+  },
+  "cityId": "55958153-6dc5-443f-2299-08dda474bd3d",
+  "ownerId": "26b46e50-d689-4628-da7c-08dda1580ad9"
+}
+###
+PUT {{host-api}}/hotels/29b714b4-3440-4fad-e7f4-08dda4b6f00d
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Grand Plaza Hotel",
+  "location": {
+    "latitude": 40.7128,
+    "longitude": -74.0060
+  },
+  "description": "we are bad.",
+  "cityId": "55958153-6dc5-443f-2299-08dda474bd3d",
+  "ownerId": "26b46e50-d689-4628-da7c-08dda1580ad9"
+}
+###
+DELETE {{host-api}}/hotels/e8110e93-c3a7-4530-70ff-08ddab530a01
+Authorization: Bearer {{token}}
+Content-Type: application/json
+###
+PUT {{host-api}}/hotels/29b714b4-3440-4fad-e7f4-08dda4b6f00d/thumbnail
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+"2bb2ee12-ed69-47da-4a69-08ddaf362c84"
+###
+
+GET {{host-api}}/hotels/29b714b4-3440-4fad-e7f4-08dda4b6f00d/images
+Authorization: Bearer {{token}}
+Content-Type: application/json

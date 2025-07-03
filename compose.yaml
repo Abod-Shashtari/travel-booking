@@ -1,0 +1,37 @@
+﻿services:
+  travel-booking:
+    build:
+      context: .
+      dockerfile: TravelBooking.Web/Dockerfile
+    image: travel-booking-x
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:8080
+      - Sentry__Dsn=${SENTRY_DSN}
+      - Stripe__SecretKey=${STRIPE_SECRET_KEY}
+      - Stripe__WebhookSigningSecret=${STRIPE_WEBHOOK_SECRET}
+      - ConnectionStrings__DefaultConnection=${CONNECTION_STRING}
+      - Jwt__key=${JWT_KEY}
+      - Smtp__username=${SMTP_USERNAME}
+      - Smtp__password=${SMTP_PASSWORD}
+      - Cloudinary__ApiSecret=${CLOUDINARY_API_SECRET}
+      - Cloudinary__Apikey=${CLOUDINARY_API_KEY}
+    depends_on:
+      - sqlserver
+    restart: unless-stopped
+
+  sqlserver:
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    ports:
+      - "1433:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${SQL_SA_PASSWORD}
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    restart: unless-stopped
+
+volumes:
+  sqlserver_data:
