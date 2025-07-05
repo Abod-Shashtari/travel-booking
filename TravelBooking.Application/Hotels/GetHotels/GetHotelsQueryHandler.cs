@@ -9,7 +9,7 @@ using TravelBooking.Domain.Hotels.Entities;
 
 namespace TravelBooking.Application.Hotels.GetHotels;
 
-public class GetHotelsQueryHandler:IRequestHandler<SearchHotelsQuery, Result<PaginatedList<HotelResponse>>>
+public class GetHotelsQueryHandler:IRequestHandler<GetHotelsQuery, Result<PaginatedList<HotelResponse>>>
 {
     private readonly IRepository<Hotel> _hotelRepository;
     public GetHotelsQueryHandler(IRepository<Hotel> hotelRepository)
@@ -17,7 +17,7 @@ public class GetHotelsQueryHandler:IRequestHandler<SearchHotelsQuery, Result<Pag
         _hotelRepository = hotelRepository;
     }
 
-    public async Task<Result<PaginatedList<HotelResponse>>> Handle(SearchHotelsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PaginatedList<HotelResponse>>> Handle(GetHotelsQuery request, CancellationToken cancellationToken)
     {
         var spec = new PaginationSpecification<Hotel>(request.PageNumber, request.PageSize,x=>x.CreatedAt,true);
         

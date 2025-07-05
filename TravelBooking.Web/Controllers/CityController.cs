@@ -11,6 +11,7 @@ using TravelBooking.Application.Cities.SetThumbnail;
 using TravelBooking.Application.Cities.UpdateCity;
 using TravelBooking.Web.Extensions;
 using TravelBooking.Web.Requests.Cities;
+using TravelBooking.Web.Requests.Images;
 
 namespace TravelBooking.Web.Controllers;
 
@@ -150,7 +151,7 @@ public class CityController:ControllerBase
     /// Sets the thumbnail image for a specific city.
     /// </summary>
     /// <param name="cityId">The ID of the city</param>
-    /// <param name="imageId">The ID of the image to set as the thumbnail</param>
+    /// <param name="request">The ID of the image to set as the thumbnail</param>
     /// <returns>No content</returns>
     /// <response code="204">Thumbnail updated successfully</response>
     /// <response code="401">Unauthorized access</response>
@@ -160,9 +161,9 @@ public class CityController:ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPut("{cityId}/thumbnail")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> SetThumbnail(Guid cityId,[FromBody] Guid imageId)
+    public async Task<IActionResult> SetThumbnail(Guid cityId, SetThumbnailImageRequest request)
     {
-        var command = new SetCityThumbnailCommand(cityId, imageId);
+        var command = new SetCityThumbnailCommand(cityId, request.ImageId);
         var result = await _sender.Send(command);
         return result.Match(NoContent,this.HandleFailure);
     }

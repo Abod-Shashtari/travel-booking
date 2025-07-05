@@ -53,6 +53,7 @@ public class SignInCommandHandlerTests
             _fixture.Create<string>(),
             DateTime.UtcNow.AddHours(1)
         );
+        var tokenResponse = new JwtTokenResponse(jwtToken.Token);
 
         _userRepository.Setup(x => x.GetByEmailAsync(command.Email,It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
@@ -73,7 +74,7 @@ public class SignInCommandHandlerTests
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        result.Value.Should().Be(jwtToken.Token);
+        result.Value.Should().Be(tokenResponse);
         _tokenWhiteListRepository.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 

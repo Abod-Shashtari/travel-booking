@@ -1,13 +1,14 @@
-GET {{host-api}}/hotels/29b714b4-3440-4fad-e7f4-08dda4b6f00d
+GET {{host-api}}/hotels
 Authorization: Bearer {{token}}
+Content-Type: application/json
+###
+GET {{host-api}}/hotels/29b714b4-3440-4fad-e7f4-08dda4b6f00d
 Content-Type: application/json
 ###
 GET {{host-api}}/hotels/search?MinPrice=470&MaxPrice=800&Amenities=Food&Amenities=WIFI&NumberOfRooms=1&NumberOfAdults=2&NumberOfChildren=2&CheckIn=2025-06-30T15:00:00+03:00&CheckOut=2025-07-01T15:00:00+03:00&StarRating=3.8
-Authorization: Bearer {{token}}
 Content-Type: application/json
 ###
 GET {{host-api}}/hotels/featured-deals
-Authorization: Bearer {{token}}
 Content-Type: application/json
 ###
 GET {{host-api}}/user/recently-visited-hotels
@@ -53,7 +54,3 @@ Content-Type: application/json
 
 "2bb2ee12-ed69-47da-4a69-08ddaf362c84"
 ###
-
-GET {{host-api}}/hotels/29b714b4-3440-4fad-e7f4-08dda4b6f00d/images
-Authorization: Bearer {{token}}
-Content-Type: application/json

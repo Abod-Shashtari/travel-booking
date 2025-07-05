@@ -5,7 +5,6 @@ using Moq;
 using TravelBooking.Application.Common.Models;
 using TravelBooking.Application.Common.Specifications;
 using TravelBooking.Application.Hotels.GetHotels;
-using TravelBooking.Application.Hotels.SearchHotels;
 using TravelBooking.Domain.Common;
 using TravelBooking.Domain.Common.Interfaces;
 using TravelBooking.Domain.Hotels.Entities;
@@ -31,7 +30,7 @@ public class GetHotelsQueryHandlerTests
     public async Task GetHotelsQueryHandler_ValidRequest_ShouldReturnSuccess()
     {
         // Arrange
-        var query = _fixture.Create<SearchHotelsQuery>();
+        var query = _fixture.Create<GetHotelsQuery>();
         var hotels=_fixture.CreateMany<Hotel>().ToList();
 
         Expression<Func<Hotel, HotelResponse>> selector = hotel => new HotelResponse(

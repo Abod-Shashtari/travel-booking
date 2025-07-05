@@ -1,7 +1,7 @@
-﻿using System.Security.Authentication;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
 using TravelBooking.Application.Common.Interfaces;
+using TravelBooking.Application.Common.Models;
 using TravelBooking.Domain.Authentication.Entities;
 using TravelBooking.Domain.Authentication.Interfaces;
 using TravelBooking.Domain.Common;
@@ -11,7 +11,7 @@ using TravelBooking.Domain.Users.Interfaces;
 
 namespace TravelBooking.Application.Users.SignIn;
 
-public class SignInCommandHandler:IRequestHandler<SignInCommand,Result<string?>>
+public class SignInCommandHandler:IRequestHandler<SignInCommand,Result<JwtTokenResponse?>>
 {
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher<User> _passwordHasher;
@@ -26,13 +26,13 @@ public class SignInCommandHandler:IRequestHandler<SignInCommand,Result<string?>>
         _tokenWhiteListRepository = tokenWhiteListRepository;
     }
 
-    public async Task<Result<string?>> Handle(SignInCommand request, CancellationToken cancellationToken)
+    public async Task<Result<JwtTokenResponse?>> Handle(SignInCommand request, CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetByEmailAsync(request.Email,cancellationToken);
-        if (user == null) return Result<string>.Failure(UserErrors.InvalidCredentialException());
+        if (user == null) return Result<JwtTokenResponse>.Failure(UserErrors.InvalidCredentialException());
         
         var verificationResult = _passwordHasher.VerifyHashedPassword(user, user.HashedPassword, request.Password);
-        if (verificationResult == PasswordVerificationResult.Failed) return Result<string>.Failure(UserErrors.InvalidCredentialException());
+        if (verificationResult == PasswordVerificationResult.Failed) return Result<JwtTokenResponse>.Failure(UserErrors.InvalidCredentialException());
         
         var token = _jwtTokenGenerator.GenerateToken(user);
         await _tokenWhiteListRepository.AddAsync(new TokenWhiteList
@@ -42,6 +42,7 @@ public class SignInCommandHandler:IRequestHandler<SignInCommand,Result<string?>>
             ExpiresAt = token.ExpirationAt 
         },cancellationToken);
         await _tokenWhiteListRepository.SaveChangesAsync(cancellationToken);
-        return Result<string>.Success(token.Token)!;
+        var tokenResponse = new JwtTokenResponse(token.Token);
+        return Result<JwtTokenResponse>.Success(tokenResponse)!;
     }
 }
