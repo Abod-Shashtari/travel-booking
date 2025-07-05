@@ -1,66 +1,27 @@
-using System.Reflection;
-using AttributeBasedRegistration;
-using FluentValidation;
-using MediatR;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Stripe;
-using TravelBooking.Application.Common.Behaviors;
-using TravelBooking.Application.Common.Profiles;
-using TravelBooking.Application.Users.CreateUser;
-using TravelBooking.Domain.Users.Entities;
-using TravelBooking.Infrastructure;
-using TravelBooking.Infrastructure.Options;
 using TravelBooking.Web.Extensions;
 using TravelBooking.Web.Middlewares;
-using TravelBooking.Web.Profiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
-builder.Services.Configure<CloudinaryOptions>(builder.Configuration.GetSection("Cloudinary"));
-builder.Services.Configure<StripeOptions>(builder.Configuration.GetSection("Stripe"));
-builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("Smtp"));
-StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
-
-builder.Services.AddDbContext<TravelBookingDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-);
-
-builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-builder.Services.AddAutoMapper(typeof(UserProfile));
-builder.Services.AddAutoMapper(typeof(UserRequestProfile));
-
-builder.Services.AddAttributeDefinedServices(typeof(TravelBookingDbContext).Assembly);
-builder.Services.AddMediatR(configuration=>
-    configuration.RegisterServicesFromAssembly(typeof(CreateUserCommand).Assembly)
-);
-builder.Services.AddValidatorsFromAssembly(typeof(CreateUserCommandValidator).Assembly);
-builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+builder.Services.AddConfiguration(builder.Configuration);
+builder.Services.AddDatabase(builder.Configuration);
 
 builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.AddApplicationServices();
+
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
 });
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddSwaggerGen(setupAction =>
-{
-    var xmlCommentsFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlCommentsFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentsFile);
-    setupAction.IncludeXmlComments(xmlCommentsFullPath);
-});
+builder.Services.AddSwaggerDocumentation();
 
 builder.WebHost.UseSentry();
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
-    using var scope = app.Services.CreateScope();
-    var context = scope.ServiceProvider.GetRequiredService<TravelBookingDbContext>();
-    context.Database.Migrate();
+    app.ApplyMigrations();
     app.UseSwagger();
     app.UseSwaggerUI();
 }

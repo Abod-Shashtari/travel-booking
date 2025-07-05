@@ -1460,20 +1460,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "string",
-                "format": "uuid"
+                "$ref": "#/components/schemas/SetThumbnailImageRequest"
               }
             },
             "text/json": {
               "schema": {
-                "type": "string",
-                "format": "uuid"
+                "$ref": "#/components/schemas/SetThumbnailImageRequest"
               }
             },
             "application/*+json": {
               "schema": {
-                "type": "string",
-                "format": "uuid"
+                "$ref": "#/components/schemas/SetThumbnailImageRequest"
               }
             }
           }
@@ -2499,20 +2496,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "string",
-                "format": "uuid"
+                "$ref": "#/components/schemas/SetThumbnailImageRequest"
               }
             },
             "text/json": {
               "schema": {
-                "type": "string",
-                "format": "uuid"
+                "$ref": "#/components/schemas/SetThumbnailImageRequest"
               }
             },
             "application/*+json": {
               "schema": {
-                "type": "string",
-                "format": "uuid"
+                "$ref": "#/components/schemas/SetThumbnailImageRequest"
               }
             }
           }
@@ -4354,6 +4348,16 @@
           }
         },
         "additionalProperties": { }
+      },
+      "SetThumbnailImageRequest": {
+        "type": "object",
+        "properties": {
+          "imageId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
       },
       "SignInRequest": {
         "type": "object",
