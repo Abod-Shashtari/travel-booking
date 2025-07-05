@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using TravelBooking.Domain.Amenities.Entities;
 using TravelBooking.Domain.Authentication.Entities;
 using TravelBooking.Domain.Bookings.Entities;
@@ -35,42 +36,7 @@ public class TravelBookingDbContext:DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Hotel>().ComplexProperty(h=>h.Location);
-        
-        modelBuilder.Entity<Hotel>()
-            .HasOne(h=>h.ThumbnailImage)
-            .WithMany()
-            .HasForeignKey(p => p.ThumbnailImageId)
-            .IsRequired(false);
-        
-        modelBuilder.Entity<City>()
-            .HasOne(h=>h.ThumbnailImage)
-            .WithMany()
-            .HasForeignKey(p => p.ThumbnailImageId)
-            .IsRequired(false);
-        
-        modelBuilder.Entity<Booking>()
-            .HasOne(b => b.User)
-            .WithMany(u => u.Bookings)
-            .OnDelete(DeleteBehavior.Restrict);
-        
-        modelBuilder.Entity<Hotel>()
-            .HasMany(h => h.Bookings)
-            .WithOne(b => b.Hotel)
-            .IsRequired()
-            .OnDelete(DeleteBehavior.Restrict);
-        
-        modelBuilder.Entity<HotelVisit>()
-            .HasOne(h => h.User)
-            .WithMany(u=>u.HotelVisits)
-            .IsRequired()
-            .OnDelete(DeleteBehavior.Restrict);
-        
-        modelBuilder.Entity<Review>()
-            .HasOne(h => h.User)
-            .WithMany(u=>u.Reviews)
-            .IsRequired()
-            .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken=default)
     {
