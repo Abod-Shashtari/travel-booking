@@ -3,7 +3,9 @@ using AutoMapper;
 using FluentAssertions;
 using Moq;
 using TravelBooking.Application.Common.Models;
+using TravelBooking.Application.Common.Specifications;
 using TravelBooking.Application.Reviews.PostReview;
+using TravelBooking.Domain.Common;
 using TravelBooking.Domain.Common.Interfaces;
 using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Domain.Hotels.Errors;
@@ -84,20 +86,23 @@ public class PostReviewCommandHandlerTests
     }
 
     [Theory]
-    [InlineData(null, 4.0, 4.0)]
-    [InlineData(3.0, 4.0, 3.5)]
-    public async Task PostReviewCommandHandler_ValidRequest_ShouldReturnSuccessAndUpdateHotelStarRating(double? baseStarRating, double newStarRating, double resultStarRating)
+    [InlineData(null, 4.0, 4.0,0)]
+    [InlineData(3.0, 4.0, 3.5,1)]
+    public async Task PostReviewCommandHandler_ValidRequest_ShouldReturnSuccessAndUpdateHotelStarRating(double? baseStarRating, double newStarRating, double resultStarRating,int totalReviewCount)
     {
         // Arrange
         var command = _fixture.Create<PostReviewCommand>();
-        var review = _fixture.Build<Review>()
-            .With(r => r.StarRating, newStarRating)
-            .With(r => r.HotelId, command.HotelId)
-            .Create();
 
         var hotel = _fixture.Build<Hotel>()
             .With(h => h.Id, command.HotelId)
             .With(h => h.StarRating, baseStarRating)
+            .Create();
+        
+        var review = _fixture.Build<Review>()
+            .With(r => r.UserId, command.UserId)
+            .With(r => r.HotelId, hotel.Id)
+            .With(r => r.StarRating, newStarRating)
+            .With(r=>r.Hotel, hotel)
             .Create();
 
         var reviewResponse = _fixture.Create<ReviewResponse>();
@@ -116,6 +121,13 @@ public class PostReviewCommandHandlerTests
         _reviewRepository.Setup(r => r.AddAsync(review, It.IsAny<CancellationToken>()))
             .ReturnsAsync(review.Id);
 
+        var reviews = new PaginatedList<Review>([], totalReviewCount, 0, 1);
+        
+        _reviewRepository.Setup(r=>r.GetPaginatedListAsync(
+            It.IsAny<PaginationSpecification<Review>>(),
+            It.IsAny<CancellationToken>()
+        )).ReturnsAsync(reviews);
+        
         _reviewRepository.Setup(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(1);
 
@@ -127,7 +139,7 @@ public class PostReviewCommandHandlerTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().BeEquivalentTo(reviewResponse);
-        hotel.StarRating.Should().BeApproximately(resultStarRating, 0.001); // check updated value
+        hotel.StarRating.Should().BeApproximately(resultStarRating, 0.001);
         _reviewRepository.Verify(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 }
