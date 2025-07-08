@@ -14,7 +14,7 @@ public class UpdateRoomCommandValidator:AbstractValidator<UpdateRoomCommand>
         RuleFor(x => x.AdultCapacity).NotEmpty()
             .InclusiveBetween(1,10)
             .WithMessage("Adult capacity must be between 1 and 10");
-        RuleFor(x => x.ChildrenCapacity).NotEmpty()
+        RuleFor(x => x.ChildrenCapacity)
             .InclusiveBetween(0,10)
             .WithMessage("Children capacity must be between 0 and 10");
     }
