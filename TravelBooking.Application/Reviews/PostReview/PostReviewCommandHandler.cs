@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using TravelBooking.Application.Common.Models;
+using TravelBooking.Application.Common.Specifications;
 using TravelBooking.Domain.Common;
 using TravelBooking.Domain.Common.Interfaces;
 using TravelBooking.Domain.Hotels.Entities;
@@ -32,9 +33,14 @@ public class PostReviewCommandHandler:IRequestHandler<PostReviewCommand,Result<R
         var review = _mapper.Map<Review>(request);
         if (await _reviewRepository.IsExistAsync(review, cancellationToken))
             return Result<ReviewResponse?>.Failure(ReviewErrors.ReviewAlreadyExists());
+
+        var specification = new PaginationSpecification<Review>(1,0);
+        var reviews= await _reviewRepository.GetPaginatedListAsync(specification,cancellationToken);
+        var reviewsCount = reviews.TotalCount;
         
         await _reviewRepository.AddAsync(review, cancellationToken);
-        hotel.StarRating = hotel.StarRating==null?review.StarRating:(hotel.StarRating+review.StarRating)/2;
+        var newAvgStarRating = ((hotel.StarRating??0) * reviewsCount + review.StarRating) / (reviewsCount + 1);
+        hotel.StarRating = hotel.StarRating==null?review.StarRating:newAvgStarRating;
         
         await _reviewRepository.SaveChangesAsync(cancellationToken);
         var reviewResponse=_mapper.Map<ReviewResponse>(review);
