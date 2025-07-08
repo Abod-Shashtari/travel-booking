@@ -28,7 +28,7 @@ public class GetRoomTypeQueryHandlerTests
     public async Task GetRoomTypeQueryHandler_RoomTypeExists_ShouldReturnSuccessWithDiscountedPrice()
     {
         // Arrange
-        var command = _fixture.Create<GetRoomTypeQuery>();
+        var query = _fixture.Create<GetRoomTypeQuery>();
         var roomType = _fixture.Build<RoomType>()
             .With(r => r.Discounts, new List<Discount>
             {
@@ -40,11 +40,11 @@ public class GetRoomTypeQueryHandlerTests
         var expectedDiscountedPrice = roomType.PricePerNight * (decimal)(1 - 0.10) * (decimal)(1 - 0.20);
 
         _roomTypeRepository
-            .Setup(r => r.GetByIdAsync(command.RoomTypeId, It.IsAny<ISpecification<RoomType>>(), It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetByIdAsync(query.RoomTypeId, It.IsAny<ISpecification<RoomType>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(roomType);
 
         // Act
-        var result = await _handler.Handle(command, CancellationToken.None);
+        var result = await _handler.Handle(query, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -57,14 +57,14 @@ public class GetRoomTypeQueryHandlerTests
     public async Task GetRoomTypeQueryHandler_RoomTypeDoesNotExist_ShouldReturnFailure()
     {
         // Arrange
-        var command = _fixture.Create<GetRoomTypeQuery>();
+        var query = _fixture.Create<GetRoomTypeQuery>();
 
         _roomTypeRepository
-            .Setup(r => r.GetByIdAsync(command.RoomTypeId, It.IsAny<ISpecification<RoomType>>(), It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetByIdAsync(query.RoomTypeId, It.IsAny<ISpecification<RoomType>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((RoomType?)null);
 
         // Act
-        var result = await _handler.Handle(command, CancellationToken.None);
+        var result = await _handler.Handle(query, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -75,7 +75,7 @@ public class GetRoomTypeQueryHandlerTests
     public async Task GetRoomTypeQueryHandler_NoValidDiscounts_ShouldReturnOriginalPriceAsDiscountedPrice()
     {
         // Arrange
-        var command = _fixture.Create<GetRoomTypeQuery>();
+        var query = _fixture.Create<GetRoomTypeQuery>();
         var roomType = _fixture.Build<RoomType>()
             .With(r => r.Discounts, new List<Discount>
             {
@@ -85,11 +85,11 @@ public class GetRoomTypeQueryHandlerTests
             .Create();
 
         _roomTypeRepository
-            .Setup(r => r.GetByIdAsync(command.RoomTypeId, It.IsAny<ISpecification<RoomType>>(), It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetByIdAsync(query.RoomTypeId, It.IsAny<ISpecification<RoomType>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(roomType);
 
         // Act
-        var result = await _handler.Handle(command, CancellationToken.None);
+        var result = await _handler.Handle(query, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
