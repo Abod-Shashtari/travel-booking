@@ -3903,6 +3903,67 @@
         }
       }
     },
+    "/api/hotels/{hotelId}/room-types": {
+      "get": {
+        "tags": [
+          "RoomType"
+        ],
+        "summary": "Retrieves a list of room types of hotel.",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "description": "The hotel to return its room types",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns list of room types for specific hotel."
+          },
+          "404": {
+            "description": "hotel is not found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/room-types/{roomTypeId}": {
       "get": {
         "tags": [
