@@ -3,8 +3,8 @@ using AutoFixture.AutoMoq;
 using FluentAssertions;
 using Moq;
 using TravelBooking.Application.Common.Interfaces;
+using TravelBooking.Application.Common.Models;
 using TravelBooking.Application.Images.DeleteImage;
-using TravelBooking.Domain.Common.Interfaces;
 using TravelBooking.Domain.Images.Entities;
 using TravelBooking.Domain.Images.Errors;
 
@@ -14,7 +14,7 @@ public class DeleteImageCommandHandlerTests
 {
     private readonly IFixture _fixture;
     private readonly Mock<IImageService> _imageService;
-    private readonly Mock<IRepository<Image>> _imageRepository;
+    private readonly Mock<IImageRepository> _imageRepository;
     private readonly DeleteImageCommandHandler _handler;
 
     public DeleteImageCommandHandlerTests()
@@ -24,7 +24,7 @@ public class DeleteImageCommandHandlerTests
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 
         _imageService = new Mock<IImageService>();
-        _imageRepository = new Mock<IRepository<Image>>();
+        _imageRepository = new Mock<IImageRepository>();
         _handler = new DeleteImageCommandHandler(_imageService.Object, _imageRepository.Object);
     }
 
@@ -67,6 +67,30 @@ public class DeleteImageCommandHandlerTests
         result.Error.Should().Be(ImageErrors.ErrorWhileDeleting());
         _imageRepository.Verify(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
+    
+    [Fact]
+    public async Task DeleteImageCommandHandler_ImageInUse_ShouldReturnFailure()
+    {
+        // Arrange
+        var imageGuid= _fixture.Create<Guid>();
+        var command = new DeleteImageCommand(imageGuid);
+        var image = _fixture.Create<Image>();
+        var imageUsageInfo = _fixture.Create<ImageUsageInfo>();
+        
+        _imageRepository.Setup(r => r.GetByIdAsync(command.ImageId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(image);
+        
+        _imageRepository.Setup(i => i.IsImageUsedAsThumbnailsAsync(imageGuid))
+            .ReturnsAsync(imageUsageInfo);
+
+        // Act
+        var result = await _handler.Handle(command, CancellationToken.None);
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
+        result.Error.Should().Be(ImageErrors.ImageInUse(imageUsageInfo.EntityType,imageUsageInfo.EntityId));
+        _imageRepository.Verify(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
+    }
 
     [Fact]
     public async Task DeleteImageCommandHandler_ValidRequest_ShouldDeleteAndReturnSuccess()
@@ -75,13 +99,20 @@ public class DeleteImageCommandHandlerTests
         var imageGuid= _fixture.Create<Guid>();
         var command = new DeleteImageCommand(imageGuid);
         var image = _fixture.Create<Image>();
+        
         _imageRepository.Setup(r => r.GetByIdAsync(command.ImageId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(image);
+        
         _imageService.Setup(s => s.DeleteImageAsync(image.Url))
             .ReturnsAsync(true);
+        
         _imageRepository.Setup(r => r.Delete(image));
+        
         _imageRepository.Setup(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(1);
+        
+        _imageRepository.Setup(i => i.IsImageUsedAsThumbnailsAsync(imageGuid))
+            .ReturnsAsync((ImageUsageInfo?)null);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);

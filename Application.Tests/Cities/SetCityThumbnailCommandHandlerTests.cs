@@ -2,10 +2,10 @@
 using FluentAssertions;
 using Moq;
 using TravelBooking.Application.Cities.SetThumbnail;
+using TravelBooking.Application.Common.Interfaces;
 using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Domain.Cities.Errors;
 using TravelBooking.Domain.Common.Interfaces;
-using TravelBooking.Domain.Images.Entities;
 using TravelBooking.Domain.Images.Errors;
 
 namespace Application.Tests.Cities;
@@ -14,7 +14,7 @@ public class SetCityThumbnailCommandHandlerTests
 {
     private readonly IFixture _fixture;
     private readonly Mock<IRepository<City>> _cityRepository;
-    private readonly Mock<IRepository<Image>> _imageRepository;
+    private readonly Mock<IImageRepository> _imageRepository;
     private readonly SetCityThumbnailCommandHandler _handler;
 
     public SetCityThumbnailCommandHandlerTests()
@@ -22,7 +22,7 @@ public class SetCityThumbnailCommandHandlerTests
         _fixture = new Fixture();
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
         _cityRepository = new Mock<IRepository<City>>();
-        _imageRepository = new Mock<IRepository<Image>>();
+        _imageRepository = new Mock<IImageRepository>();
         _handler = new SetCityThumbnailCommandHandler(
             _cityRepository.Object,
             _imageRepository.Object
