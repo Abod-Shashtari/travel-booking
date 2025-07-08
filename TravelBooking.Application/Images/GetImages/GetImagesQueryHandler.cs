@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using MediatR;
+using TravelBooking.Application.Common.Interfaces;
 using TravelBooking.Application.Common.Models;
 using TravelBooking.Application.Images.Specifications;
 using TravelBooking.Domain.Common;
@@ -11,9 +12,9 @@ namespace TravelBooking.Application.Images.GetImages;
 
 public class GetImagesQueryHandler:IRequestHandler<GetImagesQuery, Result<PaginatedList<ImageResponse>?>>
 {
-    private readonly IRepository<Image> _imageRepository;
+    private readonly IImageRepository _imageRepository;
     
-    public GetImagesQueryHandler(IRepository<Image> imageRepository)
+    public GetImagesQueryHandler(IImageRepository imageRepository)
     {
         _imageRepository = imageRepository;
     }
