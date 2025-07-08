@@ -28,7 +28,7 @@ public abstract class RepositoryTestsBase<TEntity> : IDisposable
             .Options;
 
         Context = new TravelBookingDbContext(options);
-        Context.Database.EnsureCreated(); // Create the schema
+        Context.Database.EnsureCreated();
         Repository = repository(Context);
 
         Fixture = new Fixture();
