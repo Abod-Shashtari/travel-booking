@@ -41,15 +41,17 @@ public class GetHotelQueryHandler:IRequestHandler<GetHotelQuery, Result<HotelRes
         );
         var hotelResponse = await _hotelRepository.GetByIdAsync(request.HotelId,selector, cancellationToken);
         if (hotelResponse == null) return Result<HotelResponse?>.Failure(HotelErrors.HotelNotFound());
+
+        if (!request.VisitorUserId.HasValue) return Result<HotelResponse?>.Success(hotelResponse);
         
-        var specification = new GetHotelVisitedSpecification(hotelResponse.Id,request.VisitorUserId);
+        var specification = new GetHotelVisitedSpecification(hotelResponse.Id,request.VisitorUserId.Value);
         var existedHotelVisitRecord=await _hotelVisitRepository.GetPaginatedListAsync(specification,cancellationToken);
         existedHotelVisitRecord.Data.ForEach(hv=>_hotelVisitRepository.Delete(hv));
         
-        var hotelVisit = new HotelVisit {HotelId = hotelResponse.Id,UserId = request.VisitorUserId};
+        var hotelVisit = new HotelVisit {HotelId = hotelResponse.Id,UserId = request.VisitorUserId.Value};
         await _hotelVisitRepository.AddAsync(hotelVisit,cancellationToken);
         await _hotelVisitRepository.SaveChangesAsync(cancellationToken);
-        
+
         return Result<HotelResponse?>.Success(hotelResponse);
     }
 }

@@ -11,6 +11,12 @@ public static class ControllerExtensions
         var userIdClaim = controller.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
         return new Guid(userIdClaim!.Value);
     }
+    public static Guid? GetUserIdOrNull(this ControllerBase controller)
+    {
+        var userIdClaim = controller.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+        if (userIdClaim == null) return null;
+        return new Guid(userIdClaim!.Value);
+    }
 
     public static IActionResult HandleFailure(this ControllerBase controller ,Error error)
     {

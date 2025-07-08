@@ -110,7 +110,7 @@ public class HotelController:ControllerBase
     [HttpGet("{hotelId}")]
     public async Task<IActionResult> GetHotel(Guid hotelId)
     {
-        var query = new GetHotelQuery(this.GetUserId(),hotelId); 
+        var query = new GetHotelQuery(this.GetUserIdOrNull(),hotelId); 
         var result = await _sender.Send(query);
         return result.Match(Ok,this.HandleFailure);
     }
