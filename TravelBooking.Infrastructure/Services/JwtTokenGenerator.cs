@@ -35,7 +35,7 @@ public class JwtTokenGenerator:IJwtTokenGenerator
             new Claim(ClaimTypes.Role, user.UserRole.ToString()),
         ];
         
-        var expirationDate = DateTime.UtcNow.AddMinutes(5);
+        var expirationDate = DateTime.UtcNow.AddHours(1);
         var tokenDescription = new SecurityTokenDescriptor()
         {
             Subject = new ClaimsIdentity(claims),
