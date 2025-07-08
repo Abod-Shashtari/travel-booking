@@ -5,6 +5,7 @@ using Moq;
 using TravelBooking.Application.Common.Models;
 using TravelBooking.Application.Common.Specifications;
 using TravelBooking.Application.Reviews.GetReviews;
+using TravelBooking.Application.Reviews.Specifications;
 using TravelBooking.Domain.Common;
 using TravelBooking.Domain.Common.Interfaces;
 using TravelBooking.Domain.Hotels.Entities;
@@ -71,7 +72,7 @@ public class GetReviewsQueryHandlerTests
             .ReturnsAsync(true);
 
         _reviewRepository
-            .Setup(r => r.GetPaginatedListAsync(It.IsAny<PaginationSpecification<Review>>(), It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetPaginatedListAsync(It.IsAny<GetReviewsOfHotelSpecification>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(paginatedReviews);
 
         _mapper

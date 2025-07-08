@@ -75,7 +75,7 @@ You can access the deployed API at: [https://travel-booking-api.wonderfulbeach-0
 
 ## Testing the API
 #### You can test the API using:
-- [Postman Collection]()
+- [Postman Collection](https://www.postman.com/abodshashtari/public-apis/collection/c3kutxp/travel-and-accommodation-booking-platform-api?action=share&creator=29451978)
 - `.http` files located in `TravelBooking.Web/API/.http/`
 
 #### To Test Payment:

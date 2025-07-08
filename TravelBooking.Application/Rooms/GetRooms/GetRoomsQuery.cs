@@ -4,4 +4,4 @@ using TravelBooking.Domain.Common;
 
 namespace TravelBooking.Application.Rooms.GetRooms;
 
-public record GetRoomsQuery(Guid RoomTypeId, int PageNumber = 1, int PageSize = 10):IRequest<Result<PaginatedList<RoomResponse>>>;
+public record GetRoomsQuery(Guid RoomTypeId, int PageNumber = 1, int PageSize = 10):IRequest<Result<PaginatedList<RoomResponse>?>>;

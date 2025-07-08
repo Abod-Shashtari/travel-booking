@@ -19,10 +19,10 @@ POST {{host-api}}/user/bookings/135970eb-cfa4-42d6-aad2-08ddb28e5c61/cancel
 Authorization: Bearer {{token}}
 Content-Type: application/json
 ###
-POST {{host-api}}/user/bookings/5f94a632-37c9-4ef2-1e90-08ddb296fcca/confirm
+POST {{host-api}}/user/bookings/5f94a632-37c9-4ef2-1e90-08ddb296fcca/complete
 Authorization: Bearer {{token}}
 Content-Type: application/json
 ###
-POST {{host-api}}/user/bookings/5f94a632-37c9-4ef2-1e90-08ddb296fcca/complete
+GET {{host-api}}/api/user/bookings/5f94a632-37c9-4ef2-1e90-08ddb296fcca/pdf-invoice
 Authorization: Bearer {{token}}
 Content-Type: application/json

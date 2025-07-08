@@ -1,10 +1,9 @@
 ﻿using MediatR;
-using TravelBooking.Application.Cities.SetThumbnail;
+using TravelBooking.Application.Common.Interfaces;
 using TravelBooking.Domain.Common;
 using TravelBooking.Domain.Common.Interfaces;
 using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Domain.Hotels.Errors;
-using TravelBooking.Domain.Images.Entities;
 using TravelBooking.Domain.Images.Errors;
 
 namespace TravelBooking.Application.Hotels.SetThumbnail;
@@ -12,9 +11,9 @@ namespace TravelBooking.Application.Hotels.SetThumbnail;
 public class SetHotelThumbnailCommandHandler:IRequestHandler<SetHotelThumbnailCommand, Result>
 {
     private readonly IRepository<Hotel> _hotelRepository;
-    private readonly IRepository<Image> _imageRepository;
+    private readonly IImageRepository _imageRepository;
 
-    public SetHotelThumbnailCommandHandler(IRepository<Hotel> hotelRepository, IRepository<Image> imageRepository)
+    public SetHotelThumbnailCommandHandler(IRepository<Hotel> hotelRepository, IImageRepository imageRepository)
     {
         _hotelRepository = hotelRepository;
         _imageRepository = imageRepository;

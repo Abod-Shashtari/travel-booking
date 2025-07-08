@@ -6,6 +6,7 @@ using TravelBooking.Application.RoomTypes.CreateRoomType;
 using TravelBooking.Application.RoomTypes.DeleteRoomType;
 using TravelBooking.Application.RoomTypes.GetRoomType;
 using TravelBooking.Application.RoomTypes.GetRoomTypes;
+using TravelBooking.Application.RoomTypes.GetRoomTypesOfHotel;
 using TravelBooking.Application.RoomTypes.UpdateRoomType;
 using TravelBooking.Web.Extensions;
 using TravelBooking.Web.Requests.RoomTypes;
@@ -39,6 +40,24 @@ public class RoomTypeController:ControllerBase
     public async Task<IActionResult> GetRoomTypes([FromQuery] GetRoomTypesRequest request)
     {
         var query = _mapper.Map<GetRoomTypesQuery>(request);
+        var result = await _sender.Send(query);
+        return result.Match(data => Ok(data),this.HandleFailure);
+    }
+    
+    /// <summary>
+    /// Retrieves a list of room types of hotel.
+    /// </summary>
+    /// <param name="request">The request contains the pagination</param>
+    /// <param name="hotelId">The hotel to return its room types</param>
+    /// <returns>A list of room types.</returns>
+    /// <response code="200">Returns list of room types for specific hotel.</response>
+    /// <response code="404">hotel is not found</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [HttpGet("/api/hotels/{hotelId}/room-types")]
+    public async Task<IActionResult> GetRoomTypesOfHotel(Guid hotelId, [FromQuery] GetRoomTypesOfHotelRequest request)
+    {
+        var query = _mapper.Map<GetRoomTypesOfHotelQuery>(request) with {HotelId = hotelId};
         var result = await _sender.Send(query);
         return result.Match(data => Ok(data),this.HandleFailure);
     }

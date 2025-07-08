@@ -3,6 +3,7 @@ using AutoFixture;
 using AutoFixture.AutoMoq;
 using FluentAssertions;
 using Moq;
+using TravelBooking.Application.Common.Interfaces;
 using TravelBooking.Application.Common.Models;
 using TravelBooking.Application.Images.GetImages;
 using TravelBooking.Domain.Common;
@@ -15,14 +16,14 @@ namespace Application.Tests.Images;
 public class GetImagesQueryHandlerTests
 {
     private readonly IFixture _fixture;
-    private readonly Mock<IRepository<Image>> _imageRepository;
+    private readonly Mock<IImageRepository> _imageRepository;
     private readonly GetImagesQueryHandler _handler;
 
     public GetImagesQueryHandlerTests()
     {
         _fixture = new Fixture().Customize(new AutoMoqCustomization());
 
-        _imageRepository = new Mock<IRepository<Image>>();
+        _imageRepository = new Mock<IImageRepository>();
 
         _handler = new GetImagesQueryHandler(_imageRepository.Object);
     }

@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Moq;
 using TravelBooking.Application.Common.Interfaces;
 using TravelBooking.Application.Images.UploadImage;
-using TravelBooking.Domain.Common.Interfaces;
 using TravelBooking.Domain.Images.Entities;
 using TravelBooking.Domain.Images.Errors;
 
@@ -16,7 +15,7 @@ public class UploadImageCommandHandlerTests
 {
     private readonly IFixture _fixture;
     private readonly Mock<IImageService> _imageService;
-    private readonly Mock<IRepository<Image>> _imageRepository;
+    private readonly Mock<IImageRepository> _imageRepository;
     private readonly UploadImageCommandHandler _handler;
 
     public UploadImageCommandHandlerTests()
@@ -27,7 +26,7 @@ public class UploadImageCommandHandlerTests
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 
         _imageService = new Mock<IImageService>();
-        _imageRepository = new Mock<IRepository<Image>>();
+        _imageRepository = new Mock<IImageRepository>();
         var mapper = new Mock<IMapper>();
         _handler = new UploadImageCommandHandler(_imageService.Object, _imageRepository.Object, mapper.Object);
     }

@@ -22,5 +22,6 @@ public class HotelRequestProfile:Profile
         .ForCtorParam("HotelFilter", opt => opt.MapFrom(src => src))
         .ForCtorParam("PageNumber", opt => opt.MapFrom(src => src.PageNumber))
         .ForCtorParam("PageSize", opt => opt.MapFrom(src => src.PageSize));
+        CreateMap<GetHotelsRequest, GetHotelsQuery>();
     }
 }

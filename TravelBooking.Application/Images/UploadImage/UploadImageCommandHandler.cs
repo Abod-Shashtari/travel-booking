@@ -3,7 +3,6 @@ using MediatR;
 using TravelBooking.Application.Common.Interfaces;
 using TravelBooking.Application.Common.Models;
 using TravelBooking.Domain.Common;
-using TravelBooking.Domain.Common.Interfaces;
 using TravelBooking.Domain.Images.Entities;
 using TravelBooking.Domain.Images.Errors;
 
@@ -12,10 +11,10 @@ namespace TravelBooking.Application.Images.UploadImage;
 public class UploadImageCommandHandler:IRequestHandler<UploadImageCommand, Result<ImageFullResponse?>>
 {
     private readonly IImageService _imageService;
-    private readonly IRepository<Image> _imageRepository;
+    private readonly IImageRepository _imageRepository;
     private readonly IMapper _mapper;
 
-    public UploadImageCommandHandler(IImageService imageService, IRepository<Image> imageRepository, IMapper mapper)
+    public UploadImageCommandHandler(IImageService imageService, IImageRepository imageRepository, IMapper mapper)
     {
         _imageService = imageService;
         _imageRepository = imageRepository;

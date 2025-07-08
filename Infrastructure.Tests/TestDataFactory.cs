@@ -1,9 +1,11 @@
 ﻿using AutoFixture;
 using TravelBooking.Domain.Amenities.Entities;
+using TravelBooking.Domain.Authentication.Entities;
 using TravelBooking.Domain.Bookings.Entities;
 using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Domain.Discounts.Entities;
 using TravelBooking.Domain.Hotels.Entities;
+using TravelBooking.Domain.Images.Entities;
 using TravelBooking.Domain.Reviews.Entities;
 using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.RoomTypes.Entities;
@@ -160,6 +162,31 @@ public static class TestDataFactory
             .With(x=>x.Status,BookingStatus.Pending)
             .Without(x=>x.Hotel)
             .Without(x=>x.User)
+            .Create();
+    }
+    
+    public static Image CreateImage(TravelBookingDbContext context, Fixture fixture)
+    {
+        var hotel = CreateHotel(context,fixture);
+        context.Hotels.Add(hotel);
+        context.SaveChanges();
+        
+        return fixture.Build<Image>()
+            .With(i=>i.EntityType,EntityType.Hotels)
+            .With(i=>i.EntityId,hotel.Id)
+            .Create();
+    }
+    
+    public static TokenWhiteList CreateTokenWhiteList(Fixture fixture)
+    {
+        return fixture.Build<TokenWhiteList>()
+            .Create();
+    }
+    
+    public static TokenWhiteList CreateTokenWhiteListWithUserId(Fixture fixture,Guid userId)
+    {
+        return fixture.Build<TokenWhiteList>()
+            .With(t=>t.UserId,userId)
             .Create();
     }
 }

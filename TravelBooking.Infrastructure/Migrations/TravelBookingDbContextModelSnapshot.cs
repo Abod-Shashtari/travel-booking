@@ -142,6 +142,8 @@ namespace TravelBooking.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
+                    b.HasIndex("CheckIn", "CheckOut");
+
                     b.ToTable("Bookings");
                 });
 
@@ -177,6 +179,8 @@ namespace TravelBooking.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name");
+
                     b.HasIndex("ThumbnailImageId");
 
                     b.ToTable("Cities");
@@ -209,6 +213,8 @@ namespace TravelBooking.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("RoomTypeId");
+
+                    b.HasIndex("StartDate", "EndDate");
 
                     b.ToTable("Discounts");
                 });
@@ -261,9 +267,15 @@ namespace TravelBooking.Infrastructure.Migrations
 
                     b.HasIndex("CityId");
 
+                    b.HasIndex("Name");
+
                     b.HasIndex("OwnerId");
 
+                    b.HasIndex("StarRating");
+
                     b.HasIndex("ThumbnailImageId");
+
+                    b.HasIndex("Name", "StarRating");
 
                     b.ToTable("Hotels");
                 });
@@ -360,6 +372,8 @@ namespace TravelBooking.Infrastructure.Migrations
 
                     b.HasIndex("HotelId");
 
+                    b.HasIndex("PricePerNight");
+
                     b.ToTable("RoomsTypes");
                 });
 
@@ -391,7 +405,13 @@ namespace TravelBooking.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AdultCapacity");
+
+                    b.HasIndex("ChildrenCapacity");
+
                     b.HasIndex("RoomTypeId");
+
+                    b.HasIndex("AdultCapacity", "ChildrenCapacity");
 
                     b.ToTable("Rooms");
                 });
@@ -459,6 +479,9 @@ namespace TravelBooking.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });

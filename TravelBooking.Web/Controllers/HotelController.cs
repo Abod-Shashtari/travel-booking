@@ -13,6 +13,7 @@ using TravelBooking.Application.Hotels.UpdateHotel;
 using TravelBooking.Application.UserActivity.GetRecentlyVisitedHotels;
 using TravelBooking.Web.Extensions;
 using TravelBooking.Web.Requests.Hotels;
+using TravelBooking.Web.Requests.Images;
 
 namespace TravelBooking.Web.Controllers;
 
@@ -109,7 +110,7 @@ public class HotelController:ControllerBase
     [HttpGet("{hotelId}")]
     public async Task<IActionResult> GetHotel(Guid hotelId)
     {
-        var query = new GetHotelQuery(this.GetUserId(),hotelId); 
+        var query = new GetHotelQuery(this.GetUserIdOrNull(),hotelId); 
         var result = await _sender.Send(query);
         return result.Match(Ok,this.HandleFailure);
     }
@@ -189,7 +190,7 @@ public class HotelController:ControllerBase
     /// Sets the thumbnail image for a hotel (Admin only).
     /// </summary>
     /// <param name="hotelId">The ID of the hotel</param>
-    /// <param name="imageId">The ID of the image to set as thumbnail</param>
+    /// <param name="request">The ID of the image to set as thumbnail</param>
     /// <returns>No content</returns>
     /// <response code="204">Thumbnail set successfully</response>
     /// <response code="404">Hotel or image not found</response>
@@ -199,9 +200,9 @@ public class HotelController:ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [HttpPut("{hotelId}/thumbnail")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> SetThumbnail(Guid hotelId,[FromBody] Guid imageId)
+    public async Task<IActionResult> SetThumbnail(Guid hotelId, SetThumbnailImageRequest request)
     {
-        var command = new SetHotelThumbnailCommand(hotelId, imageId);
+        var command = new SetHotelThumbnailCommand(hotelId, request.ImageId);
         var result = await _sender.Send(command);
         return result.Match(NoContent,this.HandleFailure);
     }

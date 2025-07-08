@@ -56,7 +56,7 @@ public class PdfGenerator:IPdfGenerator
                         content.Item().Text($"Status: {booking.Status}")
                             .FontSize(14);
 
-                        content.Item().Text($"Total Cost: {booking.TotalCost:C}")
+                        content.Item().Text($"Total Cost: ${booking.TotalCost}")
                             .FontSize(14)
                             .Bold();
 

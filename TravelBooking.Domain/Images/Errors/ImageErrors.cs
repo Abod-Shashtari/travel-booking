@@ -27,4 +27,10 @@ public class ImageErrors
             "An Error occurred while trying to delete the image",
             ErrorType.BadRequest
         );
+    
+    public static Error ImageInUse(string entityName, Guid entityId) =>
+        new("Image.ImageInUse",
+            $"This image is currently in use as thumbnail in [Entity:{entityName}, EntityId:{entityId}]",
+            ErrorType.BadRequest
+        );
 }

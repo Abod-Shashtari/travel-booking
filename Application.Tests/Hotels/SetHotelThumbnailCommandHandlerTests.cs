@@ -1,11 +1,11 @@
 ﻿using AutoFixture;
 using FluentAssertions;
 using Moq;
+using TravelBooking.Application.Common.Interfaces;
 using TravelBooking.Application.Hotels.SetThumbnail;
 using TravelBooking.Domain.Common.Interfaces;
 using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Domain.Hotels.Errors;
-using TravelBooking.Domain.Images.Entities;
 using TravelBooking.Domain.Images.Errors;
 
 namespace Application.Tests.Hotels;
@@ -14,7 +14,7 @@ public class SetHotelThumbnailCommandHandlerTests
 {
     private readonly IFixture _fixture;
     private readonly Mock<IRepository<Hotel>> _hotelRepository;
-    private readonly Mock<IRepository<Image>> _imageRepository;
+    private readonly Mock<IImageRepository> _imageRepository;
     private readonly SetHotelThumbnailCommandHandler _handler;
 
     public SetHotelThumbnailCommandHandlerTests()
@@ -23,7 +23,7 @@ public class SetHotelThumbnailCommandHandlerTests
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 
         _hotelRepository = new Mock<IRepository<Hotel>>();
-        _imageRepository = new Mock<IRepository<Image>>();
+        _imageRepository = new Mock<IImageRepository>();
 
         _handler = new SetHotelThumbnailCommandHandler(
             _hotelRepository.Object,
