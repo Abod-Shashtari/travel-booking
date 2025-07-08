@@ -12,6 +12,8 @@ public class CityProfile:Profile
     {
         CreateMap<CreateCityCommand, City>();
         CreateMap<UpdateCityCommand, City>();
-        CreateMap<City,CityResponse>();
+        CreateMap<City, CityResponse>()
+            .ForCtorParam("NumberOfHotels", opt => opt.MapFrom(src => src.Hotels.Count))
+            .ForCtorParam("Thumbnail", opt => opt.MapFrom(src => new ImageResponse(null,"")));
     }
 }
