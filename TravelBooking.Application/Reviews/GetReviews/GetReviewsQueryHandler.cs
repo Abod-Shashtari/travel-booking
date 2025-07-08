@@ -2,6 +2,7 @@
 using MediatR;
 using TravelBooking.Application.Common.Models;
 using TravelBooking.Application.Common.Specifications;
+using TravelBooking.Application.Reviews.Specifications;
 using TravelBooking.Domain.Common;
 using TravelBooking.Domain.Common.Interfaces;
 using TravelBooking.Domain.Hotels.Entities;
@@ -28,7 +29,7 @@ public class GetReviewsQueryHandler:IRequestHandler<GetReviewsQuery, Result<Pagi
         if (!await _hotelRepository.IsExistsByIdAsync(request.HotelId, cancellationToken))
             return Result<PaginatedList<ReviewResponse>?>.Failure(HotelErrors.HotelNotFound());
 
-        var specification = new PaginationSpecification<Review>(request.PageNumber, request.PageSize,o=>o.CreatedAt,true);
+        var specification = new GetReviewsOfHotelSpecification(request.HotelId, request.PageNumber, request.PageSize);
         var reviews = await _reviewRepository.GetPaginatedListAsync(specification, cancellationToken);
         
         var mappedReviews = _mapper.Map<List<ReviewResponse>>(reviews.Data);
