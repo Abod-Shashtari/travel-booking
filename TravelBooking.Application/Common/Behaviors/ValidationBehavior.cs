@@ -5,7 +5,7 @@ using TravelBooking.Domain.Common;
 namespace TravelBooking.Application.Common.Behaviors;
 
 public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TResponse:Result where TRequest : notnull
+    where TResponse:Result where TRequest : IRequest<TResponse> 
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;
 
