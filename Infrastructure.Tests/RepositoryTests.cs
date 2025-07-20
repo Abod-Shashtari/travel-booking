@@ -15,15 +15,15 @@ public abstract class RepositoryTestsBase<TEntity> : IDisposable
     protected readonly TravelBookingDbContext Context;
     protected readonly Fixture Fixture;
     private readonly Repository<TEntity> _repository;
-
+    private readonly SqliteConnection _connection;
 
     protected RepositoryTestsBase(Func<TravelBookingDbContext, Repository<TEntity>> repository)
     {
-        var connection = new SqliteConnection("DataSource=:memory:");
-        connection.Open();
+        _connection = new SqliteConnection("DataSource=:memory:");
+        _connection.Open();
         
         var options = new DbContextOptionsBuilder<TravelBookingDbContext>()
-            .UseSqlite(connection)
+            .UseSqlite(_connection)
             .Options;
 
         Context = new TravelBookingDbContext(options);
@@ -34,7 +34,11 @@ public abstract class RepositoryTestsBase<TEntity> : IDisposable
         Fixture.Behaviors.Add(new OmitOnRecursionBehavior());
     }
 
-    public void Dispose() => Context.Dispose();
+    public void Dispose()
+    {
+        Context.Dispose();
+        _connection.Close();
+    }
 
     protected abstract TEntity CreateEntity();
     protected abstract DbSet<TEntity> DbSet { get; }
