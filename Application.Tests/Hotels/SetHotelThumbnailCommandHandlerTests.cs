@@ -1,12 +1,12 @@
 ﻿using AutoFixture;
 using FluentAssertions;
 using Moq;
-using TravelBooking.Application.Common.Interfaces;
 using TravelBooking.Application.Hotels.SetThumbnail;
 using TravelBooking.Domain.Common.Interfaces;
 using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Domain.Hotels.Errors;
 using TravelBooking.Domain.Images.Errors;
+using TravelBooking.Domain.Images.Interfaces;
 
 namespace Application.Tests.Hotels;
 

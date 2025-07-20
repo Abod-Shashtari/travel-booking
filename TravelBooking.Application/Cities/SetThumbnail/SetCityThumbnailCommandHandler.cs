@@ -1,10 +1,10 @@
 ﻿using MediatR;
-using TravelBooking.Application.Common.Interfaces;
 using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Domain.Cities.Errors;
 using TravelBooking.Domain.Common;
 using TravelBooking.Domain.Common.Interfaces;
 using TravelBooking.Domain.Images.Errors;
+using TravelBooking.Domain.Images.Interfaces;
 
 namespace TravelBooking.Application.Cities.SetThumbnail;
 

@@ -8,6 +8,7 @@ using TravelBooking.Application.Common.Interfaces;
 using TravelBooking.Application.Images.UploadImage;
 using TravelBooking.Domain.Images.Entities;
 using TravelBooking.Domain.Images.Errors;
+using TravelBooking.Domain.Images.Interfaces;
 
 namespace Application.Tests.Images;
 
