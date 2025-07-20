@@ -3,13 +3,15 @@ using TravelBooking.Domain.RoomTypes.Entities;
 
 namespace TravelBooking.Application.RoomTypes.Specifications;
 
-public class HotelRoomTypesWithDiscountsSpecification:Specification<RoomType>
+public class IncludeDiscountsWithRoomTypeSpecification:Specification<RoomType>
 {
-    public HotelRoomTypesWithDiscountsSpecification(Guid hotelId, int pageNumber, int pageSize)
+    public IncludeDiscountsWithRoomTypeSpecification()
     {
-        Criteria = rt => rt.HotelId==hotelId;
+        AddInclude(rt=>rt.Discounts);
+    }
+    public IncludeDiscountsWithRoomTypeSpecification(int pageNumber, int pageSize)
+    {
         ApplyPaging((pageNumber - 1) * pageSize, pageSize);
         ApplyOrderByDescending(rt=>rt.CreatedAt);
-        AddInclude(rt=>rt.Discounts);
     }
 }

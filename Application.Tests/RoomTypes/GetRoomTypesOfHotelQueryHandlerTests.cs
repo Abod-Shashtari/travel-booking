@@ -61,7 +61,7 @@ public class GetRoomTypesOfHotelQueryHandlerTests
         ).ReturnsAsync(true);
         
         _roomTypeRepository.Setup(r => r.GetPaginatedListAsync(
-                It.IsAny<HotelRoomTypesWithDiscountsSpecification>(),
+                It.IsAny<HotelRoomTypesIncludingDiscountsSpecification>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(paginatedRoomTypes);
 
@@ -111,7 +111,7 @@ public class GetRoomTypesOfHotelQueryHandlerTests
         var paginatedRoomTypes = new PaginatedList<RoomType>(roomTypes, roomTypes.Count, query.PageSize, query.PageNumber);
 
         _roomTypeRepository.Setup(r => r.GetPaginatedListAsync(
-                It.IsAny<HotelRoomTypesWithDiscountsSpecification>(),
+                It.IsAny<HotelRoomTypesIncludingDiscountsSpecification>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(paginatedRoomTypes);
 

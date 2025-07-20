@@ -53,7 +53,7 @@ public class GetHotelQueryHandlerTests
         );
         
         _hotelVisitRepository.Setup(r => r.GetPaginatedListAsync(
-            It.IsAny<GetHotelVisitedSpecification>(),
+            It.IsAny<HotelVisitByUserAndHotelSpecification>(),
             It.IsAny<CancellationToken>()
         )).ReturnsAsync(existedHotelVisitRecord);
         

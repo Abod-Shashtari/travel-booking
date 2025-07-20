@@ -27,7 +27,7 @@ public class RemoveAmenityFromRoomTypeCommandHandler:IRequestHandler<RemoveAmeni
         if (amenity==null)
             return Result.Failure(AmenityErrors.AmenityNotFound());
         
-        var specification= new RoomTypesWithAmenitySpecification();
+        var specification= new IncludeAmenitiesWithRoomTypeSpecification();
         var roomType = await _roomTypeRepository.GetByIdAsync(request.RoomTypeId,specification, cancellationToken);
         if (roomType==null)
             return Result.Failure(RoomTypeErrors.RoomTypeNotFound());

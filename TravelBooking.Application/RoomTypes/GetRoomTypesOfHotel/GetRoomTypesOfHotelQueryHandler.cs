@@ -26,7 +26,7 @@ public class GetRoomTypesOfHotelQueryHandler:IRequestHandler<GetRoomTypesOfHotel
     {
         if(!await _hotelRepository.IsExistsByIdAsync(request.HotelId,cancellationToken))
             return Result<PaginatedList<RoomTypeResponse>>.Failure(HotelErrors.HotelNotFound());
-        var spec = new HotelRoomTypesWithDiscountsSpecification(request.HotelId, request.PageNumber, request.PageSize);
+        var spec = new HotelRoomTypesIncludingDiscountsSpecification(request.HotelId, request.PageNumber, request.PageSize);
         
         var roomTypes= await _roomTypeRepository.GetPaginatedListAsync(
             spec,

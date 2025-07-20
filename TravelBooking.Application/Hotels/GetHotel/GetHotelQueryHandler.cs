@@ -44,7 +44,8 @@ public class GetHotelQueryHandler:IRequestHandler<GetHotelQuery, Result<HotelRes
 
         if (!request.VisitorUserId.HasValue) return Result<HotelResponse?>.Success(hotelResponse);
         
-        var specification = new GetHotelVisitedSpecification(hotelResponse.Id,request.VisitorUserId.Value);
+        // If Same hotel by same user visited again
+        var specification = new HotelVisitByUserAndHotelSpecification(hotelResponse.Id,request.VisitorUserId.Value);
         var existedHotelVisitRecord=await _hotelVisitRepository.GetPaginatedListAsync(specification,cancellationToken);
         existedHotelVisitRecord.Data.ForEach(hv=>_hotelVisitRepository.Delete(hv));
         

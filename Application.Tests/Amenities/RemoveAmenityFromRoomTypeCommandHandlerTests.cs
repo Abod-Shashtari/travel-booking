@@ -47,7 +47,7 @@ public class RemoveAmenityFromRoomTypeCommandHandlerTests
 
         _roomTypeRepository.Setup(r => r.GetByIdAsync(
                 command.RoomTypeId,
-                It.IsAny<RoomTypesWithAmenitySpecification>(),
+                It.IsAny<IncludeAmenitiesWithRoomTypeSpecification>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(roomType);
 
@@ -94,7 +94,7 @@ public class RemoveAmenityFromRoomTypeCommandHandlerTests
 
         _roomTypeRepository.Setup(r => r.GetByIdAsync(
                 command.RoomTypeId,
-                It.IsAny<RoomTypesWithAmenitySpecification>(),
+                It.IsAny<IncludeAmenitiesWithRoomTypeSpecification>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync((RoomType?)null);
 

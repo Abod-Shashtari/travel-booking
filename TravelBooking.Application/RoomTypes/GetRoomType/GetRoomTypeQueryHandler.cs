@@ -20,7 +20,7 @@ public class GetRoomTypeQueryHandler:IRequestHandler<GetRoomTypeQuery, Result<Ro
 
     public async Task<Result<RoomTypeResponse?>> Handle(GetRoomTypeQuery request, CancellationToken cancellationToken)
     {
-        var spec = new RoomTypeWithDiscountsSpecification();
+        var spec = new IncludeDiscountsWithRoomTypeSpecification();
         var roomType = await _roomTypeRepository.GetByIdAsync(request.RoomTypeId,spec,cancellationToken);
         if (roomType == null) return Result<RoomTypeResponse?>.Failure(RoomTypeErrors.RoomTypeNotFound());
         
