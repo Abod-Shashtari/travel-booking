@@ -8,7 +8,7 @@ public class ReviewRepositoryTests : RepositoryTestsBase<Review>
 {
     public ReviewRepositoryTests() : base(ctx => new ReviewRepository(ctx)) {}
 
-    public override Review CreateEntity()
+    protected override Review CreateEntity()
     {
         return TestDataFactory.CreateReview(Context,Fixture);
     }

@@ -8,7 +8,7 @@ public class AmenityRepositoryTests : RepositoryTestsBase<Amenity>
 {
     public AmenityRepositoryTests() : base(ctx => new AmenityRepository(ctx)) {}
 
-    public override Amenity CreateEntity()
+    protected override Amenity CreateEntity()
     {
         return TestDataFactory.CreateAmenity(Fixture);
     }

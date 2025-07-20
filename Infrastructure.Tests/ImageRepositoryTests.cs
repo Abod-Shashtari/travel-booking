@@ -14,7 +14,7 @@ public class ImageRepositoryTests : RepositoryTestsBase<Image>
         _imageRepository = new ImageRepository(Context);
     }
 
-    public override Image CreateEntity()
+    protected override Image CreateEntity()
     {
         return TestDataFactory.CreateImage(Context,Fixture);
     }

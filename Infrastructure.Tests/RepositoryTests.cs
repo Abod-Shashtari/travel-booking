@@ -14,22 +14,21 @@ public abstract class RepositoryTestsBase<TEntity> : IDisposable
 {
     protected readonly TravelBookingDbContext Context;
     protected readonly Fixture Fixture;
-    protected readonly Repository<TEntity> Repository;
-    private readonly SqliteConnection _connection;
+    private readonly Repository<TEntity> _repository;
 
 
     protected RepositoryTestsBase(Func<TravelBookingDbContext, Repository<TEntity>> repository)
     {
-        _connection = new SqliteConnection("DataSource=:memory:");
-        _connection.Open();
+        var connection = new SqliteConnection("DataSource=:memory:");
+        connection.Open();
         
         var options = new DbContextOptionsBuilder<TravelBookingDbContext>()
-            .UseSqlite(_connection)
+            .UseSqlite(connection)
             .Options;
 
         Context = new TravelBookingDbContext(options);
         Context.Database.EnsureCreated();
-        Repository = repository(Context);
+        _repository = repository(Context);
 
         Fixture = new Fixture();
         Fixture.Behaviors.Add(new OmitOnRecursionBehavior());
@@ -37,15 +36,15 @@ public abstract class RepositoryTestsBase<TEntity> : IDisposable
 
     public void Dispose() => Context.Dispose();
 
-    public abstract TEntity CreateEntity();
+    protected abstract TEntity CreateEntity();
     protected abstract DbSet<TEntity> DbSet { get; }
 
     [Fact]
     public async Task AddAsync_ShouldAddEntity()
     {
         var entity = CreateEntity();
-        var result = await Repository.AddAsync(entity);
-        await Repository.SaveChangesAsync();
+        var result = await _repository.AddAsync(entity);
+        await _repository.SaveChangesAsync();
 
         result.Should().Be(entity.Id);
         var added = await DbSet.FindAsync(entity.Id);
@@ -57,10 +56,10 @@ public abstract class RepositoryTestsBase<TEntity> : IDisposable
     {
         var entity = CreateEntity();
         await DbSet.AddAsync(entity);
-        await Context.SaveChangesAsync();
+        await _repository.SaveChangesAsync();
 
-        Repository.Delete(entity);
-        await Repository.SaveChangesAsync();
+        _repository.Delete(entity);
+        await _repository.SaveChangesAsync();
 
         var deleted = await DbSet.FindAsync(entity.Id);
         deleted.Should().BeNull();
@@ -71,9 +70,9 @@ public abstract class RepositoryTestsBase<TEntity> : IDisposable
     {
         var entity = CreateEntity();
         await DbSet.AddAsync(entity);
-        await Context.SaveChangesAsync();
+        await _repository.SaveChangesAsync();
 
-        var result = await Repository.GetByIdAsync(entity.Id);
+        var result = await _repository.GetByIdAsync(entity.Id);
         result.Should().NotBeNull();
         result.Id.Should().Be(entity.Id);
     }
@@ -83,16 +82,16 @@ public abstract class RepositoryTestsBase<TEntity> : IDisposable
     {
         var entity = CreateEntity();
         await DbSet.AddAsync(entity);
-        await Context.SaveChangesAsync();
+        await _repository.SaveChangesAsync();
 
-        var result = await Repository.IsExistsByIdAsync(entity.Id);
+        var result = await _repository.IsExistsByIdAsync(entity.Id);
         result.Should().BeTrue();
     }
 
     [Fact]
     public async Task IsExistsByIdAsync_ShouldReturnFalse_WhenNotExists()
     {
-        var result = await Repository.IsExistsByIdAsync(Guid.NewGuid());
+        var result = await _repository.IsExistsByIdAsync(Guid.NewGuid());
         result.Should().BeFalse();
     }
     
@@ -102,9 +101,9 @@ public abstract class RepositoryTestsBase<TEntity> : IDisposable
         var entity = CreateEntity();
         if (entity is Booking) return;
         await DbSet.AddAsync(entity);
-        await Context.SaveChangesAsync();
+        await _repository.SaveChangesAsync();
         
-        var result = await Repository.IsExistAsync(entity);
+        var result = await _repository.IsExistAsync(entity);
         
         result.Should().BeTrue();
     }

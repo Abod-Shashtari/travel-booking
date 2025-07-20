@@ -8,7 +8,7 @@ public class CityRepositoryTests : RepositoryTestsBase<City>
 {
     public CityRepositoryTests() : base(ctx => new CityRepository(ctx)) {}
 
-    public override City CreateEntity()
+    protected override City CreateEntity()
     {
         return TestDataFactory.CreateCity(Fixture);
     }

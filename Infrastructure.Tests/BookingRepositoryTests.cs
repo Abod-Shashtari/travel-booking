@@ -8,7 +8,7 @@ public class BookingRepositoryTests : RepositoryTestsBase<Booking>
 {
     public BookingRepositoryTests() : base(ctx => new BookingRepository(ctx)) {}
 
-    public override Booking CreateEntity()
+    protected override Booking CreateEntity()
     {
         return TestDataFactory.CreateBooking(Context,Fixture); 
     }
