@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Moq;
 using TravelBooking.Application.Users.SignOut;
-using TravelBooking.Domain.Authentication.Interfaces;
+using TravelBooking.Domain.Tokens.Interfaces;
 
 namespace Application.Tests.Users;
 

@@ -3,10 +3,10 @@ using AutoFixture.AutoMoq;
 using FluentAssertions;
 using Moq;
 using TravelBooking.Application.Common.Interfaces;
-using TravelBooking.Application.Common.Models;
 using TravelBooking.Application.Images.DeleteImage;
 using TravelBooking.Domain.Images.Entities;
 using TravelBooking.Domain.Images.Errors;
+using TravelBooking.Domain.Images.Interfaces;
 
 namespace Application.Tests.Images;
 

@@ -1,10 +1,8 @@
 ﻿using AttributeBasedRegistration;
 using AttributeBasedRegistration.Attributes;
 using Microsoft.EntityFrameworkCore;
-using TravelBooking.Application.Common.Interfaces;
-using TravelBooking.Application.Common.Models;
-using TravelBooking.Domain.Common.Interfaces;
 using TravelBooking.Domain.Images.Entities;
+using TravelBooking.Domain.Images.Interfaces;
 
 namespace TravelBooking.Infrastructure.Repositories;
 

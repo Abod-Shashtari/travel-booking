@@ -28,16 +28,17 @@ public class ReviewController:ControllerBase
     /// </summary>
     /// <param name="hotelId">The ID of the hotel to retrieve reviews for.</param>
     /// <param name="request">The request object containing pagination and filtering options.</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>Returns a list of reviews.</returns>
     /// <response code="200">Returns the list of reviews.</response>
     /// <response code="404">Hotel not found.</response>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("/api/hotels/{hotelId}/reviews")]
-    public async Task<IActionResult> GetReviews(Guid hotelId,[FromQuery] GetReviewsRequest request)
+    public async Task<IActionResult> GetReviews(Guid hotelId,[FromQuery] GetReviewsRequest request, CancellationToken cancellationToken)
     {
         var query = _mapper.Map<GetReviewsQuery>(request) with {HotelId = hotelId};
-        var result = await _sender.Send(query);
+        var result = await _sender.Send(query,cancellationToken);
         return result.Match(Ok,this.HandleFailure);
     }
     
@@ -46,6 +47,7 @@ public class ReviewController:ControllerBase
     /// </summary>
     /// <param name="request">The review submission data.</param>
     /// <param name="hotelId">The ID of the hotel being reviewed.</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>Returns the created review.</returns>
     /// <response code="201">Review successfully created.</response>
     /// <response code="400">Invalid request data.</response>
@@ -59,10 +61,10 @@ public class ReviewController:ControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [HttpPost("/api/hotels/{hotelId}/reviews")]
     [Authorize]
-    public async Task<IActionResult> PostReview(PostReviewRequest request,Guid hotelId)
+    public async Task<IActionResult> PostReview(PostReviewRequest request,Guid hotelId, CancellationToken cancellationToken)
     {
         var command = _mapper.Map<PostReviewCommand>(request) with {HotelId = hotelId, UserId = this.GetUserId()};
-        var result = await _sender.Send(command);
+        var result = await _sender.Send(command,cancellationToken);
         return result.Match(data=>
                 Created($"/api/hotels/{hotelId}/reviews/",data),
             this.HandleFailure);
@@ -73,6 +75,7 @@ public class ReviewController:ControllerBase
     /// </summary>
     /// <param name="request">The updated review content.</param>
     /// <param name="reviewId">The ID of the review to update.</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>No content if successful.</returns>
     /// <response code="204">Review successfully updated.</response>
     /// <response code="400">Invalid data provided.</response>
@@ -86,14 +89,14 @@ public class ReviewController:ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPut("/api/reviews/{reviewId}")]
     [Authorize]
-    public async Task<IActionResult> PostReview(UpdateReviewRequest request,Guid reviewId)
+    public async Task<IActionResult> PostReview(UpdateReviewRequest request,Guid reviewId, CancellationToken cancellationToken)
     {
         var command = _mapper.Map<UpdateReviewCommand>(request) with
         {
             UserId = this.GetUserId(),
             ReviewId = reviewId
         };
-        var result = await _sender.Send(command);
+        var result = await _sender.Send(command,cancellationToken);
         return result.Match(NoContent,this.HandleFailure);
     }
     
@@ -101,6 +104,7 @@ public class ReviewController:ControllerBase
     /// Deletes a review made by the authenticated user.
     /// </summary>
     /// <param name="reviewId">The ID of the review to delete.</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>No content if successful.</returns>
     /// <response code="204">Review successfully deleted.</response>
     /// <response code="401">User is not authenticated.</response>
@@ -112,10 +116,10 @@ public class ReviewController:ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpDelete("/api/reviews/{reviewId}")]
     [Authorize]
-    public async Task<IActionResult> DeleteReview(Guid reviewId)
+    public async Task<IActionResult> DeleteReview(Guid reviewId, CancellationToken cancellationToken)
     {
         var command = new DeleteReviewCommand(this.GetUserId(),reviewId);
-        var result = await _sender.Send(command);
+        var result = await _sender.Send(command,cancellationToken);
         return result.Match(NoContent,this.HandleFailure);
     }
 }

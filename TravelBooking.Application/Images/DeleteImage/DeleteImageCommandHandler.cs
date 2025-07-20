@@ -2,6 +2,7 @@
 using TravelBooking.Application.Common.Interfaces;
 using TravelBooking.Domain.Common;
 using TravelBooking.Domain.Images.Errors;
+using TravelBooking.Domain.Images.Interfaces;
 
 namespace TravelBooking.Application.Images.DeleteImage;
 

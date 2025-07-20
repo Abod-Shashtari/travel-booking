@@ -2,7 +2,7 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using TravelBooking.Domain.Authentication.Interfaces;
+using TravelBooking.Domain.Tokens.Interfaces;
 
 namespace TravelBooking.Web.Extensions;
 

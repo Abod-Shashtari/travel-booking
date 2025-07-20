@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using TravelBooking.Domain.Authentication.Entities;
+using TravelBooking.Domain.Tokens.Entities;
 using TravelBooking.Infrastructure;
 using TravelBooking.Infrastructure.Repositories;
 
@@ -31,12 +31,7 @@ public class TokenWhiteListRepositoryTests
 
     private TokenWhiteList CreateEntity()
     {
-        return TestDataFactory.CreateTokenWhiteList(_fixture);
-    }
-    
-    private TokenWhiteList CreateEntityWithUserId(Guid userId)
-    {
-        return TestDataFactory.CreateTokenWhiteListWithUserId(_fixture, userId);
+        return TestDataFactory.CreateTokenWhiteList(_context,_fixture);
     }
     
     [Fact]
@@ -110,18 +105,17 @@ public class TokenWhiteListRepositoryTests
     public async Task DeactivateTokensByUserIdAsync_UserWithMultipleTokens_ShouldDeactivateAllUserTokens()
     {
         // Arrange
-        var user =TestDataFactory.CreateUser(_fixture);
         
-        var userToken1 = CreateEntityWithUserId(user.Id);
+        var userToken1 = CreateEntity();
         userToken1.IsActive = true;
-        var userToken2 = CreateEntityWithUserId(user.Id);
+        var userToken2 = CreateEntity();
         userToken1.IsActive = true;
         
         await _context.TokenWhiteList.AddRangeAsync(userToken1, userToken2);
         await _context.SaveChangesAsync();
 
         // Act
-        await _tokenWhiteListRepository.DeactivateTokensByUserIdAsync(user.Id);
+        await _tokenWhiteListRepository.DeactivateTokensByUserIdAsync(userToken1.UserId);
         await _tokenWhiteListRepository.SaveChangesAsync();
 
         // Assert

@@ -8,7 +8,7 @@ public class RoomTypeRepositoryTests : RepositoryTestsBase<RoomType>
 {
     public RoomTypeRepositoryTests() : base(ctx => new RoomTypeRepository(ctx)) {}
 
-    public override RoomType CreateEntity()
+    protected override RoomType CreateEntity()
     {
         return TestDataFactory.CreateRoomType(Context,Fixture);
     }

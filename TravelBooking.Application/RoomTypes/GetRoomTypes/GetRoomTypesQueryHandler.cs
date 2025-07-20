@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using TravelBooking.Application.Common.Extensions;
 using TravelBooking.Application.Common.Models;
 using TravelBooking.Application.RoomTypes.Specifications;
 using TravelBooking.Domain.Common;
@@ -19,7 +20,7 @@ public class GetRoomTypesQueryHandler:IRequestHandler<GetRoomTypesQuery, Result<
 
     public async Task<Result<PaginatedList<RoomTypeResponse>>> Handle(GetRoomTypesQuery request, CancellationToken cancellationToken)
     {
-        var spec = new RoomTypeWithDiscountsSpecification(request.PageNumber, request.PageSize);
+        var spec = new IncludeDiscountsWithRoomTypeSpecification(request.PageNumber, request.PageSize);
         
         var roomTypes= await _roomTypeRepository.GetPaginatedListAsync(
             spec,

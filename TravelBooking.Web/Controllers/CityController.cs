@@ -31,6 +31,7 @@ public class CityController:ControllerBase
     /// Retrieves a paginated list of all cities.
     /// </summary>
     /// <param name="request">The request contains the pagination</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>A list of cities</returns>
     /// <response code="200">Returns the list of cities</response>
     /// <response code="401">Unauthorized access</response>
@@ -38,31 +39,33 @@ public class CityController:ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [HttpGet]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> GetCities([FromQuery] GetCitiesRequest request)
+    public async Task<IActionResult> GetCities([FromQuery] GetCitiesRequest request, CancellationToken cancellationToken)
     {
         var query = _mapper.Map<GetCitiesQuery>(request);
-        var result = await _sender.Send(query);
-        return result.Match(data => Ok(data),this.HandleFailure);
+        var result = await _sender.Send(query,cancellationToken);
+        return result.Match(Ok,this.HandleFailure);
     }
     
     /// <summary>
     /// Retrieves a list of trending destination cities.
     /// </summary>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>A list of trending cities</returns>
     /// <response code="200">Returns the trending cities</response>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [HttpGet("trending-destinations")]
-    public async Task<IActionResult> GetTrendingCities()
+    public async Task<IActionResult> GetTrendingCities(CancellationToken cancellationToken)
     {
         var query = new GetTrendingCitiesQuery(); 
-        var result = await _sender.Send(query);
-        return result.Match(data => Ok(data),this.HandleFailure);
+        var result = await _sender.Send(query,cancellationToken);
+        return result.Match(Ok,this.HandleFailure);
     }
 
     /// <summary>
     /// Retrieves details of a specific city by its ID.
     /// </summary>
     /// <param name="cityId">The ID of the city</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>The city details</returns>
     /// <response code="200">Returns the city data</response>
     /// <response code="404">City not found</response>
@@ -72,17 +75,18 @@ public class CityController:ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [HttpGet("{cityId}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> GetCity(Guid cityId)
+    public async Task<IActionResult> GetCity(Guid cityId, CancellationToken cancellationToken)
     {
         var query = new GetCityQuery(cityId); 
-        var result = await _sender.Send(query);
-        return result.Match(data => Ok(data),this.HandleFailure);
+        var result = await _sender.Send(query,cancellationToken);
+        return result.Match(Ok,this.HandleFailure);
     }
     
     /// <summary>
     /// Creates a new city.
     /// </summary>
     /// <param name="request">The request containing city creation data</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>The created city</returns>
     /// <response code="201">City created successfully</response>
     /// <response code="401">Unauthorized access</response>
@@ -92,10 +96,10 @@ public class CityController:ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> CreateCity(CreateCityRequest request)
+    public async Task<IActionResult> CreateCity(CreateCityRequest request, CancellationToken cancellationToken)
     {
         var command = _mapper.Map<CreateCityCommand>(request);
-        var result = await _sender.Send(command);
+        var result = await _sender.Send(command,cancellationToken);
         return result.Match(
             createdCity=>CreatedAtAction(
                 nameof(GetCity),
@@ -111,6 +115,7 @@ public class CityController:ControllerBase
     /// </summary>
     /// <param name="cityId">The ID of the city to update</param>
     /// <param name="request">The request containing updated city data</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>No content</returns>
     /// <response code="204">City updated successfully</response>
     /// <response code="401">Unauthorized access</response>
@@ -120,10 +125,10 @@ public class CityController:ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Authorize(Roles = "Admin")]
     [HttpPut("{cityId}")]
-    public async Task<IActionResult> UpdateCity(Guid cityId,UpdateCityRequest request)
+    public async Task<IActionResult> UpdateCity(Guid cityId,UpdateCityRequest request, CancellationToken cancellationToken)
     {
         var command = _mapper.Map<UpdateCityRequest, UpdateCityCommand>(request) with { CityId = cityId };
-        var result = await _sender.Send(command);
+        var result = await _sender.Send(command,cancellationToken);
         return result.Match(NoContent,this.HandleFailure);
     }
     
@@ -131,6 +136,7 @@ public class CityController:ControllerBase
     /// Deletes a specific city.
     /// </summary>
     /// <param name="cityId">The ID of the city to delete</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>No content</returns>
     /// <response code="204">City deleted successfully</response>
     /// <response code="401">Unauthorized access</response>
@@ -140,10 +146,10 @@ public class CityController:ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpDelete("{cityId}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> DeleteCity(Guid cityId)
+    public async Task<IActionResult> DeleteCity(Guid cityId, CancellationToken cancellationToken)
     {
         var command = new DeleteCityCommand(cityId);
-        var result = await _sender.Send(command);
+        var result = await _sender.Send(command,cancellationToken);
         return result.Match(NoContent,this.HandleFailure);
     }
     
@@ -152,6 +158,7 @@ public class CityController:ControllerBase
     /// </summary>
     /// <param name="cityId">The ID of the city</param>
     /// <param name="request">The ID of the image to set as the thumbnail</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>No content</returns>
     /// <response code="204">Thumbnail updated successfully</response>
     /// <response code="401">Unauthorized access</response>
@@ -161,10 +168,10 @@ public class CityController:ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPut("{cityId}/thumbnail")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> SetThumbnail(Guid cityId, SetThumbnailImageRequest request)
+    public async Task<IActionResult> SetThumbnail(Guid cityId, SetThumbnailImageRequest request, CancellationToken cancellationToken)
     {
         var command = new SetCityThumbnailCommand(cityId, request.ImageId);
-        var result = await _sender.Send(command);
+        var result = await _sender.Send(command,cancellationToken);
         return result.Match(NoContent,this.HandleFailure);
     }
 }

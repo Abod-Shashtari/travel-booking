@@ -34,7 +34,7 @@ public class GetRoomTypesQueryHandlerTests
         var paginatedRoomTypes = new PaginatedList<RoomType>(roomTypes, roomTypes.Count, query.PageSize, query.PageNumber);
 
         _roomTypeRepository.Setup(r => r.GetPaginatedListAsync(
-                It.IsAny<RoomTypeWithDiscountsSpecification>(),
+                It.IsAny<IncludeDiscountsWithRoomTypeSpecification>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(paginatedRoomTypes);
 
@@ -79,7 +79,7 @@ public class GetRoomTypesQueryHandlerTests
         var paginatedRoomTypes = new PaginatedList<RoomType>(roomTypes, roomTypes.Count, query.PageSize, query.PageNumber);
 
         _roomTypeRepository.Setup(r => r.GetPaginatedListAsync(
-                It.IsAny<RoomTypeWithDiscountsSpecification>(),
+                It.IsAny<IncludeDiscountsWithRoomTypeSpecification>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(paginatedRoomTypes);
 

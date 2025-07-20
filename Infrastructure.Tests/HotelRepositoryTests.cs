@@ -7,7 +7,8 @@ namespace Infrastructure.Tests;
 public class HotelRepositoryTests:RepositoryTestsBase<Hotel>{
     
     public HotelRepositoryTests() : base(ctx => new HotelRepository(ctx)) {}
-    public override Hotel CreateEntity()
+
+    protected override Hotel CreateEntity()
     {
         return TestDataFactory.CreateHotel(Context,Fixture); 
     }

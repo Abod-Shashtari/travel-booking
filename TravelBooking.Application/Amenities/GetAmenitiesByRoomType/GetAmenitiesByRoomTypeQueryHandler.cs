@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using TravelBooking.Application.Amenities.Specifications;
+using TravelBooking.Application.Common.Extensions;
 using TravelBooking.Application.Common.Models;
 using TravelBooking.Domain.Amenities.Entities;
 using TravelBooking.Domain.Common;

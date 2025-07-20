@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using TravelBooking.Domain.Authentication.Interfaces;
 using TravelBooking.Domain.Common;
+using TravelBooking.Domain.Tokens.Interfaces;
 
 namespace TravelBooking.Application.Users.SignOut;
 

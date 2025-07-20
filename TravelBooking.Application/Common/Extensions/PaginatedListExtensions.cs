@@ -1,6 +1,6 @@
 ﻿using TravelBooking.Domain.Common;
 
-namespace TravelBooking.Application.Common.Models;
+namespace TravelBooking.Application.Common.Extensions;
 
 public static class PaginatedListExtensions
 {

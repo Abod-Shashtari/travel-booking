@@ -8,7 +8,7 @@ public class UserRepositoryTests : RepositoryTestsBase<User>
 {
     public UserRepositoryTests() : base(ctx => new UserRepository(ctx)) {}
 
-    public override User CreateEntity()
+    protected override User CreateEntity()
     {
         return TestDataFactory.CreateUser(Fixture);
     }

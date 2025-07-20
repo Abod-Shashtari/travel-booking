@@ -8,7 +8,7 @@ public class DiscountRepositoryTests : RepositoryTestsBase<Discount>
 {
     public DiscountRepositoryTests() : base(ctx => new DiscountRepository(ctx)) {}
 
-    public override Discount CreateEntity()
+    protected override Discount CreateEntity()
     {
         return TestDataFactory.CreateDiscount(Context,Fixture);
     }

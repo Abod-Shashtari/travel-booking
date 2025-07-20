@@ -4,9 +4,9 @@ using TravelBooking.Domain.RoomTypes.Entities;
 
 namespace TravelBooking.Application.Amenities.Specifications;
 
-public class RoomTypesWithAmenitySpecification:Specification<RoomType>
+public class IncludeAmenitiesWithRoomTypeSpecification:Specification<RoomType>
 {
-    public RoomTypesWithAmenitySpecification()
+    public IncludeAmenitiesWithRoomTypeSpecification()
     {
         AddInclude(rt=>rt.Amenities);
     }

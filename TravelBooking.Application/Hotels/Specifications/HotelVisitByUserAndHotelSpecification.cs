@@ -3,9 +3,9 @@ using TravelBooking.Domain.UserActivity.Entites;
 
 namespace TravelBooking.Application.Hotels.Specifications;
 
-public class GetHotelVisitedSpecification:Specification<HotelVisit>
+public class HotelVisitByUserAndHotelSpecification:Specification<HotelVisit>
 {
-    public GetHotelVisitedSpecification(Guid hotelId,Guid visitorUserId)
+    public HotelVisitByUserAndHotelSpecification(Guid hotelId,Guid visitorUserId)
     {
         Criteria=hv=>hv.HotelId==hotelId && hv.UserId==visitorUserId;
     }

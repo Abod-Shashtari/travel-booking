@@ -34,6 +34,7 @@ public class HotelController:ControllerBase
     /// Searches for hotels based on filters like city, dates, price, etc.
     /// </summary>
     /// <param name="request">Search criteria for hotels</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>List of hotels matching the criteria</returns>
     /// <response code="200">Hotels found successfully</response>
     /// <response code="400">Invalid search parameters</response>
@@ -42,10 +43,10 @@ public class HotelController:ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [HttpGet("search")]
-    public async Task<IActionResult> SearchHotels([FromQuery] SearchHotelsRequest request)
+    public async Task<IActionResult> SearchHotels([FromQuery] SearchHotelsRequest request, CancellationToken cancellationToken)
     {
         var query = _mapper.Map<SearchHotelsQuery>(request);
-        var result = await _sender.Send(query);
+        var result = await _sender.Send(query,cancellationToken);
         return result.Match(Ok,this.HandleFailure);
     }
     
@@ -53,6 +54,7 @@ public class HotelController:ControllerBase
     /// Retrieves a list of hotels (Admin only).
     /// </summary>
     /// <param name="request">The request contains pagination options</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>Paginated list of hotels</returns>
     /// <response code="200">Hotels retrieved</response>
     /// <response code="401">Unauthorized access</response>
@@ -60,30 +62,32 @@ public class HotelController:ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [HttpGet]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> GetHotels([FromQuery] GetHotelsRequest request)
+    public async Task<IActionResult> GetHotels([FromQuery] GetHotelsRequest request, CancellationToken cancellationToken)
     {
         var query = _mapper.Map<GetHotelsQuery>(request);
-        var result = await _sender.Send(query);
+        var result = await _sender.Send(query,cancellationToken);
         return result.Match(Ok,this.HandleFailure);
     }
     
     /// <summary>
     /// Gets a list of featured hotel deals.
     /// </summary>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>List of featured hotel deals</returns>
     /// <response code="200">Featured deals returned</response>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [HttpGet("featured-deals")]
-    public async Task<IActionResult> GetFeaturedHotels()
+    public async Task<IActionResult> GetFeaturedHotels(CancellationToken cancellationToken)
     {
         var query = new GetFeaturedHotelsQuery();
-        var result = await _sender.Send(query);
+        var result = await _sender.Send(query,cancellationToken);
         return result.Match(Ok,this.HandleFailure);
     }
     
     /// <summary>
     /// Retrieves the user's recently visited hotels.
     /// </summary>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>List of recently visited hotels</returns>
     /// <response code="200">Recently visited hotels returned</response>
     /// <response code="401">Unauthorized access</response>
@@ -91,10 +95,10 @@ public class HotelController:ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [HttpGet("/api/user/recently-visited-hotels")]
     [Authorize]
-    public async Task<IActionResult> GetRecentlyVisitedHotels()
+    public async Task<IActionResult> GetRecentlyVisitedHotels(CancellationToken cancellationToken)
     {
         var query = new GetRecentlyVisitedHotelsQuery(this.GetUserId());
-        var result = await _sender.Send(query);
+        var result = await _sender.Send(query,cancellationToken);
         return result.Match(Ok,this.HandleFailure);
     }
 
@@ -102,16 +106,17 @@ public class HotelController:ControllerBase
     /// Retrieves the details of a specific hotel.
     /// </summary>
     /// <param name="hotelId">The ID of the hotel</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>Hotel details</returns>
     /// <response code="200">Hotel retrieved successfully</response>
     /// <response code="404">Hotel not found</response>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{hotelId}")]
-    public async Task<IActionResult> GetHotel(Guid hotelId)
+    public async Task<IActionResult> GetHotel(Guid hotelId, CancellationToken cancellationToken)
     {
         var query = new GetHotelQuery(this.GetUserIdOrNull(),hotelId); 
-        var result = await _sender.Send(query);
+        var result = await _sender.Send(query,cancellationToken);
         return result.Match(Ok,this.HandleFailure);
     }
 
@@ -119,6 +124,7 @@ public class HotelController:ControllerBase
     /// Creates a new hotel (Admin only).
     /// </summary>
     /// <param name="request">The request containing hotel details</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>The created hotel</returns>
     /// <response code="201">Hotel created successfully</response>
     /// <response code="400">Invalid hotel data</response>
@@ -130,10 +136,10 @@ public class HotelController:ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> CreateHotel(CreateHotelRequest request)
+    public async Task<IActionResult> CreateHotel(CreateHotelRequest request, CancellationToken cancellationToken)
     {
         var command = _mapper.Map<CreateHotelCommand>(request);
-        var result = await _sender.Send(command);
+        var result = await _sender.Send(command,cancellationToken);
         return result.Match(
             createdHotel=>CreatedAtAction(
                 nameof(GetHotel),
@@ -149,6 +155,7 @@ public class HotelController:ControllerBase
     /// </summary>
     /// <param name="hotelId">The ID of the hotel</param>
     /// <param name="request">The request containing updated hotel info</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>No content</returns>
     /// <response code="204">Hotel updated successfully</response>
     /// <response code="400">Invalid update data</response>
@@ -159,10 +166,10 @@ public class HotelController:ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPut("{hotelId}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> UpdateHotel(Guid hotelId, UpdateHotelRequest request)
+    public async Task<IActionResult> UpdateHotel(Guid hotelId, UpdateHotelRequest request, CancellationToken cancellationToken)
     {
         var command = _mapper.Map<UpdateHotelCommand>(request) with { HotelId = hotelId };
-        var result = await _sender.Send(command);
+        var result = await _sender.Send(command,cancellationToken);
         return result.Match(NoContent,this.HandleFailure);
     }
     
@@ -170,6 +177,7 @@ public class HotelController:ControllerBase
     /// Deletes a specific hotel (Admin only).
     /// </summary>
     /// <param name="hotelId">The ID of the hotel</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>No content</returns>
     /// <response code="204">Hotel deleted</response>
     /// <response code="404">Hotel not found</response>
@@ -179,10 +187,10 @@ public class HotelController:ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [HttpDelete("{hotelId}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> DeleteHotel(Guid hotelId)
+    public async Task<IActionResult> DeleteHotel(Guid hotelId, CancellationToken cancellationToken)
     {
         var command = new DeleteHotelCommand(hotelId);
-        var result = await _sender.Send(command);
+        var result = await _sender.Send(command,cancellationToken);
         return result.Match(NoContent,this.HandleFailure);
     }
         
@@ -191,6 +199,7 @@ public class HotelController:ControllerBase
     /// </summary>
     /// <param name="hotelId">The ID of the hotel</param>
     /// <param name="request">The ID of the image to set as thumbnail</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>No content</returns>
     /// <response code="204">Thumbnail set successfully</response>
     /// <response code="404">Hotel or image not found</response>
@@ -200,10 +209,10 @@ public class HotelController:ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [HttpPut("{hotelId}/thumbnail")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> SetThumbnail(Guid hotelId, SetThumbnailImageRequest request)
+    public async Task<IActionResult> SetThumbnail(Guid hotelId, SetThumbnailImageRequest request, CancellationToken cancellationToken)
     {
         var command = new SetHotelThumbnailCommand(hotelId, request.ImageId);
-        var result = await _sender.Send(command);
+        var result = await _sender.Send(command,cancellationToken);
         return result.Match(NoContent,this.HandleFailure);
     }
 

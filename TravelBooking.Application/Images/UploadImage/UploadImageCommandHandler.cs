@@ -5,6 +5,7 @@ using TravelBooking.Application.Common.Models;
 using TravelBooking.Domain.Common;
 using TravelBooking.Domain.Images.Entities;
 using TravelBooking.Domain.Images.Errors;
+using TravelBooking.Domain.Images.Interfaces;
 
 namespace TravelBooking.Application.Images.UploadImage;
 
