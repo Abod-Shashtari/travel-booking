@@ -47,7 +47,7 @@ http://localhost:8080
 ```
 
 ## Database Diagram
-![DB-Diagram](https://github.com/user-attachments/assets/1ab3abae-0ef8-460f-bbdf-ca570caa3fa4)
+![DB-Diagram](https://github.com/user-attachments/assets/ac176eea-5637-418f-a7f3-feb43034e5c6)
 
 ## Endpoints
 You can explore all available API endpoints using the Swagger UI:
