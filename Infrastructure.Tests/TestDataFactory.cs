@@ -1,6 +1,5 @@
 ﻿using AutoFixture;
 using TravelBooking.Domain.Amenities.Entities;
-using TravelBooking.Domain.Authentication.Entities;
 using TravelBooking.Domain.Bookings.Entities;
 using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Domain.Discounts.Entities;
@@ -9,6 +8,7 @@ using TravelBooking.Domain.Images.Entities;
 using TravelBooking.Domain.Reviews.Entities;
 using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.RoomTypes.Entities;
+using TravelBooking.Domain.Tokens.Entities;
 using TravelBooking.Domain.UserActivity.Entites;
 using TravelBooking.Domain.Users.Entities;
 using TravelBooking.Infrastructure;

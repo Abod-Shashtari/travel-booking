@@ -1,6 +1,6 @@
-﻿using TravelBooking.Domain.Authentication.Entities;
+﻿using TravelBooking.Domain.Tokens.Entities;
 
-namespace TravelBooking.Domain.Authentication.Interfaces;
+namespace TravelBooking.Domain.Tokens.Interfaces;
 
 public interface ITokenWhiteListRepository
 {

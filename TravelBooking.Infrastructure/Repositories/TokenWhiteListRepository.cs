@@ -1,9 +1,8 @@
 ﻿using AttributeBasedRegistration;
 using AttributeBasedRegistration.Attributes;
 using Microsoft.EntityFrameworkCore;
-using TravelBooking.Domain.Authentication.Entities;
-using TravelBooking.Domain.Authentication.Interfaces;
-using TravelBooking.Domain.Users.Interfaces;
+using TravelBooking.Domain.Tokens.Entities;
+using TravelBooking.Domain.Tokens.Interfaces;
 
 namespace TravelBooking.Infrastructure.Repositories;
 

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TravelBooking.Domain.Common.Entities;
 
-namespace TravelBooking.Domain.Authentication.Entities;
+namespace TravelBooking.Domain.Tokens.Entities;
 
 public class TokenWhiteList:EntityBase
 {

@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using TravelBooking.Domain.Authentication.Entities;
+using TravelBooking.Domain.Tokens.Entities;
 using TravelBooking.Infrastructure;
 using TravelBooking.Infrastructure.Repositories;
 

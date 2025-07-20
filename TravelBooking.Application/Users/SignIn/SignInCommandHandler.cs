@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Identity;
 using TravelBooking.Application.Common.Interfaces;
 using TravelBooking.Application.Common.Models;
-using TravelBooking.Domain.Authentication.Entities;
-using TravelBooking.Domain.Authentication.Interfaces;
 using TravelBooking.Domain.Common;
+using TravelBooking.Domain.Tokens.Entities;
+using TravelBooking.Domain.Tokens.Interfaces;
 using TravelBooking.Domain.Users.Entities;
 using TravelBooking.Domain.Users.Errors;
 using TravelBooking.Domain.Users.Interfaces;
