@@ -177,9 +177,14 @@ public static class TestDataFactory
             .Create();
     }
     
-    public static TokenWhiteList CreateTokenWhiteList(Fixture fixture)
+    public static TokenWhiteList CreateTokenWhiteList(TravelBookingDbContext context, Fixture fixture)
     {
+        var user =  CreateUser(fixture);
+        context.Users.Add(user);
+        context.SaveChanges();
+        
         return fixture.Build<TokenWhiteList>()
+            .With(t=>t.User,user)
             .Create();
     }
     
