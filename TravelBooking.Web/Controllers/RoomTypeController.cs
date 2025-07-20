@@ -30,6 +30,7 @@ public class RoomTypeController:ControllerBase
     /// Retrieves a list of all room types.
     /// </summary>
     /// <param name="request">The request contains the pagination</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>A list of room types.</returns>
     /// <response code="200">Returns the list of room types.</response>
     /// <response code="401">Unauthorized access</response>
@@ -37,11 +38,11 @@ public class RoomTypeController:ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [HttpGet]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> GetRoomTypes([FromQuery] GetRoomTypesRequest request)
+    public async Task<IActionResult> GetRoomTypes([FromQuery] GetRoomTypesRequest request, CancellationToken cancellationToken)
     {
         var query = _mapper.Map<GetRoomTypesQuery>(request);
-        var result = await _sender.Send(query);
-        return result.Match(data => Ok(data),this.HandleFailure);
+        var result = await _sender.Send(query,cancellationToken);
+        return result.Match(Ok,this.HandleFailure);
     }
     
     /// <summary>
@@ -49,40 +50,43 @@ public class RoomTypeController:ControllerBase
     /// </summary>
     /// <param name="request">The request contains the pagination</param>
     /// <param name="hotelId">The hotel to return its room types</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>A list of room types.</returns>
     /// <response code="200">Returns list of room types for specific hotel.</response>
     /// <response code="404">hotel is not found</response>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("/api/hotels/{hotelId}/room-types")]
-    public async Task<IActionResult> GetRoomTypesOfHotel(Guid hotelId, [FromQuery] GetRoomTypesOfHotelRequest request)
+    public async Task<IActionResult> GetRoomTypesOfHotel(Guid hotelId, [FromQuery] GetRoomTypesOfHotelRequest request, CancellationToken cancellationToken)
     {
         var query = _mapper.Map<GetRoomTypesOfHotelQuery>(request) with {HotelId = hotelId};
-        var result = await _sender.Send(query);
-        return result.Match(data => Ok(data),this.HandleFailure);
+        var result = await _sender.Send(query,cancellationToken);
+        return result.Match(Ok,this.HandleFailure);
     }
     
     /// <summary>
     /// Retrieves a specific room type by ID.
     /// </summary>
     /// <param name="roomTypeId">The ID of the room type.</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>The requested room type.</returns>
     /// <response code="200">Returns the room type.</response>
     /// <response code="404">Room type not found.</response>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{roomTypeId}")]
-    public async Task<IActionResult> GetRoomType(Guid roomTypeId)
+    public async Task<IActionResult> GetRoomType(Guid roomTypeId, CancellationToken cancellationToken)
     {
         var query = new GetRoomTypeQuery(roomTypeId); 
-        var result = await _sender.Send(query);
-        return result.Match(data => Ok(data),this.HandleFailure);
+        var result = await _sender.Send(query,cancellationToken);
+        return result.Match(Ok,this.HandleFailure);
     }
 
     /// <summary>
     /// Creates a new room type.
     /// </summary>
     /// <param name="request">The details of the room type to create.</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>The created room type.</returns>
     /// <response code="201">Room type successfully created.</response>
     /// <response code="400">Invalid input data.</response>
@@ -94,10 +98,10 @@ public class RoomTypeController:ControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> CreateTypeRoom(CreateRoomTypeRequest request)
+    public async Task<IActionResult> CreateTypeRoom(CreateRoomTypeRequest request, CancellationToken cancellationToken)
     {
         var command = _mapper.Map<CreateRoomTypeCommand>(request);
-        var result = await _sender.Send(command);
+        var result = await _sender.Send(command,cancellationToken);
         return result.Match(
             createdRoomType=>CreatedAtAction(
                 nameof(GetRoomType),
@@ -113,6 +117,7 @@ public class RoomTypeController:ControllerBase
     /// </summary>
     /// <param name="roomTypeId">The ID of the room type to update.</param>
     /// <param name="request">The updated room type data.</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>No content if successful.</returns>
     /// <response code="204">Room type successfully updated.</response>
     /// <response code="400">Invalid input data.</response>
@@ -124,10 +129,10 @@ public class RoomTypeController:ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPut("{roomTypeId}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> UpdateTypeRoom(Guid roomTypeId, UpdateRoomTypeRequest request)
+    public async Task<IActionResult> UpdateTypeRoom(Guid roomTypeId, UpdateRoomTypeRequest request, CancellationToken cancellationToken)
     {
         var command = _mapper.Map<UpdateRoomTypeCommand>(request) with { RoomTypeId = roomTypeId };
-        var result = await _sender.Send(command);
+        var result = await _sender.Send(command,cancellationToken);
         return result.Match(NoContent,this.HandleFailure);
     }
     
@@ -135,6 +140,7 @@ public class RoomTypeController:ControllerBase
     /// Deletes a specific room type.
     /// </summary>
     /// <param name="roomTypeId">The ID of the room type to delete.</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>No content if successful.</returns>
     /// <response code="204">Room type successfully deleted.</response>
     /// <response code="401">Unauthorized access</response>
@@ -144,10 +150,10 @@ public class RoomTypeController:ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpDelete("{roomTypeId}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> DeleteTypeRoom(Guid roomTypeId)
+    public async Task<IActionResult> DeleteTypeRoom(Guid roomTypeId, CancellationToken cancellationToken)
     {
         var command = new DeleteRoomTypeCommand(roomTypeId);
-        var result = await _sender.Send(command);
+        var result = await _sender.Send(command,cancellationToken);
         return result.Match(NoContent,this.HandleFailure);
     }
 }

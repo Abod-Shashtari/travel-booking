@@ -28,6 +28,7 @@ public class ImageController:ControllerBase
     /// <param name="entityName">The name/type of the entity (e.g., "hotels", "room-types")</param>
     /// <param name="entityId">The ID of the target entity</param>
     /// <param name="image">The image file to upload</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>Created Image</returns>
     /// <response code="201">Image uploaded successfully</response>
     /// <response code="400">Invalid input or unsupported entity type</response>
@@ -39,10 +40,10 @@ public class ImageController:ControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [HttpPost("/api/{entityName}/{entityId}/images")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> UploadImage(string entityName, Guid entityId, IFormFile image)
+    public async Task<IActionResult> UploadImage(string entityName, Guid entityId, IFormFile image, CancellationToken cancellationToken)
     {
         var command = new UploadImageCommand(entityName, entityId, image);
-        var result = await _sender.Send(command);
+        var result = await _sender.Send(command,cancellationToken);
         return result.Match(
             data=>
                 Created($"/api/{data!.EntityType.ToString().ToLower()}/{data.EntityId}/images",data),
@@ -54,6 +55,7 @@ public class ImageController:ControllerBase
     /// Deletes an image by ID (Admin only).
     /// </summary>
     /// <param name="imageId">The ID of the image to delete</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>No content</returns>
     /// <response code="204">Image deleted successfully</response>
     /// <response code="404">Image not found</response>
@@ -63,10 +65,10 @@ public class ImageController:ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [HttpDelete("/api/images/{imageId}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> DeleteImage(Guid imageId)
+    public async Task<IActionResult> DeleteImage(Guid imageId, CancellationToken cancellationToken)
     {
         var command = new DeleteImageCommand(imageId);
-        var result = await _sender.Send(command);
+        var result = await _sender.Send(command,cancellationToken);
         return result.Match(NoContent,this.HandleFailure);
     }
     
@@ -76,16 +78,17 @@ public class ImageController:ControllerBase
     /// <param name="entityName">The name/type of the entity</param>
     /// <param name="entityId">The ID of the target entity</param>
     /// <param name="request">pagination options</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>List of images</returns>
     /// <response code="200">Images retrieved successfully</response>
     /// <response code="400">Invalid entity or parameters</response>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpGet("/api/{entityName}/{entityId}/images")]
-    public async Task<IActionResult> GetImages(string entityName, Guid entityId,[FromQuery]GetImagesRequest request)
+    public async Task<IActionResult> GetImages(string entityName, Guid entityId,[FromQuery]GetImagesRequest request, CancellationToken cancellationToken)
     {
         var query = _mapper.Map<GetImagesQuery>(request) with {EntityName = entityName, EntityId = entityId };
-        var result = await _sender.Send(query);
+        var result = await _sender.Send(query,cancellationToken);
         return result.Match(Ok,this.HandleFailure);
     }
 }

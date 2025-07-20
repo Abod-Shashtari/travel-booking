@@ -32,52 +32,56 @@ public class AmenityController:ControllerBase
     /// Retrieves a paginated list of all amenities.
     /// </summary>
     /// <param name="request">Pagination options for the amenity list</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>A list of amenities</returns>
     /// <response code="401">Unauthorized access</response>
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [HttpGet]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> GetAmenities([FromQuery] GetAmenitiesRequest request)
+    public async Task<IActionResult> GetAmenities([FromQuery] GetAmenitiesRequest request, CancellationToken cancellationToken)
     {
         var query = _mapper.Map<GetAmenitiesQuery>(request);
-        var result = await _sender.Send(query);
-        return result.Match(data => Ok(data),this.HandleFailure);
+        var result = await _sender.Send(query,cancellationToken);
+        return result.Match(Ok,this.HandleFailure);
     }
     
     /// <summary>
     /// Retrieves all amenities associated with a specific room type.
     /// </summary>
     /// <param name="roomTypeId">The ID of the room type</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>List of amenities for the specified room type</returns>
     /// <response code="404">Room type not found</response>
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("/api/room-types/{roomTypeId}/amenities")]
-    public async Task<IActionResult> GetAmenitiesByRoomType(Guid roomTypeId)
+    public async Task<IActionResult> GetAmenitiesByRoomType(Guid roomTypeId, CancellationToken cancellationToken)
     {
         var query = new GetAmenitiesByRoomTypeQuery(roomTypeId); 
-        var result = await _sender.Send(query);
-        return result.Match(data => Ok(data),this.HandleFailure);
+        var result = await _sender.Send(query,cancellationToken);
+        return result.Match(Ok,this.HandleFailure);
     }
 
     /// <summary>
     /// Retrieves details of a specific amenity by its ID.
     /// </summary>
     /// <param name="amenityId">The ID of the amenity</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>The requested amenity</returns>
     /// <response code="404">Amenity not found</response>
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{amenityId}")]
-    public async Task<IActionResult> GetAmenity(Guid amenityId)
+    public async Task<IActionResult> GetAmenity(Guid amenityId, CancellationToken cancellationToken)
     {
         var query = new GetAmenityQuery(amenityId); 
-        var result = await _sender.Send(query);
-        return result.Match(data => Ok(data),this.HandleFailure);
+        var result = await _sender.Send(query,cancellationToken);
+        return result.Match(Ok,this.HandleFailure);
     }
     
     /// <summary>
     /// Creates a new amenity.
     /// </summary>
     /// <param name="request">The request containing amenity data</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>The created amenity</returns>
     /// <response code="401">Unauthorized access</response>
     /// <response code="409">Amenity is already exists</response>
@@ -85,10 +89,10 @@ public class AmenityController:ControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> CreateAmenity(CreateAmenityRequest request)
+    public async Task<IActionResult> CreateAmenity(CreateAmenityRequest request, CancellationToken cancellationToken)
     {
         var command = _mapper.Map<CreateAmenityCommand>(request);
-        var result = await _sender.Send(command);
+        var result = await _sender.Send(command,cancellationToken);
         return result.Match(
             createdAmenity=>CreatedAtAction(
                 nameof(GetAmenity),
@@ -104,6 +108,7 @@ public class AmenityController:ControllerBase
     /// </summary>
     /// <param name="roomTypeId">The ID of the room type</param>
     /// <param name="request">The request containing the amenity ID</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>No content</returns>
     /// <response code="401">Unauthorized access</response>
     /// <response code="404">Room type or amenity Not found</response>
@@ -111,10 +116,10 @@ public class AmenityController:ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPost("/api/room-types/{roomTypeId}/amenities")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> AddAmenity(Guid roomTypeId, AddAmenityToRoomTypeRequest request)
+    public async Task<IActionResult> AddAmenity(Guid roomTypeId, AddAmenityToRoomTypeRequest request, CancellationToken cancellationToken)
     {
         var command = new AddAmenityToRoomTypeCommand(roomTypeId, request.AmenityId); 
-        var result = await _sender.Send(command);
+        var result = await _sender.Send(command,cancellationToken);
         return result.Match(NoContent, this.HandleFailure);
     }
 
@@ -123,6 +128,7 @@ public class AmenityController:ControllerBase
     /// </summary>
     /// <param name="amenityId">The ID of the amenity</param>
     /// <param name="request">The request containing updated amenity data</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>No content</returns>
     /// <response code="401">Unauthorized access</response>
     /// <response code="404">amenity Not found</response>
@@ -130,10 +136,10 @@ public class AmenityController:ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Authorize(Roles = "Admin")]
     [HttpPut("{amenityId}")]
-    public async Task<IActionResult> UpdateAmenity(Guid amenityId,UpdateAmenityRequest request)
+    public async Task<IActionResult> UpdateAmenity(Guid amenityId,UpdateAmenityRequest request, CancellationToken cancellationToken)
     {
         var command = _mapper.Map<UpdateAmenityRequest, UpdateAmenityCommand>(request) with { AmenityId = amenityId };
-        var result = await _sender.Send(command);
+        var result = await _sender.Send(command,cancellationToken);
         return result.Match(NoContent,this.HandleFailure);
     }
     
@@ -142,6 +148,7 @@ public class AmenityController:ControllerBase
     /// Deletes a specific amenity.
     /// </summary>
     /// <param name="amenityId">The ID of the amenity to delete</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>No content</returns>
     /// <response code="401">Unauthorized access</response>
     /// <response code="404">amenity Not found</response>
@@ -149,10 +156,10 @@ public class AmenityController:ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpDelete("{amenityId}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> DeleteAmenity(Guid amenityId)
+    public async Task<IActionResult> DeleteAmenity(Guid amenityId, CancellationToken cancellationToken)
     {
         var command = new DeleteAmenityCommand(amenityId);
-        var result = await _sender.Send(command);
+        var result = await _sender.Send(command,cancellationToken);
         return result.Match(NoContent,this.HandleFailure);
     }
     
@@ -161,6 +168,7 @@ public class AmenityController:ControllerBase
     /// </summary>
     /// <param name="roomTypeId">The ID of the room type</param>
     /// <param name="amenityId">The ID of the amenity to remove</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>No content</returns>
     /// <response code="401">Unauthorized access</response>
     /// <response code="404">Room type or amenity Not found</response>
@@ -168,10 +176,10 @@ public class AmenityController:ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpDelete("/api/room-types/{roomTypeId}/amenities/{amenityId}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> RemoveAmenityFromRoomType(Guid roomTypeId,Guid amenityId)
+    public async Task<IActionResult> RemoveAmenityFromRoomType(Guid roomTypeId,Guid amenityId, CancellationToken cancellationToken)
     {
         var command = new RemoveAmenityFromRoomTypeCommand(roomTypeId, amenityId);
-        var result = await _sender.Send(command);
+        var result = await _sender.Send(command,cancellationToken);
         return result.Match(NoContent,this.HandleFailure);
     }
 }
